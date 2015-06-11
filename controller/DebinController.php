@@ -41,15 +41,14 @@ class DebinController extends Controller
 		}
 
 		$params = array(
-			'article_count' => $count[0]['count'],
-			'method' => __METHOD__,
-			'title' => $category[0]['category'],
+			'page'	=> $page,
+			'base'	=> '/debin/category/'.$category_id,
+			'limit'	=> $this->limit,
+			'title'	=> $category[0]['category'],
+			'method'	=> __METHOD__,
+			'article_count'	=> $count[0]['count'],
+			'article_infos'	=> $this->getArticleInfos($article_infos),
 		);
-
-		$params['article_infos'] = $this->getArticleInfos($article_infos);
-		$params['page'] = $page;
-		$params['limit'] = $this->limit;
-		$params['base'] = '/debin/category/'.$category_id;
 		$this->predisplay($params);
 	}
 
@@ -80,15 +79,15 @@ class DebinController extends Controller
 		$tag_name = MySqlOpt::select_query($tag_sql);
 
 		$params = array(
-			'article_count' => $count[0]['count'],
-			'method' => __METHOD__,
-			'title' => $tag_name[0]['tag_name'],
+			'page'	=> $page,
+			'base'	=> '/debin/tag/'.$tag_id,
+			'limit'	=> $this->limit,
+			'title'	=> $tag_name[0]['tag_name'],
+			'method'	=> __METHOD__,
+			'article_count'	=> $count[0]['count'],
+			'article_infos'	=> $this->getArticleInfos($article_infos),
 		);
 
-		$params['article_infos'] = $this->getArticleInfos($article_infos);
-		$params['page'] = $page;
-		$params['limit'] = $this->limit;
-		$params['base'] = '/debin/tag/'.$tag_id;
 		$this->predisplay($params);
 	}
 
@@ -101,6 +100,32 @@ class DebinController extends Controller
 
 	public function moodAction($query_params)
 	{
+		if (!$this->is_root)
+		{
+			header("Location: /index/notfound");
+			return;
+		}
+		$page = (isset($query_params[0]) and intval($query_params[0])) > 0 ?
+			intval($query_params[0]) : 1;
+
+		$count_sql = 'select count(*) as count from mood where 1';
+		$mood_sql = 'select * from mood where 1'
+			.' order by inserttime desc'
+			.' limit '.(($page-1)*$this->limit).', '.$this->limit;
+		$count = MySqlOpt::select_query($count_sql);
+		$mood_infos = MySqlOpt::select_query($mood_sql);
+
+		$params = array(
+			'page'	=> $page,
+			'base'	=> '/debin/mood',
+			'limit'	=> $this->limit,
+			'title'	=> '心情小说',
+			'ismood'	=> true,
+			'method'	=> __METHOD__,
+			'article_count'	=> $count[0]['count'],
+			'article_infos'	=> $this->getMoodInfos($mood_infos),
+		);
+		$this->predisplay($params);
 	}
 
 	public function searchArticle($request)
@@ -114,23 +139,46 @@ class DebinController extends Controller
 		$article_infos = MySqlOpt::select_query($article_sql);
 
 		$params = array(
-			'article_count' => $count[0]['count'],
-			'method' => __METHOD__,
-			'title' => '检索结果',
+			'page'	=> $request['page'],
+			'tags'	=> $request['tags'],
+			'limit'	=> $this->limit,
+			'title'	=> '检索结果',
+			'method'	=> __METHOD__,
+			'search'	=> $request['search'],
+			'opt_type'	=> $request['opt_type'],
+			'category'	=> $request['category'],
+			'article_count'	=> $count[0]['count'],
+			'article_infos'	=> $this->getArticleInfos($article_infos),
 		);
 
-		$params['article_infos'] = $this->getArticleInfos($article_infos);
-		$params['page'] = $request['page'];
-		$params['limit'] = $this->limit;
-		$params['opt_type'] = $request['opt_type'];
-		$params['category'] = $request['category'];
-		$params['tags'] = $request['tags'];
-		$params['search'] = $request['search'];
 		$this->predisplay($params);
 	}
 
 	public function searchMood($request)
 	{
+		$count_sql = 'select count(*) as count from mood where 1'
+			.$this->getWhere($request, true);
+		$mood_sql = 'select * from mood where 1'
+			.$this->getWhere($request, true)
+			.' order by inserttime desc'
+			.' limit '.(($request['page']-1)*$this->limit).', '.$this->limit;
+		$count = MySqlOpt::select_query($count_sql);
+		$mood_infos = MySqlOpt::select_query($mood_sql);
+
+		$params = array(
+			'page'	=> $request['page'],
+			'tags'	=> $request['tags'],
+			'limit'	=> $this->limit,
+			'title'	=> '检索结果',
+			'ismood'	=> true,
+			'method'	=> __METHOD__,
+			'search'	=> $request['search'],
+			'opt_type'	=> $request['opt_type'],
+			'category'	=> $request['category'],
+			'article_count'	=> $count[0]['count'],
+			'article_infos'	=> $this->getMoodInfos($mood_infos),
+		);
+		$this->predisplay($params);
 	}
 
 	public function getQueryInfo($input)
@@ -235,7 +283,12 @@ class DebinController extends Controller
 						);
 				}
 			}
-			$where_str .= ' and article_id in ('.implode(',', $article_ids).')';
+			if (!$ismood)
+				$where_str .= ' and article_id in ('.implode(',', $article_ids).')';
+			else if ($this->is_root)
+				$where_str .= ' and mood_id in ('.implode(',', $article_ids).')';
+			else
+				$where_str = ' and 0';
 		}
 		return $where_str;
 	}
@@ -271,6 +324,24 @@ class DebinController extends Controller
 			.' order by tag_id limit 20';
 		$rand_tags = MySqlOpt::select_query($sql);
 		return $rand_tags;
+	}
+
+	public function getMoodInfos($mood_infos)
+	{
+		$ret_infos = array();
+		foreach ($mood_infos as $infos)
+		{
+			$tmp_infos = array(
+				'title'	=> $infos['contents'],
+				'contents'	=> $infos['inserttime'],
+			);
+			preg_match('/^(?<month>\d{4}-\d{2})-(?<date>\d{2})/is',
+				$infos['inserttime'], $arr);
+			$tmp_infos['month'] = str_replace('-', '/', $arr['month']);
+			$tmp_infos['date'] = $arr['date'];
+			$ret_infos[] = $tmp_infos;
+		}
+		return $ret_infos;
 	}
 
 	private function getArticleInfos($article_infos, $is_moode = false)

@@ -12,7 +12,7 @@ class Controller
 			&& $_COOKIE["LoginInfo"] == $conf['admin']['logininfo']
 		)
 		{
-			setcookie('LoginInfo', $conf['admin']['logininfo'], time()+1800);
+			setcookie('LoginInfo', $conf['admin']['logininfo'], time()+1800, '/');
 			$this->is_root = true;
 		}
 		else
