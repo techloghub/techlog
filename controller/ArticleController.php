@@ -13,6 +13,10 @@ class ArticleController extends Controller
 		$this->display(__METHOD__, $params);
 	}
 
+	public function testAction($query_params)
+	{
+	}
+
 	private function getArticle($article_id)
 	{
 		$params = array();

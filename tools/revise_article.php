@@ -1,5 +1,5 @@
 <?php
-require_once (dirname(__FILE__).'/../'.'library/zeyublog.php');
+require_once (dirname(__FILE__).'/../'.'library/TechlogTools.php');
 
 LogOpt::init('revise_article', true);
 

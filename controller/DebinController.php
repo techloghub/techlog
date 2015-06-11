@@ -50,7 +50,6 @@ class DebinController extends Controller
 		$params['page'] = $page;
 		$params['limit'] = $this->limit;
 		$params['base'] = '/debin/category/'.$category_id;
-		echo 'hello';
 		$this->predisplay($params);
 	}
 
