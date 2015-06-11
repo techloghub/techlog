@@ -14,5 +14,6 @@ $controller_list = array(
 	'InfosController',
 	'SearchController',
 	'EarningsController',
+	'PicturesController',
 );
 ?>
