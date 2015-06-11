@@ -96,16 +96,41 @@ class DebinController extends Controller
 	public function searchAction($query_params)
 	{
 		$request = $this->getQueryInfo($_REQUEST);
-		$tags = explode(',', $request['tags']);
-		$ismood = $request['category'] == 'mood' ? true : false;
-
-		$where_str = $this->getWhere($tags, $ismood);
-
-		var_dump($where_str);
-		exit;
+		$request['category'] == 'mood' ? $this->searchMood($request)
+			: $this->searchArticle($request);
 	}
 
 	public function moodAction($query_params)
+	{
+	}
+
+	public function searchArticle($request)
+	{
+		$where_str = $this->getWhere($request, false);
+		$count_sql = 'select count(*) as count from article where 1'
+			.$where_str;
+		$article_sql = 'select * from article where 1'.$where_str
+			.' limit '.$request['start'].', '.$this->limit;
+		$count = MySqlOpt::select_query($count_sql);
+		$article_infos = MySqlOpt::select_query($article_sql);
+
+		$params = array(
+			'article_count' => $count[0]['count'],
+			'method' => __METHOD__,
+			'title' => '检索结果',
+		);
+
+		$params['article_infos'] = $this->getArticleInfos($article_infos);
+		$params['page'] = $request['page'];
+		$params['limit'] = $this->limit;
+		$params['opt_type'] = $request['opt_type'];
+		$params['category'] = $request['category'];
+		$params['tags'] = $request['tags'];
+		$params['search'] = $request['search'];
+		$this->predisplay($params);
+	}
+
+	public function searchMood($request)
 	{
 	}
 
@@ -135,11 +160,12 @@ class DebinController extends Controller
 		return $query_info;
 	}
 
-	public function getWhere($tags, $ismood = false)
+	public function getWhere($request, $ismood = false)
 	{
 		$dates = array();
 		$tag_ids = array();
 		$where_str = '';
+		$tags = explode(',', $request['tags']);
 
 		if (!empty($tags))
 		{
@@ -161,6 +187,10 @@ class DebinController extends Controller
 					break;
 				}
 			}
+			if (!$ismood && (!$this->root || $request['opt_type'] != 'all'))
+				$where_str .= ' and category_id < 5';
+			else if (!$this->is_root)
+				$where_str .= ' and 0';
 
 			if (!empty($tag_ids) && !$ismood)
 			{
@@ -182,6 +212,31 @@ class DebinController extends Controller
 				}
 				$where_str .= ' and ('.implode(' or ', $where_arr).')';
 			}
+		}
+
+		if (!empty($request['search']))
+		{
+			$article_ids = array();
+			$searchs = explode(' ', $request['search']);
+			foreach ($searchs as $key)
+			{
+				$key = trim($key);
+				if (empty($key))
+					continue;
+				$search_ret = $this->sphinx->query($key, $request['opt_type']);
+
+				if (empty($article_ids))
+					$article_ids = array_keys($search_ret['matches']);
+				else
+				{
+					$article_ids =
+						array_intersect(
+							$article_ids,
+							array_keys($search_ret['matches'])
+						);
+				}
+			}
+			$where_str .= ' and article_id in ('.implode(',', $article_ids).')';
 		}
 		return $where_str;
 	}
