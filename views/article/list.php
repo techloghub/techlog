@@ -63,7 +63,7 @@
 							<div id="tags">标签</div>
 						</div>
 						<?php foreach($params['tags'] as $tags) { ?>
-						<a href="debin/tag/<?php echo $tags['tag_id'] ?>" target="_blank"><?php echo $tags['tag_name'] ?></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<a href="/debin/tag/<?php echo $tags['tag_id'] ?>" target="_blank"><?php echo $tags['tag_name'] ?></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						<?php } ?>
 						<?php endif ?>
 					</div>
