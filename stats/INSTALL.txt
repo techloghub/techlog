@@ -1,0 +1,20 @@
+1) prerequisites: mysql db and php4
+2) create a stats directory in the web root and uncompress files in it
+3) Add at the end of all your PHP pages :
+   <?php require($REDIRECT_HOMEDIR . "stats/stats.php"); ?>
+4) configure config.php and according to your config change:
+    $sql_host  = "localhost";
+    $sql_login = "root";
+    $sql_passe = "";
+    $sql_dbase = "the_dbase";
+
+The db table will be created automatically at the first access.
+
+
+// AudiStat v1.3 by Alexandre Dubus
+// May 2003
+// http://adubus.free.fr/audistat/
+//
+// If you like AudiStat or choose it for your web site,
+// don't hesitate to contact me
+// my email is adubus at free dot fr
