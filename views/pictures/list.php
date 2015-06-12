@@ -31,7 +31,7 @@
 					<input value="<?php if (!empty($params['category'])): ?><?php echo $params['category'] ?><?php else: ?>all<?php endif ?>" type="text" class="form-control" id="category" name="category" style="width:235px;" readonly="readonly"/>
 					<span class="input-group-addon">插入时间（起始）</span>
 					<div class="input-group date form_datetime">
-						<input class="form-control" width="20px" type="text" id="start_time" name="start_time" value="<?php if (!empty($params['start_time']): ?><?php echo $params['start_time'] ?><?php else: ?>2014-01-01 00:00:00<?php endif ?>">
+						<input class="form-control" width="20px" type="text" id="start_time" name="start_time" value="<?php if (!empty($params['start_time'])): ?><?php echo $params['start_time'] ?><?php else: ?>2014-01-01 00:00:00<?php endif ?>">
 						<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 					</div>
 					<span class="input-group-addon">插入时间（终止）</span>

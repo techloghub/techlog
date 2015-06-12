@@ -15,6 +15,40 @@ class ArticleController extends Controller
 
 	public function testAction($query_params)
 	{
+		if (!$this->is_root)
+		{
+			header("Location: /index/notfound");
+			return;
+		}
+
+		$draft_id = (isset($query_params[0]) && intval($query_params[0]) > 0)
+			? intval($query_params[0]) : '';
+		$contents = file_exists(DRAFT_PATH.'/draft'.$draft_id.'.tpl')
+			? TechlogTools::pre_treat_article(
+				file_get_contents(DRAFT_PATH.'/draft'.$draft_id.'.tpl')
+			) : '';
+
+		if (StringOpt::spider_string(
+			$contents, '"page-header"', '</div>') === null)
+		{
+			$contents = '<div class="page-header"><h1>草稿'
+				.$draft_id.'</h1></div>'.$contents;
+		}
+
+		$index = TechlogTools::get_index($contents);
+
+		$params = array(
+			'tags'	=> array(),
+			'title'	=> '测试页面',
+			'contents'	=> $contents,
+			'inserttime'	=> '',
+			'title_desc'	=> '仅供测试',
+			'article_category_id'	=> 3,
+		);
+		if (count($index) > 0)
+			$params['index'] = $index;
+
+		$this->display(__CLASS__.'::listAction', $params);
 	}
 
 	private function getArticle($article_id)
