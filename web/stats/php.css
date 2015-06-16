@@ -1,0 +1,20 @@
+.Body {background-color: #D8D8F8}
+
+.Table1 { background-color: #000000; text-align: center; width: 600px; border:0}
+
+.TR1 { background-color: #9999CC; vertical-align: middle}
+.TR2 { background-color: #CCCCCC; vertical-align: bottom}
+.TR3 { background-color: #C0C0C0; vertical-align: bottom}
+
+.TD1 {  width: 549px; height: 18px; text-align: left; font-size: 10pt ;font-weight:bold ;vertical-align: bottom; word-spacing=0px}
+.TD2 { text-align: left; font-size: 10pt}
+.TD3 { text-align: right; font-size: 10pt}
+.TD4 { background-color: #CCCCFF; width: 48px; text-align: center ;font-weight:bold }
+.TD5 { width: 178px}
+.TD6 { width: 48px}
+.TD7 { width: 188px}
+.TD8 { width: 364px}
+.TD9 { background-color: #CCCCFF; vertical-align: middle; font-size: 10pt;font-weight:bold; text-align: left}
+.TD10 { background-color: #CCCCFF; vertical-align: top; width: 48px; text-align: right ;font-weight:bold }
+.TD11 { width: 549px; height: 110px; text-align: left; font-size: 10pt ;font-weight:bold ;vertical-align: bottom; word-spacing:0px}
+.TD12 { vertical-align: bottom; text-align: left; width: 17px;font-size: 10pt ;font-weight:bold; word-spacing=0px}
