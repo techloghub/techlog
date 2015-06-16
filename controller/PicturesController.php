@@ -21,12 +21,10 @@ class PicturesController extends Controller
 			'image_id',
 			'start_time',
 		);
-		$request = getParams($_REQUEST, $params_key);
+		$request = $this->getParams($_REQUEST, $params_key);
 		$category = $request['category'];
 		if ($request['category'] == 'all')
 			unset($request['category']);
-
-		$start = ($page-1)*$this->limit;
 
 		$where_str = $this->getWhere($request);
 		$sql = 'select count(*) as count from images where 1'
@@ -35,8 +33,9 @@ class PicturesController extends Controller
 		$count = $count[0]['count'];
 		#$allcount = intval(($count-1)/$this->limit + 1);
 
+		$start = ($page-1)*$this->limit;
 		$sql = 'select * from images where 1'.$where_str
-			.' limit '.$start.', '.$limit;
+			.' limit '.$start.', '.$this->limit;
 		$infos = MySqlOpt::select_query($sql);
 
 		$sql = 'select category from images group by category';
@@ -67,10 +66,7 @@ class PicturesController extends Controller
 	{
 		$params = array();
 		foreach ($keys as $key)
-		{
-			if (isset($input[$key]) && $input[$key] != '')
-				$params[$key] = $input[$key];
-		}
+			$params[$key] = isset($input[$key]) ? $input[$key] : '';
 		return $params;
 	}
 
