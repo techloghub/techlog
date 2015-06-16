@@ -12,7 +12,7 @@
 					<p>
 					<form class="navbar-form bs3-link" style="margin:0 0 55px 0" action="javascript:void(0)"; role="search">
 						<div class="form-group">
-							<input type="text" style="width:400px;height:40px" class="form-control" id="search" placeholder="Search" value="<?php echo_ifset('search_text') ?>">
+							<input type="text" style="width:400px;height:40px" class="form-control" id="search" placeholder="Search" value="<?php echo_ifset($params, 'search_text') ?>">
 						</div>&nbsp;&nbsp;
 						<button type="button" class="btn btn-default dropdown-toggle" value="content" style="height:40px" data-toggle="dropdown" name="chose_btn" id="chose_btn">
 						内容 <span class="caret"></span>
