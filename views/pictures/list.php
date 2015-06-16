@@ -9,15 +9,15 @@
 			<center>
 				<p><h1 style="color:#0047DD;margin-top:80px">图片查询</h1></p>
 			</center>
-			<form class="navbar-form navbar-left" role="search" id="picture" method="get" action="pictures.php">
+			<form class="navbar-form navbar-left" role="search" id="picture" method="post" action="/pictures">
 				<div class="input-group" style="margin-top:10px;margin-bottom:10px;">
 					<span class="input-group-addon">图片ID</span>
-					<input type="text" class="form-control" name="image_id" id="image_id" placeholder="Picture-ID" style="width:300px;"/>
+					<input type="text" class="form-control" name="image_id" id="image_id" placeholder="Picture-ID" value="<?php echo_ifset($params, 'image_id') ?>" style="width:300px;"/>
 					<span class="input-group-addon">图片路径</span>
-					<input type="text" class="form-control" name="path" id="path" placeholder="Picture-Path" style="width:300px;"/>
+					<input type="text" class="form-control" name="path" id="path" placeholder="Picture-Path" style="width:300px;" value="<?php echo_ifset($params, 'path') ?>"/>
 					<span class="input-group-addon">MD5</span>
-					<input type="text" class="form-control" name="md5" id="md5" placeholder="Picture-MD5" style="width:300px;"/>
-					<input type="hidden" name="opt_type" id="opt_type" value="search"/>
+					<input type="text" class="form-control" name="md5" id="md5" placeholder="Picture-MD5" style="width:300px;" value="<?php echo_ifset($params, 'md5') ?>"/>
+					<input type="hidden" name="page" id="page" value="<?php echo_ifset($params, 'page') ?>"/>
 				</div>
 				<div class="input-group" style="margin-top:10px;margin-bottom:10px;">
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -36,7 +36,7 @@
 					</div>
 					<span class="input-group-addon">插入时间（终止）</span>
 					<div class="input-group date form_datetime">
-					<input class="form-control" width="20px" id="end_time" name="end_time" type="text" value="<?php if (!empty($params['start_time'])): ?><? echo $params['end_time'] ?><?php endif ?>">
+					<input class="form-control" width="20px" id="end_time" name="end_time" type="text" value="<?php if (!empty($params['start_time'])): ?><?php echo $params['end_time'] ?><?php endif ?>">
 						<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 					</div>
 				</div>
@@ -84,21 +84,7 @@
 					<?php } ?>
 				</table>
 				<ul class="pagination">
-					<{if $first != ''}>
-					<li><a href="?page=<{$first}>&<{$param}>" class="first">&laquo;</a></li>
-					<li><a href="?page=<{$pre}>&<{$param}>">&lt;</a></li>
-					<{/if}>
-					<{foreach item=pagenum from=$list}>
-					<{if $page==$pagenum}>
-					<li class="active"><a href="javascript:void(0)" hidefocus=""><{$pagenum}></a></li>
-					<{else}>
-					<li><a href="?page=<{$pagenum}>&<{$param}>" hidefocus=""><{$pagenum}></a></li>
-					<{/if}>
-					<{/foreach}>
-					<{if $end != ''}>
-					<li><a href="?page=<{$last}>&<{$param}>" class="next">&gt;</a></li>
-					<li><a href="?page=<{$end}>&<{$param}>" class="last">&raquo;</a></li>
-					<{/if}>
+					<?php require(VIEW_PATH.'/pictures/page.php'); ?>
 				</ul>
 			</center>
 		</div>
@@ -122,7 +108,6 @@
 					<div class="input-group" style="margin-top:10px;margin-bottom:10px;">
 						<span class="input-group-addon" style="width:10px;">文件名</span>
 						<input type="file" id="file" name="file" onchange="if ($('#file').val() != '') {$('#file_input').val($('#file').val());}" value="" style="display:none"/>
-						<input type="text" id="opt_type" name="opt_type" value="insert" style="display:none"/>
 						<input type="text" id="file_input" class="form-control" style="width:200px;" readonly="readonly" value=""/>
 						<button type="button" class="btn btn-primary" onclick="$('#file').click()" style="float:right; margin-left:10px">浏览</button>
 					</div>
@@ -193,6 +178,12 @@ function change_category (category, id)
 function insert_image()
 {
 	$('#pic_form').submit();
+}
+
+function js_submit(page)
+{
+	$('#page').val(page);
+	$('#picture').submit();
 }
 </script>
 <?php require(VIEW_PATH.'/base/footer.php'); ?>

@@ -1,7 +1,7 @@
 <?php
-function echo_ifset($key)
+function echo_ifset($params, $key)
 {
-	echo isset($params[$key]) ? $params[$key] : '';
+	echo (isset($params[$key]) ? $params[$key] : '');
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

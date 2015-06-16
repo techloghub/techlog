@@ -4,17 +4,9 @@ class PicturesController extends Controller
 	protected $limit = 10;
 	public function listAction($query_params)
 	{
-		#if (!$this->is_root)
-		#{
-		#	header("Location: /index/notfound");
-		#	return;
-		#}
-
-		$page = (isset($query_params[0]) && intval($query_params[0]) > 0)
-			? intval($query_params[0]) : 1;
-
 		$params_key = array(
 			'md5',
+			'page',
 			'path',
 			'category',
 			'end_time',
@@ -22,16 +14,18 @@ class PicturesController extends Controller
 			'start_time',
 		);
 		$request = $this->getParams($_REQUEST, $params_key);
+		$page = intval($request['page']) > 0 ? intval($request['page']) : 1;
+		unset($request['page']);
+
 		$category = $request['category'];
 		if ($request['category'] == 'all')
-			unset($request['category']);
+			$request['category'] = '';
 
 		$where_str = $this->getWhere($request);
 		$sql = 'select count(*) as count from images where 1'
 			.$where_str;
 		$count = MySqlOpt::select_query($sql);
 		$count = $count[0]['count'];
-		#$allcount = intval(($count-1)/$this->limit + 1);
 
 		$start = ($page-1)*$this->limit;
 		$sql = 'select * from images where 1'.$where_str
@@ -49,11 +43,13 @@ class PicturesController extends Controller
 			'count'	=> $count,
 			'infos'	=> $infos,
 			'title'	=> '龙潭相册',
+			'limit'	=> $this->limit,
 			'category'	=> $category,
-			'end_time'	=> $request['end_time'],
-			'start_time'	=> $request['start_time'],
 			'category_list'	=> $category_list,
 		);
+
+		foreach ($request as $key=>$value)
+			$params[$key] = $value;
 
 		$this->display(__METHOD__, $params);
 	}
