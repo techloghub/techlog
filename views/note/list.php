@@ -18,20 +18,20 @@ function drw_earnings()
 }
 </script>
 <br /><br /><br />
-<input type="hidden" id="det_beg_month" class="form-control" value="<?php echo_ifset('det_beg_month') ?>"/>
-<input type="hidden" id="det_end_month" class="form-control" value="<?php echo_ifset('det_end_month') ?>"/>
-<input type="hidden" id="drw_beg_month" class="form-control" value="<?php echo_ifset('drw_beg_month') ?>"/>
-<input type="hidden" id="drw_end_month" class="form-control" value="<?php echo_ifset('drw_end_month') ?>"/>
+<input type="hidden" id="det_beg_month" class="form-control" value="<?php echo_ifset($request, 'det_beg_month') ?>"/>
+<input type="hidden" id="det_end_month" class="form-control" value="<?php echo_ifset($request, 'det_end_month') ?>"/>
+<input type="hidden" id="drw_beg_month" class="form-control" value="<?php echo_ifset($request, 'drw_beg_month') ?>"/>
+<input type="hidden" id="drw_end_month" class="form-control" value="<?php echo_ifset($request, 'drw_end_month') ?>"/>
 <div class="container projects">
 	<div class="row">
 		<?php if ($params['category_id'] == 1): ?>
 			<canvas id="myChart" width="980px" height="300px" class="span12"></canvas>
 			<div class='span12'><br /></div>
 			<div class='span2'>
-				<input type="text" id="beg_month" class="form-control" placeholder="BEG_MONTH" value="<?php echo_ifset('beg_month') ?>"/>
+				<input type="text" id="beg_month" class="form-control" placeholder="BEG_MONTH" value="<?php echo_ifset($request, 'beg_month') ?>"/>
 			</div>
 			<div class='span2'>
-				<input type="text" id="end_month" class="form-control" placeholder="END_MONTH" value="<?php echo_ifset('end_month') ?>"/>
+				<input type="text" id="end_month" class="form-control" placeholder="END_MONTH" value="<?php echo_ifset($request, 'end_month') ?>"/>
 			</div>
 			<div class='span2'>
 				<button type="submit" onclick="get_earnings()" class="btn btn-default">详&nbsp;&nbsp;情</button>&nbsp;&nbsp;
