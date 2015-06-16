@@ -4,11 +4,11 @@ class PicturesController extends Controller
 	protected $limit = 10;
 	public function listAction($query_params)
 	{
-		if (!$this->is_root)
-		{
-			header("Location: /index/notfound");
-			return;
-		}
+		#if (!$this->is_root)
+		#{
+		#	header("Location: /index/notfound");
+		#	return;
+		#}
 
 <<<<<<< HEAD
 		$params_key = array(
@@ -211,6 +211,8 @@ class PicturesController extends Controller
 		$sql = '';
 		foreach ($request as $key => $value)
 		{
+			if (empty($value))
+				continue;
 			if ($key == 'start_time')
 				$sql .= ' and inserttime >= "'.mysql_escape_string($value).'"';
 			else if ($key == 'end_time')
