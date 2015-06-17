@@ -94,7 +94,7 @@
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog" style="margin:300px auto;">
-		<form id="pic_form" action="/html/pictures.php" method="post" enctype="multipart/form-data">
+		<form id="pic_form" action="/pictures/insert" method="post" enctype="multipart/form-data">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>

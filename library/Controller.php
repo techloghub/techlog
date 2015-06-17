@@ -68,12 +68,6 @@ class Controller
 		$func = strtolower($arr['func']);
 		$file = $class.'/'.$func.'.php';
 
-		if ($func == 'notfound')
-		{
-			header('HTTP/1.1 404 Not Found');
-			header("status: 404 Not Found");
-		}
-
 		$params['is_root'] = $this->is_root;
 
 		if (empty($class) || empty($func) || !file_exists(VIEW_PATH.'/'.$file))
