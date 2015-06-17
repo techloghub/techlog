@@ -1,5 +1,6 @@
 <?php
-require_once (dirname(__FILE__).'/../'.'library/zeyublog.php');
+require_once (__DIR__.'/../app/register.php');
+require_once (__DIR__.'/../'.'library/TechlogTools.php');
 
 LogOpt::init('article_creater', true);
 
@@ -28,10 +29,10 @@ $infos = array();
 
 // 获取 contents
 $infos['draft'] = file_get_contents($draft_file);
-$temp_contents = ZeyuBlogOpt::pre_treat_article($infos['draft']);
+$temp_contents = TechlogTools::pre_treat_article($infos['draft']);
 
 // 获取 index
-$indexs = json_encode(ZeyuBlogOpt::get_index($temp_contents));
+$indexs = json_encode(TechlogTools::get_index($temp_contents));
 if ($indexs != null)
 	$infos['indexs'] = $indexs;
 
@@ -64,7 +65,7 @@ while (1)
 	if ($image_id == null)
 	{
 		$full_path = dirname(__FILE__).'/../'.'html/'.$image_path;
-		$image_id = ZeyuBlogOpt::load_image ($full_path, 'article');
+		$image_id = TechlogTools::load_image ($full_path, 'article');
 		if ($image_id == null)
 		{
 			LogOpt::set('exception', '添加图片到数据库失败',
