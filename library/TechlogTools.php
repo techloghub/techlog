@@ -1,7 +1,7 @@
 <?php
-require_once (dirname(__FILE__).'/'.'../library/mysqlopt.php');
-require_once (dirname(__FILE__).'/'.'../library/logopt.php');
-require_once (dirname(__FILE__).'/'.'../library/stringopt.php');
+require_once (LIB_PATH.'/'.'mysqlopt.php');
+require_once (LIB_PATH.'/'.'logopt.php');
+require_once (LIB_PATH.'/'.'stringopt.php');
 
 class TechlogTools
 {
@@ -145,7 +145,7 @@ class TechlogTools
 						$path = $path[0]['path'];
 						if (StringOpt::spider_string($line, 'width="', '"') == null)
 						{
-							$image_info = GetImageSize(dirname(__FILE__).'/../resource/'.$path);
+							$image_info = GetImageSize(WEB_PATH.'/resource/'.$path);
 							$image_info = $image_info['3'];
 							$width = StringOpt::spider_string($image_info, 'width="', '"');
 							$width = intval(trim($width));
@@ -309,25 +309,6 @@ class TechlogTools
 		return $str;
 	}
 
-	public static function getfilepath($file_path)
-	{
-		$file_path = trim($file_path);
-		if ($file_path[0] != '/')
-			$file_path = dirname(__FILE__).'/'.$file_path;
-		$file_path = str_replace('/./', '/', $file_path);
-		while (($current_pos = strpos($file_path, '/../')) !== false)
-		{
-			$current_path = substr($file_path, 0, $current_pos);
-			$last_pos = strrpos($current_path, '/');
-			if ($last_pos === false)
-				return;
-			$last_path = substr($file_path, 0, $last_pos+1);
-			$extra_path = substr($file_path, $current_pos+strlen('/../'));
-			$file_path = $last_path.$extra_path;
-		}
-		return $file_path;
-	}
-
 	/**
 	 * return:
 	 * 		0 : success
@@ -349,7 +330,7 @@ class TechlogTools
 			if (isset($info[0]['path']))
 			{
 				$path = $info[0]['path'];
-				$blog_image = dirname(__FILE__).'/../html/'.$path;
+				$blog_image = WEB_PATH.'/resource/'.$path;
 				unlink($blog_image);
 
 				$ret = copy($file, $blog_image);
