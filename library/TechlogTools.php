@@ -372,7 +372,7 @@ class TechlogTools
 			$format = substr($file, $format);
 			$md5 = md5_file($file);
 			$path = 'images/'.$md5.$format;
-			$blog_image = dirname(__FILE__).'/../html/'.$path;
+			$blog_image = WEB_PATH.'/resource/'.$path;
 
 			$ret = copy($file, $blog_image);
 			if ($ret == false)
