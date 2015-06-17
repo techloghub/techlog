@@ -1,5 +1,5 @@
 <?php
-require_once(dirname(__FILE__) . '/../' . 'resource/require/dbdriver.php');
+require_once(WEB_PATH.'/resource/require/dbdriver.php');
 
 class MySqlOpt
 {
