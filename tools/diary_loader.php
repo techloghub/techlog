@@ -1,5 +1,6 @@
 <?php
-require_once (dirname(__FILE__).'/../'.'library/zeyublog.php');
+require_once (__DIR__.'/../app/register.php');
+require_once (LIB_PATH.'/TechlogTools.php');
 
 ini_set('date.timezone','Asia/Shanghai');
 
@@ -8,14 +9,14 @@ LogOpt::init('diary_loader', true);
 $options = getopt('t:');
 
 $infos = array();
-$draft_file = dirname(__FILE__).'/../'.'draft/draft.tpl';
+$draft_file = DRAFT_PATH.'/draft.tpl';
 if (!file_exists($draft_file))
 {
 	echo '指定日志的草稿不存在'.PHP_EOL;
 	return;
 }
 $infos['draft'] = file_get_contents($draft_file);
-$contents = ZeyuBlogOpt::pre_treat_article ($infos['draft']);
+$contents = TechlogTools::pre_treat_article ($infos['draft']);
 $image_ids = array();
 while (1)
 {
@@ -33,7 +34,7 @@ while (1)
 		break;
 
 	$image_path = trim($image_path);
-	if (!file_exists(dirname(__FILE__).'/../'.'html/'.$image_path))
+	if (!file_exists(WEB_PATH.'/resource/'.$image_path))
 	{
 		LogOpt::set('exception', 'the image does not exist',
 			'image_path', $image_path
@@ -45,8 +46,8 @@ while (1)
 	$image_id = MySqlOpt::select_query($query);
 	if ($image_id == null)
 	{
-		$full_path = dirname(__FILE__).'/../'.'html/'.$image_path;
-		$image_id = ZeyuBlogOpt::load_image($full_path, 'article');
+		$full_path = WEB_PATH.'/resource/'.$image_path;
+		$image_id = TechlogTools::load_image($full_path, 'article');
 		if ($image_id == false)
 		{
 			LogOpt::set('exception', '添加图片到数据库失败',
@@ -69,7 +70,7 @@ if (isset($options['t']))
 $infos['category_id'] = '5';
 
 // 获取 index
-$indexs = json_encode(ZeyuBlogOpt::get_index($contents));
+$indexs = json_encode(TechlogTools::get_index($contents));
 if ($indexs != null)
 	$infos['indexs'] = $indexs;
 
