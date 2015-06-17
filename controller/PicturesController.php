@@ -60,8 +60,11 @@ class PicturesController extends Controller
 		$this->display(__METHOD__, $params);
 	}
 
-	public function insertActionAjax()
+	public function insertAction()
 	{
+		if ($_FILES["file"]["error"] > 0)
+		{
+		}
 	}
 
 	private function getParams ($input, $keys)

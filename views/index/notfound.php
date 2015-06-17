@@ -24,7 +24,7 @@ jAlert
 	'提示',
 	function()
 	{
-		window.location.href="/";
+		window.location.href="<?php echo isset($params['url']) ? $params['url'] : '/' ?>";
 	}
 );
 </script>

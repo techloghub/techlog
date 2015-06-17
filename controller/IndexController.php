@@ -8,6 +8,8 @@ class IndexController extends Controller
 
 	public function notfoundAction($params)
 	{
+		header('HTTP/1.1 404 Not Found');
+		header("status: 404 Not Found");
 		$this->display(__METHOD__, array('msg'=>'您访问的页面不存在'));
 	}
 }
