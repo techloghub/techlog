@@ -1,5 +1,6 @@
 <?php
-require_once (dirname(__FILE__).'/../'.'library/zeyublog.php');
+require_once (__DIR__.'/../app/register.php');
+require_once (LIB_PATH.'/TechlogTools.php');
 LogOpt::init ('earnings_loader', true);
 
 $options = getopt('m:a:i:e:');

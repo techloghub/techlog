@@ -1,6 +1,6 @@
 <?php
 require_once (__DIR__.'/../app/register.php');
-require_once (__DIR__.'/../'.'library/TechlogTools.php');
+require_once (LIB_PATH.'/TechlogTools.php');
 
 LogOpt::init('article_creater', true);
 
@@ -15,9 +15,9 @@ if (!isset($options['t']) || !isset($options['g']) || !isset($options['c']))
 }
 
 if (isset($options['i']))
-	$draft_file = dirname(__FILE__).'/../'.'draft/draft'.$options['i'].'.tpl';
+	$draft_file = DRAFT_PATH.'/draft'.$options['i'].'.tpl';
 else
-	$draft_file = dirname(__FILE__).'/../'.'draft/draft.tpl';
+	$draft_file = DRAFT_PATH.'/draft.tpl';
 
 if (!file_exists($draft_file))
 {
@@ -54,7 +54,7 @@ while (1)
 		break;
 
 	$image_path = trim($image_path);
-	if (!file_exists(dirname(__FILE__).'/'.'../html/'.$image_path))
+	if (!file_exists(WEB_PATH.'/resource/'.$image_path))
 	{
 		echo '文中目标图片不存在'."\t".$image_path.PHP_EOL;
 		return;
@@ -64,7 +64,7 @@ while (1)
 	$image_id = MySqlOpt::select_query($query);
 	if ($image_id == null)
 	{
-		$full_path = dirname(__FILE__).'/../'.'html/'.$image_path;
+		$full_path = WEB_PATH.'/resource/'.$image_path;
 		$image_id = TechlogTools::load_image ($full_path, 'article');
 		if ($image_id == null)
 		{

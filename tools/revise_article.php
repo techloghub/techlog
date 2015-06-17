@@ -1,5 +1,6 @@
 <?php
-require_once (dirname(__FILE__).'/../'.'library/TechlogTools.php');
+require_once (__DIR__.'/../app/register.php');
+require_once (LIB_PATH.'/TechlogTools.php');
 
 LogOpt::init('revise_article', true);
 
@@ -22,7 +23,7 @@ if ($draft == null)
 $title = $draft[0]['title'];
 $draft = $draft[0]['draft'];
 
-$filename = dirname(__FILE__).'/../'.'draft/draft'.$options['i'].'.tpl';
+$filename = DRAFT_PATH.'/draft'.$options['i'].'.tpl';
 
 file_put_contents($filename, $draft);
 
