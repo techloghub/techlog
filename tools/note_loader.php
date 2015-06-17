@@ -1,6 +1,7 @@
 <?php
 //调用方式: php note_loader.php -b bookname -i bookimageid [-d desc]
-require_once (dirname(__FILE__).'/../'.'library/zeyublog.php');
+require_once (__DIR__.'/../app/register.php');
+require_once (LIB_PATH.'/TechlogTools.php');
 LogOpt::init ('note_loader', true);
 
 $options = getopt('b:i:d:');
