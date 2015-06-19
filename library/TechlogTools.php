@@ -143,40 +143,12 @@ class TechlogTools
 					if (isset($path[0]['path']))
 					{
 						$path = $path[0]['path'];
-						if (StringOpt::spider_string($line, 'width="', '"') == null)
-						{
-							$image_info = GetImageSize(WEB_PATH.'/resource/'.$path);
-							$image_info = $image_info['3'];
-							$width = StringOpt::spider_string($image_info, 'width="', '"');
-							$width = intval(trim($width));
-							if ($width > '765')
-							{
-								$line =
-									str_replace(
-										'id="'.$id.'"',
-										'src="'.$path.'" width="765px;"',
-										$line
-									);
-							}
-							else
-							{
-								$line =
-									str_replace(
-										'id="'.$id.'"',
-										'src="'.$path.'"',
-										$line
-									);
-							}
-						}
-						else
-						{
-							$line =
-								str_replace(
-									'id="'.$id.'"',
-									'src="'.$path.'"',
-									$line
-								);
-						}
+						$line =
+							str_replace(
+								'id="'.$id.'"',
+								'src="'.$path.'"',
+								$line
+							);
 					}
 					else
 					{
@@ -187,8 +159,12 @@ class TechlogTools
 				{
 					$path = StringOpt::spider_string($line, 'src="', '"');
 				}
+				$image_info = GetImageSize(WEB_PATH.'/resource/'.$path);
+				$image_info = $image_info['3'];
+				$width = StringOpt::spider_string($image_info, 'width="', '"');
+				$width = intval(trim($width));
 				$contents .= '<p style="text-indent:0em;">'
-					.'<a target="_blank" href="'.$path.'">'
+					.'<a target="_blank" alt="'.$width.'" href="'.$path.'">'
 					.$line.'</a></p><p>&nbsp;</p>';
 			}
 			else if (substr($line, 0, 5) == '<code')
