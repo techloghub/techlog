@@ -106,6 +106,22 @@ function resize()
 			$('#md9').addClass('col-md-9');
 		}
 	}
+
+	if (typeof(CODE_DIVS) != 'undefined')
+	{
+		if (typeof(allId) == 'undefined')
+			var allId = CODE_DIVS;
+		for (var i in allId)
+		{
+			$('#'+allId[i]['id']).css('width', $('.bs-docs-section').width());
+		}
+	}
+
+	$('img').each(function(){
+			if ($(this).width() > $('.bs-docs-section').width())
+				$(this).width($('.bs-docs-section').width());
+		}
+	)
 }
 </script>
 <?php require(VIEW_PATH.'/base/footer.php'); ?>
