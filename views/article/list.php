@@ -78,4 +78,34 @@
 	</div>
 </div>
 <script src="/resource/zeyu_blog/js/article.js"></script>
+<script type="text/javascript">
+window.onresize = function() {
+	resize();
+}
+resize();
+
+function resize()
+{
+	if (document.body.clientWidth < 1190)
+	{
+		if ($('#index').is(":visible"))
+		{
+			$('#index').hide();
+			$('#md3').hide();
+			$('#md9').removeClass('col-md-9');
+			$('#md9').addClass('col-md-12');
+		}
+	}
+	else
+	{
+		if ($('#index').length > 0 && $('#index').is(":hidden"))
+		{
+			$('#index').show();
+			$('#md3').show();
+			$('#md9').removeClass('col-md-12');
+			$('#md9').addClass('col-md-9');
+		}
+	}
+}
+</script>
 <?php require(VIEW_PATH.'/base/footer.php'); ?>

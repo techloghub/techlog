@@ -30,7 +30,7 @@ Dispatcher::getInstance()->dispatch();
 >>>>>>> af7121e... fix bug - 路径错误
 =======
 if (strpos(__DIR__, 'example_techlog') !== false) {
-	#Dispatcher::getInstance('debug')->dispatch();
+	Dispatcher::getInstance('debug')->dispatch();
 } else {
 	Dispatcher::getInstance()->dispatch();
 }
