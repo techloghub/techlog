@@ -19,9 +19,10 @@
 <br/>
 <div class="container_wrapper">
 	<div class="container bs-docs-container" style="margin-bottom:80px;">
-	<?php if(!empty($params['contents'])): ?>
+		<?php if(!empty($params['contents'])): ?>
 		<div class="row">
 			<?php if(!empty($params['indexs'])): ?>
+			<div id="index">
 			<script src="/resource/stickUp-master/stickUp.min.js"></script>
 			<style>
 				.isStuck
@@ -50,13 +51,15 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-md-3"></div>
-			<div class="col-md-9" role="main">
-				<?php else: ?>
-				<div class="col-md-12" role="main">
-				<?php endif ?>
+		</div>
+		<div id="md3" style="display:block" class="col-md-3"></div>
+		<div id="md9" class="col-md-9" role="main">
+		<?php else: ?>
+		<div id="md3" style="display:none" class="col-md-3"></div>
+		<div id="md9" class="col-md-12" role="main">
+			<?php endif ?>
 					<div class="bs-docs-section">
-					<?php echo $params['contents'] ?>
+						<?php echo $params['contents'] ?>
 						<?php if(!in_array($params['article_category_id'], array(2, 5, 6))): ?>
 						<br /><br /><br /><br /><br />
 						<div class="page-header">
@@ -75,4 +78,34 @@
 	</div>
 </div>
 <script src="/resource/zeyu_blog/js/article.js"></script>
+<script type="text/javascript">
+window.onresize = function() {
+	resize();
+}
+resize();
+
+function resize()
+{
+	if (document.body.clientWidth < 1190)
+	{
+		if ($('#index').is(":visible"))
+		{
+			$('#index').hide();
+			$('#md3').hide();
+			$('#md9').removeClass('col-md-9');
+			$('#md9').addClass('col-md-12');
+		}
+	}
+	else
+	{
+		if ($('#index').length > 0 && $('#index').is(":hidden"))
+		{
+			$('#index').show();
+			$('#md3').show();
+			$('#md9').removeClass('col-md-12');
+			$('#md9').addClass('col-md-9');
+		}
+	}
+}
+</script>
 <?php require(VIEW_PATH.'/base/footer.php'); ?>
