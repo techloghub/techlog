@@ -46,7 +46,7 @@ class ArticleController extends Controller
 			'article_category_id'	=> 3,
 		);
 		if (count($index) > 0)
-			$params['index'] = $index;
+			$params['indexs'] = $index;
 
 		$this->display(__CLASS__.'::listAction', $params);
 	}
