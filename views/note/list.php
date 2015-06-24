@@ -60,8 +60,8 @@ function drw_earnings()
 		<?php } ?>
 	</div>
 </div>
-<script src="../resource/Chart.js-master/Chart.min.js"></script>
-<script src="../resource/zeyu_blog/js/chart.js" type="text/javascript" charset="utf-8"></script>
+<script src="/resource/Chart.js-master/Chart.min.js"></script>
+<script src="/resource/zeyu_blog/js/chart.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" language="javascript">
 var data =
 {
