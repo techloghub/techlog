@@ -96,6 +96,7 @@ class ArticleController extends Controller
 			.$article_info['updatetime']
 			.'&nbsp;&nbsp;&nbsp;访问数量：'
 			.($article_info['access_count']+1);
+		
 		return $params;
 	}
 }
