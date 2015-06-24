@@ -53,8 +53,8 @@
 		<div class='span12'><br /><br /></div>
 	</div>
 </div>
-<script src="../resource/Chart.js-master/Chart.min.js"></script>
-<script src="../resource/zeyu_blog/js/chart.js" type="text/javascript" charset="utf-8"></script>
+<script src="/resource/Chart.js-master/Chart.min.js"></script>
+<script src="/resource/zeyu_blog/js/chart.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" language="javascript">
 var category_data = <?php echo $params['category_data'] ?>;
 
