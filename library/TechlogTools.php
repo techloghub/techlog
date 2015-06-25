@@ -143,12 +143,49 @@ class TechlogTools
 					if (isset($path[0]['path']))
 					{
 						$path = $path[0]['path'];
+<<<<<<< HEAD
 						$line =
 							str_replace(
 								'id="'.$id.'"',
 								'src="'.$path.'"',
 								$line
 							);
+=======
+						if (StringOpt::spider_string($line, 'width="', '"') == null)
+						{
+							$image_info = GetImageSize(WEB_PATH.'/resource/'.$path);
+							$image_info = $image_info['3'];
+							$width = StringOpt::spider_string($image_info, 'width="', '"');
+							$width = intval(trim($width));
+							if ($width > '765')
+							{
+								$line =
+									str_replace(
+										'id="'.$id.'"',
+										'src="'.$path.'" width="765px;"',
+										$line
+									);
+							}
+							else
+							{
+								$line =
+									str_replace(
+										'id="'.$id.'"',
+										'src="'.$path.'"',
+										$line
+									);
+							}
+						}
+						else
+						{
+							$line =
+								str_replace(
+									'id="'.$id.'"',
+									'src="'.$path.'"',
+									$line
+								);
+						}
+>>>>>>> 349ee81... fix bug - 路径错误
 					}
 					else
 					{
