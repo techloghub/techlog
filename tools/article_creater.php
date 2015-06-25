@@ -1,10 +1,14 @@
 <?php
 require_once (__DIR__.'/../app/register.php');
 <<<<<<< HEAD
+<<<<<<< HEAD
 require_once (LIB_PATH.'/TechlogTools.php');
 =======
 require_once (__DIR__.'/../'.'library/TechlogTools.php');
 >>>>>>> b5c8fa3... fix bug - 宏定义格式错误，更新 article tools
+=======
+require_once (LIB_PATH.'/TechlogTools.php');
+>>>>>>> 91ed12f... 工具修改到新版
 
 LogOpt::init('article_creater', true);
 
@@ -69,10 +73,14 @@ while (1)
 	if ($image_id == null)
 	{
 <<<<<<< HEAD
+<<<<<<< HEAD
 		$full_path = WEB_PATH.'/resource/'.$image_path;
 =======
 		$full_path = dirname(__FILE__).'/../'.'html/'.$image_path;
 >>>>>>> b5c8fa3... fix bug - 宏定义格式错误，更新 article tools
+=======
+		$full_path = WEB_PATH.'/resource/'.$image_path;
+>>>>>>> 91ed12f... 工具修改到新版
 		$image_id = TechlogTools::load_image ($full_path, 'article');
 		if ($image_id == null)
 		{
