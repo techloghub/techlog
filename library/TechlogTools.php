@@ -144,12 +144,16 @@ class TechlogTools
 					{
 						$path = $path[0]['path'];
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 2b86814... 小屏幕适配，图片大小随屏幕大小、窗口大小变化
 						$line =
 							str_replace(
 								'id="'.$id.'"',
 								'src="'.$path.'"',
 								$line
 							);
+<<<<<<< HEAD
 =======
 						if (StringOpt::spider_string($line, 'width="', '"') == null)
 						{
@@ -186,6 +190,8 @@ class TechlogTools
 								);
 						}
 >>>>>>> 349ee81... fix bug - 路径错误
+=======
+>>>>>>> 2b86814... 小屏幕适配，图片大小随屏幕大小、窗口大小变化
 					}
 					else
 					{
