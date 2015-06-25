@@ -47,10 +47,14 @@ class ArticleController extends Controller
 		);
 		if (count($index) > 0)
 <<<<<<< HEAD
+<<<<<<< HEAD
 			$params['indexs'] = $index;
 =======
 			$params['index'] = $index;
 >>>>>>> e3a3b6d... 测试页面
+=======
+			$params['indexs'] = $index;
+>>>>>>> 8aa488a... fix bug - 草稿页面不显示侧边栏
 
 		$this->display(__CLASS__.'::listAction', $params);
 	}
