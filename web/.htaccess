@@ -7,8 +7,12 @@
 
     RewriteCond %{REQUEST_FILENAME} !-f
 <<<<<<< HEAD:web/.htaccess
+<<<<<<< HEAD:web/.htaccess
     RewriteRule ^(.*)$ app.php [QSA,L]
 =======
     RewriteRule ^(.*)$ web/app.php [QSA,L]
 >>>>>>> 3374d6f... 切换目录:.htaccess
+=======
+    RewriteRule ^(.*)$ app.php [QSA,L]
+>>>>>>> 737b5e9... 更改根目录地址，提高安全性:.htaccess
 </IfModule>
