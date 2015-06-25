@@ -139,6 +139,7 @@ class PicturesController extends Controller
 
 	public function insertAction()
 	{
+<<<<<<< HEAD
 		if (!$this->is_root)
 		{
 			header("Location: /index/notfound");
@@ -228,6 +229,11 @@ class PicturesController extends Controller
 				$sql .= ' and '.$key.'="'.mysql_escape_string($value).'"';
 		}
 		return $sql;
+=======
+		if ($_FILES["file"]["error"] > 0)
+		{
+		}
+>>>>>>> a329e90... 警告页面优化，图片管理页面权限
 	}
 
 	private function getParams ($input, $keys)
