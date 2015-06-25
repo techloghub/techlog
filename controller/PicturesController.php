@@ -28,6 +28,7 @@ class PicturesController extends Controller
 			'start_time',
 		);
 <<<<<<< HEAD
+<<<<<<< HEAD
 		$request = $this->getParams($_REQUEST, $params_key);
 		$page = intval($request['page']) > 0 ? intval($request['page']) : 1;
 		unset($request['page']);
@@ -37,13 +38,19 @@ class PicturesController extends Controller
 			$request['category'] = '';
 =======
 		$request = getParams($_REQUEST, $params_key);
+=======
+		$request = $this->getParams($_REQUEST, $params_key);
+>>>>>>> 47b1ce8... 图片管理页面
 		$category = $request['category'];
 		if ($request['category'] == 'all')
 			unset($request['category']);
 
+<<<<<<< HEAD
 		$start = ($page-1)*$this->limit;
 >>>>>>> 3374d6f... 切换目录
 
+=======
+>>>>>>> 47b1ce8... 图片管理页面
 		$where_str = $this->getWhere($request);
 		$sql = 'select count(*) as count from images where 1'
 			.$where_str;
@@ -57,9 +64,14 @@ class PicturesController extends Controller
 =======
 		#$allcount = intval(($count-1)/$this->limit + 1);
 
+		$start = ($page-1)*$this->limit;
 		$sql = 'select * from images where 1'.$where_str
+<<<<<<< HEAD
 			.' limit '.$start.', '.$limit;
 >>>>>>> 3374d6f... 切换目录
+=======
+			.' limit '.$start.', '.$this->limit;
+>>>>>>> 47b1ce8... 图片管理页面
 		$infos = MySqlOpt::select_query($sql);
 
 		$sql = 'select category from images group by category';
@@ -190,10 +202,7 @@ class PicturesController extends Controller
 	{
 		$params = array();
 		foreach ($keys as $key)
-		{
-			if (isset($input[$key]) && $input[$key] != '')
-				$params[$key] = $input[$key];
-		}
+			$params[$key] = isset($input[$key]) ? $input[$key] : '';
 		return $params;
 	}
 
