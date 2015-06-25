@@ -5,6 +5,7 @@ class PicturesController extends Controller
 	public function listAction($query_params)
 	{
 <<<<<<< HEAD
+<<<<<<< HEAD
 		#if (!$this->is_root)
 		#{
 		#	header("Location: /index/notfound");
@@ -12,6 +13,14 @@ class PicturesController extends Controller
 		#}
 
 <<<<<<< HEAD
+=======
+		if (!$this->is_root)
+		{
+			header("Location: /index/notfound");
+			return;
+		}
+
+>>>>>>> bf9fbf1... 权限限制
 		$params_key = array(
 			'md5',
 			'page',
