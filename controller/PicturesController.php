@@ -4,6 +4,7 @@ class PicturesController extends Controller
 	protected $limit = 10;
 	public function listAction($query_params)
 	{
+<<<<<<< HEAD
 		#if (!$this->is_root)
 		#{
 		#	header("Location: /index/notfound");
@@ -21,6 +22,11 @@ class PicturesController extends Controller
 		$params_key = array(
 			'md5',
 >>>>>>> 3374d6f... 切换目录
+=======
+		$params_key = array(
+			'md5',
+			'page',
+>>>>>>> 6e66b00... 图片管理页面展示完成
 			'path',
 			'category',
 			'end_time',
@@ -40,10 +46,16 @@ class PicturesController extends Controller
 		$request = getParams($_REQUEST, $params_key);
 =======
 		$request = $this->getParams($_REQUEST, $params_key);
+<<<<<<< HEAD
 >>>>>>> 47b1ce8... 图片管理页面
+=======
+		$page = intval($request['page']) > 0 ? intval($request['page']) : 1;
+		unset($request['page']);
+
+>>>>>>> 6e66b00... 图片管理页面展示完成
 		$category = $request['category'];
 		if ($request['category'] == 'all')
-			unset($request['category']);
+			$request['category'] = '';
 
 <<<<<<< HEAD
 		$start = ($page-1)*$this->limit;
@@ -57,12 +69,15 @@ class PicturesController extends Controller
 		$count = MySqlOpt::select_query($sql);
 		$count = $count[0]['count'];
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 		$start = ($page-1)*$this->limit;
 		$sql = 'select * from images where 1'.$where_str
 			.' limit '.$start.', '.$this->limit;
 =======
 		#$allcount = intval(($count-1)/$this->limit + 1);
+=======
+>>>>>>> 6e66b00... 图片管理页面展示完成
 
 		$start = ($page-1)*$this->limit;
 		$sql = 'select * from images where 1'.$where_str
@@ -86,6 +101,7 @@ class PicturesController extends Controller
 			'infos'	=> $infos,
 			'title'	=> '龙潭相册',
 <<<<<<< HEAD
+<<<<<<< HEAD
 			'limit'	=> $this->limit,
 			'category'	=> $category,
 			'category_list'	=> $category_list,
@@ -95,13 +111,20 @@ class PicturesController extends Controller
 			$params[$key] = $value;
 
 =======
+=======
+			'limit'	=> $this->limit,
+>>>>>>> 6e66b00... 图片管理页面展示完成
 			'category'	=> $category,
-			'end_time'	=> $request['end_time'],
-			'start_time'	=> $request['start_time'],
 			'category_list'	=> $category_list,
 		);
 
+<<<<<<< HEAD
 >>>>>>> 3374d6f... 切换目录
+=======
+		foreach ($request as $key=>$value)
+			$params[$key] = $value;
+
+>>>>>>> 6e66b00... 图片管理页面展示完成
 		$this->display(__METHOD__, $params);
 	}
 
