@@ -10,15 +10,24 @@ class PicturesController extends Controller
 			return;
 		}
 
+<<<<<<< HEAD
 		$params_key = array(
 			'md5',
 			'page',
+=======
+		$page = (isset($query_params[0]) && intval($query_params[0]) > 0)
+			? intval($query_params[0]) : 1;
+
+		$params_key = array(
+			'md5',
+>>>>>>> 3374d6f... 切换目录
 			'path',
 			'category',
 			'end_time',
 			'image_id',
 			'start_time',
 		);
+<<<<<<< HEAD
 		$request = $this->getParams($_REQUEST, $params_key);
 		$page = intval($request['page']) > 0 ? intval($request['page']) : 1;
 		unset($request['page']);
@@ -26,16 +35,31 @@ class PicturesController extends Controller
 		$category = $request['category'];
 		if ($request['category'] == 'all')
 			$request['category'] = '';
+=======
+		$request = getParams($_REQUEST, $params_key);
+		$category = $request['category'];
+		if ($request['category'] == 'all')
+			unset($request['category']);
+
+		$start = ($page-1)*$this->limit;
+>>>>>>> 3374d6f... 切换目录
 
 		$where_str = $this->getWhere($request);
 		$sql = 'select count(*) as count from images where 1'
 			.$where_str;
 		$count = MySqlOpt::select_query($sql);
 		$count = $count[0]['count'];
+<<<<<<< HEAD
 
 		$start = ($page-1)*$this->limit;
 		$sql = 'select * from images where 1'.$where_str
 			.' limit '.$start.', '.$this->limit;
+=======
+		#$allcount = intval(($count-1)/$this->limit + 1);
+
+		$sql = 'select * from images where 1'.$where_str
+			.' limit '.$start.', '.$limit;
+>>>>>>> 3374d6f... 切换目录
 		$infos = MySqlOpt::select_query($sql);
 
 		$sql = 'select category from images group by category';
@@ -49,6 +73,7 @@ class PicturesController extends Controller
 			'count'	=> $count,
 			'infos'	=> $infos,
 			'title'	=> '龙潭相册',
+<<<<<<< HEAD
 			'limit'	=> $this->limit,
 			'category'	=> $category,
 			'category_list'	=> $category_list,
@@ -57,6 +82,14 @@ class PicturesController extends Controller
 		foreach ($request as $key=>$value)
 			$params[$key] = $value;
 
+=======
+			'category'	=> $category,
+			'end_time'	=> $request['end_time'],
+			'start_time'	=> $request['start_time'],
+			'category_list'	=> $category_list,
+		);
+
+>>>>>>> 3374d6f... 切换目录
 		$this->display(__METHOD__, $params);
 	}
 
@@ -143,6 +176,32 @@ class PicturesController extends Controller
 		{
 			if (empty($value))
 				continue;
+			if ($key == 'start_time')
+				$sql .= ' and inserttime >= "'.mysql_escape_string($value).'"';
+			else if ($key == 'end_time')
+				$sql .= ' and inserttime <= "'.mysql_escape_string($value).'"';
+			else
+				$sql .= ' and '.$key.'="'.mysql_escape_string($value).'"';
+		}
+		return $sql;
+	}
+
+	private function getParams ($input, $keys)
+	{
+		$params = array();
+		foreach ($keys as $key)
+		{
+			if (isset($input[$key]) && $input[$key] != '')
+				$params[$key] = $input[$key];
+		}
+		return $params;
+	}
+
+	private function getWhere($request)
+	{
+		$sql = '';
+		foreach ($request as $key => $value)
+		{
 			if ($key == 'start_time')
 				$sql .= ' and inserttime >= "'.mysql_escape_string($value).'"';
 			else if ($key == 'end_time')
