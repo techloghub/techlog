@@ -1,49 +1,32 @@
 <?php
 require_once (__DIR__.'/../app/register.php');
-<<<<<<< HEAD
-<<<<<<< HEAD
 require_once (LIB_PATH.'/TechlogTools.php');
-=======
-require_once (__DIR__.'/../'.'library/TechlogTools.php');
->>>>>>> b5c8fa3... fix bug - 宏定义格式错误，更新 article tools
-=======
-require_once (LIB_PATH.'/TechlogTools.php');
->>>>>>> 91ed12f... 工具修改到新版
-
 LogOpt::init('article_creater', true);
-
 $options = getopt('i:t:g:c:d:a:');
 if (!isset($options['t']) || !isset($options['g']) || !isset($options['c']))
 {
 	echo 'usage: php article_creater.php'
 		.' [-a inserttime] [-i article_id] -t title'
 		.' [-d title_desc] -g tags -c category'.PHP_EOL;
-
 	return;
 }
-
 if (isset($options['i']))
 	$draft_file = DRAFT_PATH.'/draft'.$options['i'].'.tpl';
 else
 	$draft_file = DRAFT_PATH.'/draft.tpl';
-
 if (!file_exists($draft_file))
 {
 	echo '指定日志的草稿不存在'.PHP_EOL;
 	return;
 }
-
 $infos = array();
-
 // 获取 contents
 $infos['draft'] = file_get_contents($draft_file);
 $temp_contents = TechlogTools::pre_treat_article($infos['draft']);
-
 // 获取 index
 $indexs = json_encode(TechlogTools::get_index($temp_contents));
 if ($indexs != null)
 	$infos['indexs'] = $indexs;
-
 // 获取 images
 $image_ids = array();
 while (1)
@@ -54,33 +37,22 @@ while (1)
 		'"',
 		$temp_contents
 	);
-
 	if ($image_path === null
 		|| $image_path === false
 		|| trim($image_path) == ''
 	)
 		break;
-
 	$image_path = trim($image_path);
 	if (!file_exists(WEB_PATH.'/resource/'.$image_path))
 	{
 		echo '文中目标图片不存在'."\t".$image_path.PHP_EOL;
 		return;
 	}
-
 	$query = 'select image_id from images where path="'.$image_path.'"';
 	$image_id = MySqlOpt::select_query($query);
 	if ($image_id == null)
 	{
-<<<<<<< HEAD
-<<<<<<< HEAD
 		$full_path = WEB_PATH.'/resource/'.$image_path;
-=======
-		$full_path = dirname(__FILE__).'/../'.'html/'.$image_path;
->>>>>>> b5c8fa3... fix bug - 宏定义格式错误，更新 article tools
-=======
-		$full_path = WEB_PATH.'/resource/'.$image_path;
->>>>>>> 91ed12f... 工具修改到新版
 		$image_id = TechlogTools::load_image ($full_path, 'article');
 		if ($image_id == null)
 		{
@@ -88,18 +60,15 @@ while (1)
 				'image_path', $image_path,
 				MySqlOpt::errno(), MySqlOpt::error()
 			);
-
 			return;
 		}
 		LogOpt::set('info', '添加图片到数据库成功',
 			'image_id', $image_id,
 			'image_path', $image_path
 		);
-
 		$image_ids[] = $image_id;
 	}
 }
-
 // 获取 category_id
 $query = 'select category_id from category where category="'.$options['c'].'"';
 $category_info = MySqlOpt::select_query($query);
@@ -109,19 +78,16 @@ if ($category_info == null)
 	return;
 }
 $infos['category_id'] = $category_info[0]['category_id'];
-
 // 获取 title、title_desc、updatetime
 $infos['title'] = $options['t'];
 if (isset($options['d']))
 	$infos['title_desc'] = $options['d'];
 $infos['updatetime'] = 'now()';
-
 // 设置inserttime
 if (isset($options['a']))
 {
 	$infos['inserttime'] = $options['a'];
 }
-
 // 插入日志
 if (isset($options['i']))
 {
@@ -130,14 +96,12 @@ if (isset($options['i']))
 		$infos,
 		array('article_id'=>$options['i'])
 	);
-
 	if ($ret == null)
 	{
 		LogOpt::set ('exception', '日志更新失败',
 			'article_id', $options['i'],
 			MySqlOpt::errno(), MySqlOpt::error()
 		);
-
 		return;
 	}
 	$article_id = $options['i'];
@@ -150,18 +114,14 @@ else
 		LogOpt::set ('exception', '日志插入失败',
 			MySqlOpt::errno().':'.MySqlOpt::error()
 		);
-
 		return;
 	}
 }
-
 LogOpt::set ('info', '日志插入成功',
 	'article_id', $article_id,
 	'title', $options['t']
 );
-
 unlink($draft_file);
-
 // 添加 article 并获取新加 article_id 后需要更新为 tags 表对应项
 $tags = explode(',', $options['g']);
 if ($tags == null)
@@ -184,13 +144,11 @@ foreach ($tags as $tag)
 			LogOpt::set ('exception', 'tag 添加失败',
 				MySqlOpt::errno(), MySqlOpt::error()
 			);
-
 			continue;
 		}
 	}
 	else
 		$tag_id = $tag_infos[0]['tag_id'];
-
 	$params = array();
 	$params['article_id'] = $article_id;
 	$params['tag_id'] = $tag_id;
@@ -202,10 +160,8 @@ foreach ($tags as $tag)
 			'tag_id', $tag_id,
 			MySqlOpt::errno(), MySqlOpt::error()
 		);
-
 		continue;
 	}
-
 	LogOpt::set ('info', 'article_tag_relation 更新成功',
 		'relation_id', $relation_id
 	);

@@ -2,7 +2,6 @@
 require_once (LIB_PATH.'/'.'mysqlopt.php');
 require_once (LIB_PATH.'/'.'logopt.php');
 require_once (LIB_PATH.'/'.'stringopt.php');
-
 class TechlogTools
 {
 	public static function pre_treat_article ($file)
@@ -149,41 +148,6 @@ class TechlogTools
 								'src="'.$path.'"',
 								$line
 							);
-
-						if (StringOpt::spider_string($line, 'width="', '"') == null)
-						{
-							$image_info = GetImageSize(WEB_PATH.'/resource/'.$path);
-							$image_info = $image_info['3'];
-							$width = StringOpt::spider_string($image_info, 'width="', '"');
-							$width = intval(trim($width));
-							if ($width > '765')
-							{
-								$line =
-									str_replace(
-										'id="'.$id.'"',
-										'src="'.$path.'" width="765px;"',
-										$line
-									);
-							}
-							else
-							{
-								$line =
-									str_replace(
-										'id="'.$id.'"',
-										'src="'.$path.'"',
-										$line
-									);
-							}
-						}
-						else
-						{
-							$line =
-								str_replace(
-									'id="'.$id.'"',
-									'src="'.$path.'"',
-									$line
-								);
-						}
 					}
 					else
 					{
@@ -218,10 +182,8 @@ class TechlogTools
 					if ($index >= count($lines))
 						break;
 					$line = $lines[$index];
-
 					if (trim($line) === '</code>')
 						break;
-
 					$code_wrap = 0;
 					for ($idx = 0; $idx < strlen($line); ++$idx )
 					{
@@ -243,12 +205,9 @@ class TechlogTools
 						}
 						$code_wrap++;
 					}
-
 					$code_line += floor($code_wrap / 80) + 1;
-
 					$code .= self::str_trans($line, false).PHP_EOL;
 				}
-
 				if ($is_php)
 				{
 					$code = '&lt;?php'.PHP_EOL.$code.'?&gt;';
@@ -257,14 +216,12 @@ class TechlogTools
 				
 				if ($code_line > 30)
 					$code_line = 30;
-
 				$contents .= '<div id="editor_'.$code_id.'"'
 					.' style="position: relative;'
 					.' width: 765px;'
 					.' height: '.$code_line.'px">'
 					.trim($code)
 					.'</div><p>&nbsp;</p>';
-
 				$codes[] = array('id'=>'editor_'.$code_id++, 'mode'=>$mode);
 				continue;
 			}
@@ -289,11 +246,9 @@ class TechlogTools
 						.$line
 						.'</span>';
 				}
-
 				$contents .= '<p>'.$line.'</p>';
 			}
 		}
-
 		if (!empty($codes))
 		{
 			$js_arr = array();
@@ -305,10 +260,8 @@ class TechlogTools
 			$contents .= implode(',', $js_arr);
 			$contents .= '];</script>';
 		}
-
 		return $contents;
 	}
-
 	private static function str_trans($str, $nbsp = true)
 	{
 		$str = str_replace('&', '&amp;', $str);
@@ -319,7 +272,6 @@ class TechlogTools
 			$str = str_replace(' ', '&nbsp;', $str);
 		return $str;
 	}
-
 	/**
 	 * return:
 	 * 		0 : success
@@ -343,11 +295,9 @@ class TechlogTools
 				$path = $info[0]['path'];
 				$blog_image = WEB_PATH.'/resource/'.$path;
 				unlink($blog_image);
-
 				$ret = copy($file, $blog_image);
 				if ($ret == false)
 					return -2;
-
 				MySqlOpt::update(
 					'images',
 					array('md5'=>md5_file($blog_image),
@@ -365,7 +315,6 @@ class TechlogTools
 			$md5 = md5_file($file);
 			$path = 'images/'.$md5.$format;
 			$blog_image = WEB_PATH.'/resource/'.$path;
-
 			$ret = copy($file, $blog_image);
 			if ($ret == false)
 				return -5;
@@ -386,7 +335,6 @@ class TechlogTools
 		rename($file, '/home/zeyu/Documents/'.$path);
 		return $id;
 	}
-
 	public static function load_image ($path, $category='')
 	{
 		$file_path = self::getfilepath($path);
@@ -419,7 +367,6 @@ class TechlogTools
 		}
 		return $ret;
 	}
-
 	public static function get_index ($html_str)
 	{
 		$str = $html_str;
@@ -436,11 +383,9 @@ class TechlogTools
 			{
 				return false;
 			}
-
 			$key = StringOpt::spider_string($key, 'class="page-header"<![&&]>id="', '"', $value);
 			if ($key === null)
 				continue;
-
 			$value = StringOpt::spider_string($value, '>', '<');
 			if ($value === null)
 			{
@@ -450,12 +395,10 @@ class TechlogTools
 			{
 				return false;
 			}
-
 			$index[$key] = $value;
 		}
 		return $index;
 	}
-
 	public static function get_tags ($article_id)
 	{
 		$sql = 'select C.* from article as A, article_tag_relation as B, tags as C where A.article_id = B.article_id and B.tag_id = C.tag_id and A.article_id = '.intval($article_id);
