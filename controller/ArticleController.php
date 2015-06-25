@@ -46,7 +46,11 @@ class ArticleController extends Controller
 			'article_category_id'	=> 3,
 		);
 		if (count($index) > 0)
+<<<<<<< HEAD
 			$params['indexs'] = $index;
+=======
+			$params['index'] = $index;
+>>>>>>> e3a3b6d... 测试页面
 
 		$this->display(__CLASS__.'::listAction', $params);
 	}
