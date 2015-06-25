@@ -3,6 +3,7 @@ ini_set('date.timezone','Asia/Shanghai');
 require_once(__DIR__.'/../app/Dispatcher.php');
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 if (strpos(__DIR__, 'example_techlog') !== false) {
 	Dispatcher::getInstance('debug')->dispatch();
 } else {
@@ -11,4 +12,7 @@ if (strpos(__DIR__, 'example_techlog') !== false) {
 =======
 Dispatcher::getInstance()->dispatch();
 >>>>>>> d627a3a... 目录切换
+=======
+#Dispatcher::getInstance('debug')->dispatch();
+>>>>>>> 1976c14... 目录调整，提高安全性
 ?>
