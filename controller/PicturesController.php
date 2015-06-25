@@ -140,6 +140,9 @@ class PicturesController extends Controller
 	public function insertAction()
 	{
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> df0fcef... 完成图片管理页面，测试成功，fix bug
 		if (!$this->is_root)
 		{
 			header("Location: /index/notfound");
@@ -147,6 +150,7 @@ class PicturesController extends Controller
 		}
 
 		$url = '/pictures';
+<<<<<<< HEAD
 		if ($_FILES["file"]["error"] > 0)
 		{
 			$this->display('IndexController::notfoundAction', array(
@@ -230,10 +234,69 @@ class PicturesController extends Controller
 		}
 		return $sql;
 =======
+=======
+>>>>>>> df0fcef... 完成图片管理页面，测试成功，fix bug
 		if ($_FILES["file"]["error"] > 0)
 		{
+			$this->display('IndexController::notfoundAction', array(
+					'msg'	=> 'Error: '.$_FILES["file"]["error"],
+					'url'	=> $url,
+				)
+			);
 		}
+
+		$params_key = array('insert_id', 'insert_category');
+		$request = $this->getParams($_REQUEST, $params_key);
+		$request['insert_id'] = intval($request['insert_id']) >= 0
+			? intval($request['insert_id']) : null;
+		$request['name'] = trim($_FILES["file"]["name"]);
+		$file = '/home/zeyu/Documents/images/'.$request['name'];
+		$ret = copy($_FILES["file"]["tmp_name"], $file);
+		if ($ret == false)
+		{
+			$this->display('IndexController::notfoundAction', array(
+					'msg'	=> '临时文件不存在',
+					'url'	=> $url,
+				)
+			);
+		}
+
+		$ret = TechlogTools::picture_insert(
+			$request['name'],
+			$request['insert_category'],
+			$request['insert_id']
+		);
+
+		switch ($ret)
+		{
+		case -1:
+			$message = '源文件不存在';
+			break;
+		case -2:
+			$message = '文件替换失败，请查看权限';
+			break;
+		case -3:
+			$message = '目录创建失败，请查看权限';
+			break;
+		case -4:
+			$message = '指定被替换文件 ID 不存在';
+			break;
+		case -5:
+			$message = '文件添加失败，请查看权限';
+			break;
+		default:
+			$message = '文件添加成功';
+			$url .= '?image_id='.$ret;
+		}
+<<<<<<< HEAD
 >>>>>>> a329e90... 警告页面优化，图片管理页面权限
+=======
+		$this->display('IndexController::notfoundAction', array(
+				'msg'	=> $message,
+				'url'	=> $url,
+			)
+		);
+>>>>>>> df0fcef... 完成图片管理页面，测试成功，fix bug
 	}
 
 	private function getParams ($input, $keys)
