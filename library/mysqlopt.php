@@ -1,13 +1,5 @@
 <?php
-<<<<<<< HEAD
-<<<<<<< HEAD
 require_once(WEB_PATH.'/resource/require/dbdriver.php');
-=======
-require_once(WEB_PATH.'resource/require/dbdriver.php');
->>>>>>> ed1c3c5... fix bug - 路径错误
-=======
-require_once(WEB_PATH.'/resource/require/dbdriver.php');
->>>>>>> af7121e... fix bug - 路径错误
 
 class MySqlOpt
 {

@@ -46,15 +46,7 @@ class ArticleController extends Controller
 			'article_category_id'	=> 3,
 		);
 		if (count($index) > 0)
-<<<<<<< HEAD
-<<<<<<< HEAD
 			$params['indexs'] = $index;
-=======
-			$params['index'] = $index;
->>>>>>> e3a3b6d... 测试页面
-=======
-			$params['indexs'] = $index;
->>>>>>> 8aa488a... fix bug - 草稿页面不显示侧边栏
 
 		$this->display(__CLASS__.'::listAction', $params);
 	}
@@ -104,14 +96,7 @@ class ArticleController extends Controller
 			.$article_info['updatetime']
 			.'&nbsp;&nbsp;&nbsp;访问数量：'
 			.($article_info['access_count']+1);
-<<<<<<< HEAD
-<<<<<<< HEAD
-		
-=======
->>>>>>> fe1d2f1... 测试amend
-=======
-		
->>>>>>> 347b459... 测试amend
+
 		return $params;
 	}
 }
