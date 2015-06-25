@@ -6,6 +6,7 @@ require_once(__DIR__.'/../app/Dispatcher.php');
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 if (strpos(__DIR__, 'example_techlog') !== false) {
 	Dispatcher::getInstance('debug')->dispatch();
 } else {
@@ -23,4 +24,7 @@ Dispatcher::getInstance()->dispatch();
 =======
 #Dispatcher::getInstance('debug')->dispatch();
 >>>>>>> ed1c3c5... fix bug - 路径错误
+=======
+Dispatcher::getInstance()->dispatch();
+>>>>>>> af7121e... fix bug - 路径错误
 ?>
