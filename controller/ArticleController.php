@@ -105,9 +105,13 @@ class ArticleController extends Controller
 			.'&nbsp;&nbsp;&nbsp;访问数量：'
 			.($article_info['access_count']+1);
 <<<<<<< HEAD
+<<<<<<< HEAD
 		
 =======
 >>>>>>> fe1d2f1... 测试amend
+=======
+		
+>>>>>>> 347b459... 测试amend
 		return $params;
 	}
 }
