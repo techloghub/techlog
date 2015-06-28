@@ -134,6 +134,7 @@ class DebinController extends Controller
 		$count_sql = 'select count(*) as count from article where 1'
 			.$where_str;
 		$article_sql = 'select * from article where 1'.$where_str
+			.' order by inserttime desc'
 			.' limit '.$request['start'].', '.$this->limit;
 		$count = MySqlOpt::select_query($count_sql);
 		$article_infos = MySqlOpt::select_query($article_sql);
