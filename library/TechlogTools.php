@@ -237,6 +237,16 @@ class TechlogTools
 					.self::str_trans(substr($line, 4))
 					.'</h3></p>';
 			}
+			else if (substr($line, 0, 2) == '<a')
+			{
+				$id = StringOpt::spider_string($line, 'id="', '"');
+				$sql = 'select title from article where article_id = '.intval($id);
+				$title = MySqlOpt::select_query($sql);
+				$title = empty($title[0]) ?
+					'ERROR：加载失败' : $title[0]['title'];
+				$contents .= '<p><a target="_blank" href="/article/list/'.intval($id).'">'
+					.$title.'</a></p>';
+			}
 			else
 			{
 				$line = self::str_trans($line);
