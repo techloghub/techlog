@@ -202,12 +202,12 @@
 			<script>document.write(unescape("%3Cscript src='http://hm.baidu.com/h.js%3F8c869b543955d43e496c2efee5b55823' type='text/javascript'%3E%3C/script%3E"));qext.stat.ns('m_20120713_qing_pv');</script>
 		</div>
 <form action="/debin/search" method="post" name="params_form" id="params_form">
-	<input type="hidden" id='page' name='page' value="<?php echo $params['page'] ?>"/>
-	<input type="hidden" id='limit' name='limit' value="<?php echo $params['limit'] ?>"/>
-	<input type="hidden" id='tags' name='tags' value="<?php echo $params['tags'] ?>"/>
-	<input type="hidden" id='category' name='category' value="<?php echo $params['category'] ?>"/>
-	<input type="hidden" id='opt_type' name='opt_type' value="<?php echo $params['opt_type'] ?>"/>
-	<input type="hidden" id="search" name="search" value="<?php echo $params['search'] ?>"/>
+	<input type="hidden" id='page' name='page' value="<?php echo_ifset('page') ?>"/>
+	<input type="hidden" id='limit' name='limit' value="<?php echo_ifset('limit') ?>"/>
+	<input type="hidden" id='tags' name='tags' value="<?php echo_ifset('tags') ?>"/>
+	<input type="hidden" id='category' name='category' value="<?php echo_ifset('category') ?>"/>
+	<input type="hidden" id='opt_type' name='opt_type' value="<?php echo_ifset('opt_type') ?>"/>
+	<input type="hidden" id="search" name="search" value="<?php echo_ifset('search') ?>"/>
 </form>
 <br />
 <br />
