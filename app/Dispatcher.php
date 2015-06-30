@@ -71,7 +71,7 @@ class Dispatcher
 		$this->rewrite();
 		list($class, $func, $params) = $this->parseUrl();
 
-		$obj_exsistruequestuestfalse;
+		$obj_exsists = false;
 		if (class_exists($class))
 		{
 			$obj = new $class();
