@@ -358,7 +358,7 @@ class DebinController extends Controller
 			$ret_infos['date'] = $arr['date'];
 
 			$tags = TechlogTools::get_tags($infos['article_id']);
-			if (is_array($tags) && count($tags) > 4)
+			if (is_array($tags))
 				$ret_infos['tags'] = array_slice( $tags, 0, 4);
 
 			$contents = TechlogTools::pre_treat_article($infos['draft']);

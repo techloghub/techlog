@@ -18,20 +18,20 @@ function drw_earnings()
 }
 </script>
 <br /><br /><br />
-<input type="hidden" id="det_beg_month" class="form-control" value="<?php echo_ifset($request, 'det_beg_month') ?>"/>
-<input type="hidden" id="det_end_month" class="form-control" value="<?php echo_ifset($request, 'det_end_month') ?>"/>
-<input type="hidden" id="drw_beg_month" class="form-control" value="<?php echo_ifset($request, 'drw_beg_month') ?>"/>
-<input type="hidden" id="drw_end_month" class="form-control" value="<?php echo_ifset($request, 'drw_end_month') ?>"/>
+<input type="hidden" id="det_beg_month" class="form-control" value="<?php echo_ifset($params, 'det_beg_month') ?>"/>
+<input type="hidden" id="det_end_month" class="form-control" value="<?php echo_ifset($params, 'det_end_month') ?>"/>
+<input type="hidden" id="drw_beg_month" class="form-control" value="<?php echo_ifset($params, 'drw_beg_month') ?>"/>
+<input type="hidden" id="drw_end_month" class="form-control" value="<?php echo_ifset($params, 'drw_end_month') ?>"/>
 <div class="container projects">
 	<div class="row">
 		<?php if ($params['category_id'] == 1): ?>
 			<canvas id="myChart" width="980px" height="300px" class="span12"></canvas>
 			<div class='span12'><br /></div>
 			<div class='span2'>
-				<input type="text" id="beg_month" class="form-control" placeholder="BEG_MONTH" value="<?php echo_ifset($request, 'beg_month') ?>"/>
+				<input type="text" id="beg_month" class="form-control" placeholder="BEG_MONTH" value="<?php echo_ifset($params, 'beg_month') ?>"/>
 			</div>
 			<div class='span2'>
-				<input type="text" id="end_month" class="form-control" placeholder="END_MONTH" value="<?php echo_ifset($request, 'end_month') ?>"/>
+				<input type="text" id="end_month" class="form-control" placeholder="END_MONTH" value="<?php echo_ifset($params, 'end_month') ?>"/>
 			</div>
 			<div class='span2'>
 				<button type="submit" onclick="get_earnings()" class="btn btn-default">详&nbsp;&nbsp;情</button>&nbsp;&nbsp;
@@ -60,6 +60,7 @@ function drw_earnings()
 		<?php } ?>
 	</div>
 </div>
+<?php if ($params['category_id'] == 1): ?>
 <script src="/resource/Chart.js-master/Chart.min.js"></script>
 <script src="/resource/zeyu_blog/js/chart.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript" language="javascript">
@@ -88,4 +89,5 @@ var ctx = document.getElementById("myChart").getContext("2d");
 var myNewChart = new Chart(ctx).PolarArea(data);
 new Chart(ctx).Line(data, canvas_options);
 </script>
+<?php endif ?>
 <?php require(VIEW_PATH.'/base/footer.php'); ?>

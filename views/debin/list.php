@@ -62,7 +62,7 @@
 						<?php echo $article_info['contents'] ?>
 					</div>
 				</div>
-				<?php if (!isset($params['ismood']) or !$params['ismood']): ?>
+				<?php if ((!isset($params['ismood']) or !$params['ismood']) && !empty($article_info['tags'])): ?>
 				<div class="item-foot clearfix">
 					<span class=box-tag>
 						<?php foreach ($article_info['tags'] as $tag) { ?>
