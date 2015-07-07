@@ -371,7 +371,7 @@ class DebinController extends Controller
 			else
 			{
 				$ret_infos['contents'] =
-					'<p><a href="article.php?id='.$infos['article_id'].'" target="_blank">'
+					'<p><a href="/article/list/'.$infos['article_id'].'" target="_blank">'
 					.'<img class="img-thumbnail" alt="200x200" style="height: 200px;"'
 					.' src="'.$imgpath.'"></a></p><br /><p>'
 					.mb_substr(strip_tags($contents), 0, 100, 'utf-8')

@@ -18,12 +18,10 @@
 <title>龙潭斋</title>
 <body>
 <script language="javascript" type="text/javascript">
-jAlert
-(
+jAlert (
 	'<?php echo $params['msg'] ?>',
 	'提示',
-	function()
-	{
+	function() {
 		window.location.href="<?php echo isset($params['url']) ? $params['url'] : '/' ?>";
 	}
 );
