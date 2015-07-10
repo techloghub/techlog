@@ -12,7 +12,7 @@ class NoteController extends Controller
 		foreach ($notes as $note)
 		{
 			$infos = array();
-			$infos['idx_href'] = 'article.php?id='.$note['index_article_id'];
+			$infos['idx_href'] = '/article/list/'.$note['index_article_id'];
 			$image_select_query = 'select path from images'
 				.' where image_id='.$note['image_id'];
 			$image_ret = MySqlOpt::select_query($image_select_query);

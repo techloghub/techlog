@@ -13,6 +13,10 @@ class Dispatcher
 			'replace'	=> '/',
 		),
 		array(
+			'pattern'	=> '/^\/favicon.ico/',
+			'replace'	=> '/resource/images/favicon.ico',
+		),
+		array(
 			'pattern'	=> '/^.*\/images\/(.+)$/i',
 			'replace'	=> '/resource/images/$1',
 		),

@@ -36,7 +36,7 @@ class EarningsController extends Controller
 				and $index < 12
 			)
 			{
-				$infos['idx_href'] = 'article.php?id='.$earning['article_id'];
+				$infos['idx_href'] = '/article/list/'.$earning['article_id'];
 
 				$image_select_query =
 					'select path from images where image_id='.$earning['image_id'];

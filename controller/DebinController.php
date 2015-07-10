@@ -358,7 +358,7 @@ class DebinController extends Controller
 			$ret_infos['date'] = $arr['date'];
 
 			$tags = TechlogTools::get_tags($infos['article_id']);
-			if (is_array($tags) && count($tags) > 4)
+			if (is_array($tags))
 				$ret_infos['tags'] = array_slice( $tags, 0, 4);
 
 			$contents = TechlogTools::pre_treat_article($infos['draft']);
@@ -371,7 +371,7 @@ class DebinController extends Controller
 			else
 			{
 				$ret_infos['contents'] =
-					'<p><a href="article.php?id='.$infos['article_id'].'" target="_blank">'
+					'<p><a href="/article/list/'.$infos['article_id'].'" target="_blank">'
 					.'<img class="img-thumbnail" alt="200x200" style="height: 200px;"'
 					.' src="'.$imgpath.'"></a></p><br /><p>'
 					.mb_substr(strip_tags($contents), 0, 100, 'utf-8')

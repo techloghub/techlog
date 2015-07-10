@@ -40,7 +40,7 @@
 							<?php echo $infos['category'] ?>
 							</td>
 							<td>
-							<a href="article.php?id=<?php echo $infos['article_id'] ?>" target="_blank"><?php echo $infos['title'] ?></a>
+							<a href="/article/list/<?php echo $infos['article_id'] ?>" target="_blank"><?php echo $infos['title'] ?></a>
 							</td>
 							<td>
 							<?php echo $infos['inserttime'] ?>
