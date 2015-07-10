@@ -235,7 +235,7 @@ class DebinController extends Controller
 					break;
 				}
 			}
-			if (!$ismood && (!$this->root || $request['opt_type'] != 'all'))
+			if (!$ismood && (!$this->is_root || $request['opt_type'] != 'all'))
 				$where_str .= ' and category_id < 5';
 			else if (!$this->is_root)
 				$where_str .= ' and 0';
