@@ -31,7 +31,7 @@ class PicturesController extends Controller
 		$count = $count[0]['count'];
 		$start = ($page-1)*$this->limit;
 		$sql = 'select * from images where 1'.$where_str
-			.' limit '.$start.', '.$this->limit;
+			.'order by inserttime desc limit '.$start.', '.$this->limit;
 		$infos = MySqlOpt::select_query($sql);
 		$sql = 'select category from images group by category';
 		$category_infos = MySqlOpt::select_query($sql);
