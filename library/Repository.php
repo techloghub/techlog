@@ -160,5 +160,14 @@ class Repository
 	{
 		return $this->pdo_instance;
 	}
+
+	public function persist($model)
+	{
+		return $model->is_set_pri() ? insert($model) : update($model);
+	}
+
+	private function insert($model)
+	{
+	}
 }
 ?>
