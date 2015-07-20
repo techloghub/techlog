@@ -30,13 +30,14 @@ foreach ($rows as $row)
 {
 	$model .= "\t".'private $'.$row['Field'].';'.PHP_EOL;
 }
+$model .= PHP_EOL;
 $model .= "\t".'public function __construct($params = array())'.PHP_EOL
 	."\t{".PHP_EOL
 	."\t\t".'foreach (get_object_vars($this) as $key=>$value)'.PHP_EOL
 	."\t\t".'{'.PHP_EOL."\t\t\t".'if (isset($params[$key]))'.PHP_EOL
 	."\t\t\t\t".'$this->$key = $value;'.PHP_EOL
 	."\t\t\t".'else'.PHP_EOL."\t\t\t\t".'$this->$key = "";'.PHP_EOL
-	."\t\t}".PHP_EOL."\t}".PHP_EOL;
+	."\t\t}".PHP_EOL."\t}".PHP_EOL.PHP_EOL;
 foreach ($rows as $row)
 {
 	$model .= "\t".'public function get_'.$row['Field'].'()'.PHP_EOL
@@ -51,16 +52,17 @@ foreach ($rows as $row)
 	else
 		$pri_row = $row;
 }
+$model .= PHP_EOL;
 $model .= "\t".'public function set($params)'.PHP_EOL
 	."\t".'{'.PHP_EOL
 	."\t\t".'foreach (get_object_vars($this) as $key=>$value)'.PHP_EOL
 	."\t\t".'{'.PHP_EOL."\t\t\t".'if (isset($params[$key]))'.PHP_EOL
 	."\t\t\t\t".'$this->$key = $params[$key];'.PHP_EOL
-	."\t\t".'}'.PHP_EOL."\t".'}'.PHP_EOL;
+	."\t\t".'}'.PHP_EOL."\t".'}'.PHP_EOL.PHP_EOL;
 $model .= "\t".'public function is_set_pri()'.PHP_EOL
 	."\t".'{'.PHP_EOL
 	."\t\t".'return !empty($this->'.$pri_row['Field'].');'.PHP_EOL
 	."\t".'}'.PHP_EOL;
 $model .= '}';
-echo $model.PHP_EOL;
+file_put_contents($file, $model);
 ?>
