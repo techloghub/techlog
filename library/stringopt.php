@@ -1,6 +1,28 @@
 <?php
 class StringOpt
 {
+	public static function unlinetocamel($value)
+	{
+		$value = str_replace('_', ' ', $value);
+		$value = ucwords($value);
+		$value = str_replace(' ', '', $value);
+		$value = lcfirst($value);
+		return $value;
+	}
+
+	public static function cameltounline($value)
+	{
+		$ret = '';
+		for ($i=0; $i<mb_strlen($value); ++$i)
+		{
+			if ($value[$i] >= 'A' && $value[$i] <= 'Z')
+				$ret .= '_'.lcfirst($value[$i]);
+			else
+				$ret .= $value[$i];
+		}
+		return $ret;
+	}
+
 	public static function spider_string (
 		$string, $begtab, $endtab, &$remain_str=null
 	)

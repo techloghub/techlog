@@ -2,6 +2,7 @@
 require_once (LIB_PATH.'/'.'mysqlopt.php');
 require_once (LIB_PATH.'/'.'logopt.php');
 require_once (LIB_PATH.'/'.'stringopt.php');
+require_once (LIB_PATH.'/'.'Repository.php');
 class TechlogTools
 {
 	public static function pre_treat_article ($file)

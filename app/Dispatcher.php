@@ -41,9 +41,7 @@ class Dispatcher
 	private function __construct()
 	{
 		global $controller_list;
-
-		foreach ($controller_list as $controller)
-			require_once(CONTROLLER_PATH.'/'.$controller.'.php');
+		global $model_list;
 
 		define('URI', isset($_SERVER['REQUEST_URI']) ?
 			$_SERVER['REQUEST_URI'] : '');
