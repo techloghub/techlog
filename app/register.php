@@ -21,5 +21,13 @@ $controller_list = array(
 );
 
 $model_list = array(
+	'ArticleModel',
 );
+
+foreach ($controller_list as $controller)
+	require_once(CONTROLLER_PATH.'/'.$controller.'.php');
+
+foreach ($model_list as $model)
+	require_once(MODEL_PATH.'/'.$model.'.php');
+
 ?>
