@@ -24,6 +24,7 @@ $model_list = array(
 	'ArticleModel',
 );
 
+require_once (LIB_PATH.'/'.'Controller.php');
 foreach ($controller_list as $controller)
 	require_once(CONTROLLER_PATH.'/'.$controller.'.php');
 

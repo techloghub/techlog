@@ -1,6 +1,7 @@
 <?php
 require_once (__DIR__.'/../app/register.php');
 require_once(LIB_PATH.'/TechlogTools.php');
+
 class Repository
 {
 	private $dbfd;
@@ -89,10 +90,17 @@ class Repository
 		}
 		if (isset($params['in']))
 		{
-			foreach ($params['in'] as $key=>$value)
+			foreach ($params['in'] as $key=>$values)
 			{
-				$sql .= ' and '.$key.' in :in_'.$key;
-				$query_params['in_'.$key] = '('.implode(',', $value).')';
+				$sql .= ' and '.$key.' in (';
+				foreach ($values as $index=>$value)
+				{
+					if ($index != 0)
+						$sql .= ', ';
+					$sql .= ':in_'.$key.'_'.$index;
+					$query_params['in_'.$key.'_'.$index] = $value;
+				}
+				$sql .= ')';
 			}
 		}
 		if (isset($params['lt']))
@@ -138,12 +146,14 @@ class Repository
 		}
 
 		$stmt = $this->pdo_instance->prepare($sql);
-		foreach ($query_params as $key=>$value)
-			$stmt->bindParam(':'.$key, $value);
+		if (!empty($query_params))
+		{
+			foreach ($query_params as $key=>$value)
+				$stmt->bindParam(':'.$key, $value);
+		}
 		$table_class = ucfirst(StringOpt::unlinetocamel($this->table).'Model');
-		$stmt->setFetchMode(PDO::FETCH_INTO, new $table_class());
 		$stmt->execute();
-		$ret = $stmt->fetchAll(PDO::FETCH_INTO);
+		$ret = $stmt->fetchAll(PDO::FETCH_CLASS, $table_class);
 		return $ret;
 	}
 

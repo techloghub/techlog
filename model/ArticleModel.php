@@ -17,8 +17,8 @@ class ArticleModel
 		foreach (get_object_vars($this) as $key=>$value)
 		{
 			if (isset($params[$key]))
-				$this->$key = $value;
-			else
+				$this->$key = $params[$key];
+			else if (empty($this->$key))
 				$this->$key = "";
 		}
 	}
