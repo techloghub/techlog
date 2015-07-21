@@ -35,8 +35,9 @@ $model .= "\t".'public function __construct($params = array())'.PHP_EOL
 	."\t{".PHP_EOL
 	."\t\t".'foreach (get_object_vars($this) as $key=>$value)'.PHP_EOL
 	."\t\t".'{'.PHP_EOL."\t\t\t".'if (isset($params[$key]))'.PHP_EOL
-	."\t\t\t\t".'$this->$key = $value;'.PHP_EOL
-	."\t\t\t".'else'.PHP_EOL."\t\t\t\t".'$this->$key = "";'.PHP_EOL
+	."\t\t\t\t".'$this->$key = $params[$key];'.PHP_EOL
+	."\t\t\t".'else if (empty($this->$key))'.PHP_EOL
+	."\t\t\t\t".'$this->$key = "";'.PHP_EOL
 	."\t\t}".PHP_EOL."\t}".PHP_EOL.PHP_EOL;
 foreach ($rows as $row)
 {
