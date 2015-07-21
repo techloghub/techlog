@@ -173,11 +173,53 @@ class Repository
 
 	public function persist($model)
 	{
-		return $model->is_set_pri() ? insert($model) : update($model);
+		return $model->is_set_pri() ? $this->update($model) : $this->insert($model);
 	}
 
 	private function insert($model)
 	{
+		$obj_vars = $model->get_model_fields();
+		$keys = $params_keys = $query_params = array();
+		foreach ($obj_vars as $key)
+		{
+			$func = 'get_'.$key;
+			$value = $model->$func();
+			if ($key == $model->get_pri_key())
+				continue;
+			$keys[] = $key;
+			if ($value == 'now()')
+			{
+				$params_keys[] = 'now()';
+			}
+			else
+			{
+				$params_keys[] = ':'.$key;
+				$query_params[':'.$key] = $value;
+			}
+		}
+		try
+		{
+			$this->pdo_instance->setAttribute(
+				PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			$this->pdo_instance->beginTransaction();
+			$sql = 'insert into '.$this->table
+				.' ('.implode(', ', $keys).')'
+				.' values ('.implode(', ', $params_keys).')';
+			$stmt = $this->pdo_instance->prepare($sql);
+			$stmt->execute($query_params);
+			$this->pdo_instance->commit();
+		}
+		catch(PDOExecption $e)
+		{
+			$dbh->rollback();
+			return 'ERROR: '.$e->getMessage();
+		}
+		return $this->pdo_instance->lastInsertId();
+	}
+
+	private function update ()
+	{
+		return 'update';
 	}
 }
 ?>

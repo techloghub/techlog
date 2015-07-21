@@ -16,13 +16,17 @@ class ArticleModel
 	{
 		foreach (get_object_vars($this) as $key=>$value)
 		{
-			if (isset($params[$key]))
+			if ($key != $this->get_pri_key() && isset($params[$key]))
 				$this->$key = $params[$key];
 			else if (empty($this->$key))
 				$this->$key = "";
 		}
 	}
 
+	public function get_model_fields()
+	{
+		return array_keys(get_object_vars($this));
+	}
 	public function get_article_id()
 	{
 		return $this->article_id;
@@ -108,7 +112,6 @@ class ArticleModel
 		$this->online = $value;
 		return $this;
 	}
-
 	public function set($params)
 	{
 		foreach (get_object_vars($this) as $key=>$value)
@@ -117,9 +120,12 @@ class ArticleModel
 				$this->$key = $params[$key];
 		}
 	}
-
 	public function is_set_pri()
 	{
 		return !empty($this->article_id);
+	}
+	public function get_pri_key()
+	{
+		return "article_id";
 	}
 }
