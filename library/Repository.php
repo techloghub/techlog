@@ -4,28 +4,21 @@ require_once(LIB_PATH.'/TechlogTools.php');
 
 class Repository
 {
-	private $dbfd;
-	private $debug;
-	private $pdo_instance;
-	private $table;
+	private static $dbfd;
+	private static $debug;
+	private static $pdo_instance;
+	private static $table;
 
-	public function __construct($db = 'db', $debug = false)
+	private static function dbConnect()
 	{
-		$this->dbfd = $db;
-		$this->debug = $debug;
-		$mode = $this->debug ? PDO::ERRMODE_EXCEPTION : PDO::ERRMODE_SILENT;
-		$this->dbConnect($mode);
-	}
-
-	function __destruct()
-	{
-		$this->pdo_instance = null;
-	}
-
-	private function dbConnect($mode = PDO::ERRMODE_EXCEPTION)
-	{
-		if (!empty($this->pdo_instance))
+		if (!empty(self::$pdo_instance))
 			return;
+
+		if (empty(self::$dbfd))
+			$dbfd = 'db';
+		if (empty(self::$debug))
+			self::$debug = false;
+		$mode = self::$debug ? PDO::ERRMODE_EXCEPTION : PDO::ERRMODE_SILENT;
 
 		$config = file_get_contents(APP_PATH.'/config.json');
 		$config = json_decode($config, true);
@@ -36,41 +29,47 @@ class Repository
 		}
 
 		$mysql_config = 'mysql:'
-			.'host='.$config[$this->dbfd]['host'].';'
-			.'dbname='.$config[$this->dbfd]['dbname'];
-		$this->pdo_instance = new PDO($mysql_config,
-			$config[$this->dbfd]['username'], $config[$this->dbfd]['password'],
+			.'host='.$config[self::$dbfd]['host'].';'
+			.'dbname='.$config[self::$dbfd]['dbname'];
+		self::$pdo_instance = new PDO($mysql_config,
+			$config[self::$dbfd]['username'], $config[self::$dbfd]['password'],
 			array(PDO::ATTR_ERRMODE => $mode)
 		);
-		$this->pdo_instance->exec('set names utf8');
+		self::$pdo_instance->exec('set names utf8');
 	}
 
-	public function setTable($table)
+	public static function setTable($table)
 	{
-		$this->table = $table;
-		return $this;
+		self::dbConnect();
+		self::$table = $table;
 	}
 
-	public function getTable()
+	public static function getTable()
 	{
-		return $this->table;
+		self::dbConnect();
+		return self::$table;
 	}
 
-	public function setdbfd($dbfd)
+	public static function setdbfd($dbfd)
 	{
-		$this->dbfd = $dbfd;
-		$this->pdo_instance = null;
-		$mode = $this->debug ? PDO::ERRMODE_EXCEPTION : PDO::ERRMODE_SILENT;
-		$this->dbConnect($mode);
+		self::$dbfd = $dbfd;
+		self::$pdo_instance = null;
+		self::dbConnect();
 	}
 
-	public function findBy($params)
+	public static function setdebug($debug)
 	{
-		if (empty($this->table))
+		self::$debug = $debug;
+		self::$pdo_instance = null;
+		self::dbConnect();
+	}
+
+	public static function findBy($params)
+	{
+		self::dbConnect();
+		if (empty(self::$table))
 			return '{"code":-1, "errmsg":"table empty"}';
-		if (empty($this->pdo_instance))
-			$this->dbConnect();
-		$sql = 'select * from '.$this->table.' where 1';
+		$sql = 'select * from '.self::$table.' where 1';
 		$query_params = array();
 		if (isset($params['eq']))
 		{
@@ -145,39 +144,84 @@ class Repository
 			$sql .= ' limit '.$params['range'][0].','.$params['range'][1];
 		}
 
-		$stmt = $this->pdo_instance->prepare($sql);
+		$stmt = self::$pdo_instance->prepare($sql);
 		if (!empty($query_params))
 		{
 			foreach ($query_params as $key=>$value)
 				$stmt->bindParam(':'.$key, $value);
 		}
-		$table_class = ucfirst(StringOpt::unlinetocamel($this->table).'Model');
+		$table_class = ucfirst(StringOpt::unlinetocamel(self::$table).'Model');
 		$stmt->execute();
 		$ret = $stmt->fetchAll(PDO::FETCH_CLASS, $table_class);
 		return $ret;
 	}
 
-	public function findOneBy($params)
+	public static function findOneBy($params)
 	{
+		self::dbConnect();
 		if (!isset($params['range']))
 			$params['range'] = array(0, 1);
 		$params['range'][1] = 1;
-		$objs = $this->findBy($params);
+		$objs = self::findBy($params);
 		return $objs[0];
 	}
 
-	public function getInstance()
+	public static function getInstance()
 	{
-		return $this->pdo_instance;
+		self::dbConnect();
+		return self::$pdo_instance;
 	}
 
-	public function persist($model)
+	public static function persist($model)
 	{
-		return $model->is_set_pri() ? insert($model) : update($model);
+		self::dbConnect();
+		return $model->is_set_pri() ? self::update($model) : self::insert($model);
 	}
 
-	private function insert($model)
+	private static function insert($model)
 	{
+		$obj_vars = $model->get_model_fields();
+		$keys = $params_keys = $query_params = array();
+		foreach ($obj_vars as $key)
+		{
+			$func = 'get_'.$key;
+			$value = $model->$func();
+			if ($key == $model->get_pri_key())
+				continue;
+			$keys[] = $key;
+			if ($value == 'now()')
+			{
+				$params_keys[] = 'now()';
+			}
+			else
+			{
+				$params_keys[] = ':'.$key;
+				$query_params[':'.$key] = $value;
+			}
+		}
+		try
+		{
+			self::$pdo_instance->setAttribute(
+				PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			self::$pdo_instance->beginTransaction();
+			$sql = 'insert into '.self::$table
+				.' ('.implode(', ', $keys).')'
+				.' values ('.implode(', ', $params_keys).')';
+			$stmt = self::$pdo_instance->prepare($sql);
+			$stmt->execute($query_params);
+			self::$pdo_instance->commit();
+		}
+		catch(PDOExecption $e)
+		{
+			$dbh->rollback();
+			return 'ERROR: '.$e->getMessage();
+		}
+		return self::$pdo_instance->lastInsertId();
+	}
+
+	private static function update ()
+	{
+		return 'update';
 	}
 }
 ?>
