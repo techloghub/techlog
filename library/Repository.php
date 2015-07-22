@@ -211,6 +211,7 @@ class Repository
 				.' values ('.implode(', ', $params_keys).')';
 			$stmt = self::$pdo_instance->prepare($sql);
 			$stmt->execute($query_params);
+			$insert_id = self::$pdo_instance->lastInsertId();
 			self::$pdo_instance->commit();
 		}
 		catch(PDOExecption $e)
@@ -218,7 +219,7 @@ class Repository
 			$dbh->rollback();
 			return 'INSERT_ERROR: '.$e->getMessage();
 		}
-		return self::$pdo_instance->lastInsertId();
+		return $insert_id;
 	}
 
 	private static function update ($model)
