@@ -9,13 +9,16 @@ class Repository
 	private static $pdo_instance;
 	private static $table;
 
-	private static function dbConnect($db = 'db', $mode = PDO::ERRMODE_EXCEPTION)
+	private static function dbConnect()
 	{
 		if (!empty(self::$pdo_instance))
 			return;
 
-		self::$dbfd = $db;
-		self::$debug = $debug;
+		if (empty(self::$dbfd))
+			$dbfd = 'db';
+		if (empty(self::$debug))
+			self::$debug = false;
+		$mode = self::$debug ? PDO::ERRMODE_EXCEPTION : PDO::ERRMODE_SILENT;
 
 		$config = file_get_contents(APP_PATH.'/config.json');
 		$config = json_decode($config, true);
@@ -35,27 +38,33 @@ class Repository
 		self::$pdo_instance->exec('set names utf8');
 	}
 
-	public function setTable($table)
+	public static function setTable($table)
 	{
 		self::dbConnect();
 		self::$table = $table;
 	}
 
-	public function getTable()
+	public static function getTable()
 	{
 		self::dbConnect();
 		return self::$table;
 	}
 
-	public function setdbfd($dbfd)
+	public static function setdbfd($dbfd)
 	{
 		self::$dbfd = $dbfd;
 		self::$pdo_instance = null;
-		$mode = self::$debug ? PDO::ERRMODE_EXCEPTION : PDO::ERRMODE_SILENT;
-		self::dbConnect($mode);
+		self::dbConnect();
 	}
 
-	public function findBy($params)
+	public static function setdebug($debug)
+	{
+		self::$debug = $debug;
+		self::$pdo_instance = null;
+		self::dbConnect();
+	}
+
+	public static function findBy($params)
 	{
 		self::dbConnect();
 		if (empty(self::$table))
@@ -147,7 +156,7 @@ class Repository
 		return $ret;
 	}
 
-	public function findOneBy($params)
+	public static function findOneBy($params)
 	{
 		self::dbConnect();
 		if (!isset($params['range']))
@@ -157,19 +166,19 @@ class Repository
 		return $objs[0];
 	}
 
-	public function getInstance()
+	public static function getInstance()
 	{
 		self::dbConnect();
 		return self::$pdo_instance;
 	}
 
-	public function persist($model)
+	public static function persist($model)
 	{
 		self::dbConnect();
 		return $model->is_set_pri() ? self::update($model) : self::insert($model);
 	}
 
-	private function insert($model)
+	private static function insert($model)
 	{
 		$obj_vars = $model->get_model_fields();
 		$keys = $params_keys = $query_params = array();
@@ -210,7 +219,7 @@ class Repository
 		return self::$pdo_instance->lastInsertId();
 	}
 
-	private function update ()
+	private static function update ()
 	{
 		return 'update';
 	}
