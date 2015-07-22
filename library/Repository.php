@@ -175,8 +175,16 @@ class Repository
 	public static function persist($model)
 	{
 		self::dbConnect();
-		if (empty(self::$table))
-			return '{"code":-1, "errmsg":"table empty"}';
+		$class = get_class($model);
+		$pattern = '/^(?<table>.*)Model$/';
+		$table_infos = array();
+		if (preg_match($pattern, $class, $table_infos) == false)
+		{
+			echo 'ERROR: params error'.PHP_EOL;
+			return false;
+		}
+		$table = StringOpt::cameltounline(lcfirst($table_infos['table']));
+		self::setTable($table);
 		return $model->is_set_pri() ? self::update($model) : self::insert($model);
 	}
 
@@ -262,5 +270,22 @@ class Repository
 		$func = 'get_'.$pri_key;
 		return $model->$func();
 	}
+
+	public static function __callStatic($method, $params)
+	{
+		$pattern = '/^find(?<one>(One){0,1})From(?<table>.*)$/';
+		$method_infos = array();
+		if (preg_match($pattern, $method, $method_infos) == false)
+		{
+			echo 'ERROR: method error'.PHP_EOL;
+			return false;
+		}
+		$table = StringOpt::cameltounline(lcfirst($method_infos['table']));
+		self::setTable($table);
+		$func = 'find'.$method_infos['one'].'By';
+		return self::$func($params);
+	}
 }
+$tag = new TagsModel();
+Repository::persist($tag);
 ?>
