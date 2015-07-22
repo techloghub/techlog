@@ -180,9 +180,9 @@ class Repository
 
 	private static function insert($model)
 	{
-		$obj_vars = $model->get_model_fields();
+		$fields = $model->get_model_fields();
 		$keys = $params_keys = $query_params = array();
-		foreach ($obj_vars as $key)
+		foreach ($fields as $key)
 		{
 			$func = 'get_'.$key;
 			$value = $model->$func();
@@ -214,14 +214,43 @@ class Repository
 		catch(PDOExecption $e)
 		{
 			$dbh->rollback();
-			return 'ERROR: '.$e->getMessage();
+			return 'INSERT_ERROR: '.$e->getMessage();
 		}
 		return self::$pdo_instance->lastInsertId();
 	}
 
-	private static function update ()
+	private static function update ($model)
 	{
-		return 'update';
+		$pri_key = $model->get_pri_key();
+		$fields = $model->get_model_fields();
+		$func = 'get_'.$pri_key;
+		$old_model = self::findOneBy(array('eq'=>array($pri_key=>$model->$func())));
+		$set_params = array();
+		$query_params = array();
+		foreach ($fields as $key)
+		{
+			if ($model->$key !== $old_model->$key)
+			{
+				$set_params[] = $key.'=:'.$key;
+				$query_params[':'.$key] = $model->$key;
+			}
+		}
+		try
+		{
+			self::$pdo_instance->setAttribute(
+				PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			self::$pdo_instance->beginTransaction();
+			$sql = 'update '.self::$table.' set '.implode(', ', $set_params)
+				.' where '.$pri_key.'='.$model->$pri_key;
+			$stmt->execute($query_params);
+			self::$pdo_instance->commit();
+		}
+		catch(PDOExecption $e)
+		{
+			$dbh->rollback();
+			return 'UPDATE_ERROR: '.$e->getMessage();
+		}
+		return $model->$pri_key;
 	}
 }
 ?>
