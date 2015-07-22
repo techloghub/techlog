@@ -99,5 +99,7 @@ $('#category_doughnut').click(function(evt)
 		);
 	}
 });
+$('#myChart').css('width', '980px');
+$('#myChart').css('height', '300px');
 </script>
 <?php require(VIEW_PATH.'/base/footer.php'); ?>
