@@ -88,6 +88,8 @@ var data =
 var ctx = document.getElementById("myChart").getContext("2d");
 var myNewChart = new Chart(ctx).PolarArea(data);
 new Chart(ctx).Line(data, canvas_options);
+$('#myChart').css('width', '980px');
+$('#myChart').css('height', '300px');
 </script>
 <?php endif ?>
 <?php require(VIEW_PATH.'/base/footer.php'); ?>
