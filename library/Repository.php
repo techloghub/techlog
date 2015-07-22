@@ -286,6 +286,4 @@ class Repository
 		return self::$func($params);
 	}
 }
-$tag = new TagsModel();
-Repository::persist($tag);
 ?>
