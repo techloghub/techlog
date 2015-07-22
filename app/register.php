@@ -22,6 +22,13 @@ $controller_list = array(
 
 $model_list = array(
 	'ArticleModel',
+	'ArticleTagRelationModel',
+	'BooknoteModel',
+	'CategoryModel',
+	'EarningsModel',
+	'ImagesModel',
+	'MoodModel',
+	'TagsModel'
 );
 
 require_once (LIB_PATH.'/'.'Controller.php');
