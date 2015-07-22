@@ -15,7 +15,7 @@ class Repository
 			return;
 
 		if (empty(self::$dbfd))
-			$dbfd = 'db';
+			self::$dbfd = 'db';
 		if (empty(self::$debug))
 			self::$debug = false;
 		$mode = self::$debug ? PDO::ERRMODE_EXCEPTION : PDO::ERRMODE_SILENT;
@@ -175,6 +175,8 @@ class Repository
 	public static function persist($model)
 	{
 		self::dbConnect();
+		if (empty(self::$table))
+			return '{"code":-1, "errmsg":"table empty"}';
 		return $model->is_set_pri() ? self::update($model) : self::insert($model);
 	}
 
@@ -229,28 +231,35 @@ class Repository
 		$query_params = array();
 		foreach ($fields as $key)
 		{
-			if ($model->$key !== $old_model->$key)
+			$func = 'get_'.$key;
+			if ($model->$func() !== $old_model->$func())
 			{
 				$set_params[] = $key.'=:'.$key;
-				$query_params[':'.$key] = $model->$key;
+				$query_params[':'.$key] = $model->$func();
 			}
 		}
-		try
+		if (!empty($query_params))
 		{
-			self::$pdo_instance->setAttribute(
-				PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			self::$pdo_instance->beginTransaction();
-			$sql = 'update '.self::$table.' set '.implode(', ', $set_params)
-				.' where '.$pri_key.'='.$model->$pri_key;
-			$stmt->execute($query_params);
-			self::$pdo_instance->commit();
+			try
+			{
+				self::$pdo_instance->setAttribute(
+					PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+				self::$pdo_instance->beginTransaction();
+				$func = 'get_'.$pri_key;
+				$sql = 'update '.self::$table.' set '.implode(', ', $set_params)
+					.' where '.$pri_key.'='.$model->$func();
+				$stmt = self::$pdo_instance->prepare($sql);
+				$stmt->execute($query_params);
+				self::$pdo_instance->commit();
+			}
+			catch(PDOExecption $e)
+			{
+				$dbh->rollback();
+				return 'UPDATE_ERROR: '.$e->getMessage();
+			}
 		}
-		catch(PDOExecption $e)
-		{
-			$dbh->rollback();
-			return 'UPDATE_ERROR: '.$e->getMessage();
-		}
-		return $model->$pri_key;
+		$func = 'get_'.$pri_key;
+		return $model->$func();
 	}
 }
 ?>
