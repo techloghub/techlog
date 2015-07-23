@@ -69,80 +69,9 @@ class Repository
 		self::dbConnect();
 		if (empty(self::$table))
 			return '{"code":-1, "errmsg":"table empty"}';
-		$sql = 'select * from '.self::$table.' where 1';
 		$query_params = array();
-		if (isset($params['eq']))
-		{
-			foreach ($params['eq'] as $key=>$value)
-			{
-				$sql .= ' and '.$key.' = :eq_'.$key;
-				$query_params['eq_'.$key] = $value;
-			}
-		}
-		if (isset($params['ne']))
-		{
-			foreach ($params['ne'] as $key=>$value)
-			{
-				$sql .= ' and '.$key.' != :ne_'.$key;
-				$query_params['ne_'.$key] = $value;
-			}
-		}
-		if (isset($params['in']))
-		{
-			foreach ($params['in'] as $key=>$values)
-			{
-				$sql .= ' and '.$key.' in (';
-				foreach ($values as $index=>$value)
-				{
-					if ($index != 0)
-						$sql .= ', ';
-					$sql .= ':in_'.$key.'_'.$index;
-					$query_params['in_'.$key.'_'.$index] = $value;
-				}
-				$sql .= ')';
-			}
-		}
-		if (isset($params['lt']))
-		{
-			foreach ($params['lt'] as $key=>$value)
-			{
-				$sql .= ' and '.$key.' < :lt_'.$key;
-				$query_params['lt_'.$key] = $value;
-			}
-		}
-		if (isset($params['gt']))
-		{
-			foreach ($params['gt'] as $key=>$value)
-			{
-				$sql .= ' and '.$key.' > :gt_'.$key;
-				$query_params['gt_'.$key] = $value;
-			}
-		}
-		if (isset($params['le']))
-		{
-			foreach ($params['le'] as $key=>$value)
-			{
-				$sql .= ' and '.$key.' <= :le_'.$key;
-				$query_params['le_'.$key] = $value;
-			}
-		}
-		if (isset($params['ge']))
-		{
-			foreach ($params['ge'] as $key=>$value)
-			{
-				$sql .= ' and '.$key.' >= :ge_'.$key;
-				$query_params['ge_'.$key] = $value;
-			}
-		}
-		if (isset($params['order']))
-		{
-			foreach ($params['order'] as $key=>$value)
-				$sql .= ' order by '.$key.' '.$value;
-		}
-		if (isset($params['range']))
-		{
-			$sql .= ' limit '.$params['range'][0].','.$params['range'][1];
-		}
+		$sql = 'select * from '.self::$table.' where 1'
+			.self::getParams($params, $query_params);
 
 		$stmt = self::$pdo_instance->prepare($sql);
 		$table_class = ucfirst(StringOpt::unlinetocamel(self::$table).'Model');
@@ -159,6 +88,20 @@ class Repository
 		$params['range'][1] = 1;
 		$objs = self::findBy($params);
 		return isset($objs[0]) ? $objs[0] : false;
+	}
+
+	public static function findCountBy($params)
+	{
+		self::dbConnect();
+		if (empty(self::$table))
+			return '{"code":-1, "errmsg":"table empty"}';
+		$query_params = array();
+		$sql = 'select count(*) as total from '.self::$table.' where 1'
+			.self::getParams($params, $query_params);
+		$stmt = self::$pdo_instance->prepare($sql);
+		$stmt->execute($query_params);
+		$ret = $stmt->fetch();
+		return isset($ret['total']) : $ret['total'] : false;
 	}
 
 	public static function getInstance()
@@ -268,7 +211,7 @@ class Repository
 
 	public static function __callStatic($method, $params)
 	{
-		$pattern = '/^find(?<one>(One){0,1})From(?<table>.*)$/';
+		$pattern = '/^find(?<sth>(.*){0,1})From(?<table>.*)$/';
 		$method_infos = array();
 		if (preg_match($pattern, $method, $method_infos) == false)
 		{
@@ -277,8 +220,87 @@ class Repository
 		}
 		$table = StringOpt::cameltounline(lcfirst($method_infos['table']));
 		self::setTable($table);
-		$func = 'find'.$method_infos['one'].'By';
+		$func = 'find'.$method_infos['sth'].'By';
 		return self::$func($params[0]);
+	}
+
+	private static function getParams($params, &$query_params)
+	{
+		$sql = '';
+		if (isset($params['eq']))
+		{
+			foreach ($params['eq'] as $key=>$value)
+			{
+				$sql .= ' and '.$key.' = :eq_'.$key;
+				$query_params['eq_'.$key] = $value;
+			}
+		}
+		if (isset($params['ne']))
+		{
+			foreach ($params['ne'] as $key=>$value)
+			{
+				$sql .= ' and '.$key.' != :ne_'.$key;
+				$query_params['ne_'.$key] = $value;
+			}
+		}
+		if (isset($params['in']))
+		{
+			foreach ($params['in'] as $key=>$values)
+			{
+				$sql .= ' and '.$key.' in (';
+				foreach ($values as $index=>$value)
+				{
+					if ($index != 0)
+						$sql .= ', ';
+					$sql .= ':in_'.$key.'_'.$index;
+					$query_params['in_'.$key.'_'.$index] = $value;
+				}
+				$sql .= ')';
+			}
+		}
+		if (isset($params['lt']))
+		{
+			foreach ($params['lt'] as $key=>$value)
+			{
+				$sql .= ' and '.$key.' < :lt_'.$key;
+				$query_params['lt_'.$key] = $value;
+			}
+		}
+		if (isset($params['gt']))
+		{
+			foreach ($params['gt'] as $key=>$value)
+			{
+				$sql .= ' and '.$key.' > :gt_'.$key;
+				$query_params['gt_'.$key] = $value;
+			}
+		}
+		if (isset($params['le']))
+		{
+			foreach ($params['le'] as $key=>$value)
+			{
+				$sql .= ' and '.$key.' <= :le_'.$key;
+				$query_params['le_'.$key] = $value;
+			}
+		}
+		if (isset($params['ge']))
+		{
+			foreach ($params['ge'] as $key=>$value)
+			{
+				$sql .= ' and '.$key.' >= :ge_'.$key;
+				$query_params['ge_'.$key] = $value;
+			}
+		}
+		if (isset($params['order']))
+		{
+			foreach ($params['order'] as $key=>$value)
+				$sql .= ' order by '.$key.' '.$value;
+		}
+		if (isset($params['range']))
+		{
+			$sql .= ' limit '.$params['range'][0].','.$params['range'][1];
+		}
+
+		return $sql;
 	}
 }
 ?>
