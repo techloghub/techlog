@@ -55,25 +55,24 @@ class ArticleController extends Controller
 	{
 		$params = array();
 
-		$article_query = 'select * from article where article_id='.$article_id;
+		$params = array('eq' => array('article_id' => $article_id));
 		if (!$this->is_root)
-			$article_query .= ' and category_id < 5';
-		$article_info = MySqlOpt::select_query($article_query);
+			$params['lt'] = array('category_id' => 5);
+		$article = Repository::findOneFromArticle($params);
 
-		if ($article_info == false)
+		if ($article == false)
 		{
 			header("Location: /index/notfound");
 			return;
 		}
-		$article_info = $article_info[0];
 
 		$params['tags']		= TechlogTools::get_tags($article_id);
-		$params['title']	= $article_info['title'];
-		$params['indexs']	= json_decode($article_info['indexs']);
+		$params['title']	= $article->get_title();
+		$params['indexs'] = json_decode($article->get_indexs());
 		$params['contents'] = \
-			TechlogTools::pre_treat_article($article_info['draft']);
-		$params['title_desc']	= $article_info['title_desc'];
-		$params['article_category_id']	= $article_info['category_id'];
+			TechlogTools::pre_treat_article($article->get_draft());
+		$params['title_desc']	= $article->get_title_desc();
+		$params['article_category_id']	= $article->get_category_id();
 
 		if (
 			StringOpt::spider_string(
@@ -87,15 +86,14 @@ class ArticleController extends Controller
 				.'</h1></div>'.$params['contents'];
 		}
 
-		$sql = 'update article set access_count=access_count+1'
-			.' where article_id = "'.$article_id.'"';
-		MySqlOpt::update_query($sql);
+		$article->set_access_count($article->get_access_count() + 1);
+		Repository::persist($article);
 
-		$params['inserttime'] = $article_info['inserttime']
+		$params['inserttime'] = $article->get_inserttime()
 			.'&nbsp;&nbsp;&nbsp;最后更新: '
-			.$article_info['updatetime']
+			.$article->get_updatetime()
 			.'&nbsp;&nbsp;&nbsp;访问数量：'
-			.($article_info['access_count']+1);
+			.($article->get_access_count()+1);
 
 		return $params;
 	}
