@@ -57,7 +57,7 @@ class Repository
 		self::dbConnect();
 	}
 
-	public static function setdebug($debug)
+	public static function setDebug($debug)
 	{
 		self::$debug = $debug;
 		self::$pdo_instance = null;
@@ -145,13 +145,8 @@ class Repository
 		}
 
 		$stmt = self::$pdo_instance->prepare($sql);
-		if (!empty($query_params))
-		{
-			foreach ($query_params as $key=>$value)
-				$stmt->bindParam(':'.$key, $value);
-		}
 		$table_class = ucfirst(StringOpt::unlinetocamel(self::$table).'Model');
-		$stmt->execute();
+		$stmt->execute($query_params);
 		$ret = $stmt->fetchAll(PDO::FETCH_CLASS, $table_class);
 		return $ret;
 	}
@@ -163,7 +158,7 @@ class Repository
 			$params['range'] = array(0, 1);
 		$params['range'][1] = 1;
 		$objs = self::findBy($params);
-		return $objs[0];
+		return isset($objs[0]) ? $objs[0] : false;
 	}
 
 	public static function getInstance()
@@ -283,7 +278,7 @@ class Repository
 		$table = StringOpt::cameltounline(lcfirst($method_infos['table']));
 		self::setTable($table);
 		$func = 'find'.$method_infos['one'].'By';
-		return self::$func($params);
+		return self::$func($params[0]);
 	}
 }
 ?>
