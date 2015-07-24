@@ -100,10 +100,10 @@
 							</li>
 						</ul>
 						<ul class=friendlyLinks-linkListContainer style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-							<?php foreach ($params['hot_articles'] as $infos) { ?>
+							<?php foreach ($params['hot_articles'] as $article) { ?>
 							<li>
 							<h2 style="line-height:30px">
-								<a href="/article/list/<?php echo $infos['article_id'] ?>" target="_blank"><?php echo $infos['title'] ?></a>
+								<a href="/article/list/<?php echo $article->get_article_id() ?>" target="_blank"><?php echo $article->get_title() ?></a>
 							</h2>
 							</li>
 							<?php } ?>
@@ -118,10 +118,10 @@
 							</li>
 						</ul>
 						<ul class=friendlyLinks-linkListContainer style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-							<?php foreach ($params['new_articles'] as $infos) { ?>
+							<?php foreach ($params['new_articles'] as $article) { ?>
 							<li>
 							<h2 style="line-height:30px">
-								<a href="/article/list/<?php echo $infos['article_id'] ?>" target="_blank"><?php echo $infos['title'] ?></a>
+								<a href="/article/list/<?php echo $article->get_article_id() ?>" target="_blank"><?php echo $article->get_title() ?></a>
 							</h2>
 							</li>
 							<?php } ?>
@@ -136,10 +136,10 @@
 							</li>
 						</ul>
 						<ul class=friendlyLinks-linkListContainer style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-							<?php foreach ($params['rand_tags'] as $infos) { ?>
+							<?php foreach ($params['rand_tags'] as $tag) { ?>
 							<li>
 							<h2 style="line-height:30px">
-								<a href="/debin/tag/<?php echo $infos['tag_id'] ?>" target="_blank"><?php echo $infos['tag_name'] ?></a>
+								<a href="/debin/tag/<?php echo $tag->get_tag_id() ?>" target="_blank"><?php echo $infos->get_tag_name() ?></a>
 							</h2>
 							</li>
 							<?php } ?>

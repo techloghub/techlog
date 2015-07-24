@@ -69,18 +69,9 @@ class DebinController extends Controller
 		$tag_id = intval($query_params[0]);
 		$page = isset($query_params[1]) ? intval($query_params[1]) : 1;
 
-		$count_sql = 'select count(*) as count from'
-			.' (select 1 from article_tag_relation'
-			.' where tag_id = '.$tag_id.' group by article_id) as A';
-		$sql = 'select article.*'
-			.' from article, article_tag_relation, tags'
-			.' where article.article_id = article_tag_relation.article_id'
-			.' and tags.tag_id = article_tag_relation.tag_id'
-			.' and tags.tag_id = '.$tag_id
-			.' order by inserttime desc'
-			.' limit '.(($page-1)*$this->limit).', '.$this->limit;
-		$count = MySqlOpt::select_query($count_sql);
-		$article_infos = MySqlOpt::select_query($sql);
+		$count = SqlRepository::getArticleCountByTagId($tag_id);
+		$articles = SqlRepository::getArticlesByTagId(
+			$tag_id, array(($page-1)*$this->limit, $this->limit));
 		$tag_name = Repository::findTagNameFromTags(
 			array(
 				'eq' => array('tag_id' => $tag_id)
@@ -93,8 +84,8 @@ class DebinController extends Controller
 			'limit'	=> $this->limit,
 			'title'	=> $tag_name,
 			'method'	=> __METHOD__,
-			'article_count'	=> $count[0]['count'],
-			'article_infos'	=> $this->getArticleInfos($article_infos),
+			'article_count'	=> $count,
+			'article_infos'	=> $this->getArticleInfos($articles),
 		);
 
 		$this->predisplay($params);
@@ -117,12 +108,13 @@ class DebinController extends Controller
 		$page = (isset($query_params[0]) and intval($query_params[0])) > 0 ?
 			intval($query_params[0]) : 1;
 
-		$count_sql = 'select count(*) as count from mood where 1';
-		$mood_sql = 'select * from mood where 1'
-			.' order by inserttime desc'
-			.' limit '.(($page-1)*$this->limit).', '.$this->limit;
-		$count = MySqlOpt::select_query($count_sql);
-		$mood_infos = MySqlOpt::select_query($mood_sql);
+		$count = Repository::findCountFromMood(array());
+		$moods = Repository::findFromMood(
+			array(
+				'order' => array('inserttime' => 'desc'),
+				'range' => array(($page-1)*$this->limit, $this->limit)
+			)
+		);
 
 		$params = array(
 			'page'	=> $page,
@@ -131,8 +123,8 @@ class DebinController extends Controller
 			'title'	=> '心情小说',
 			'ismood'	=> true,
 			'method'	=> __METHOD__,
-			'article_count'	=> $count[0]['count'],
-			'article_infos'	=> $this->getMoodInfos($mood_infos),
+			'article_count'	=> $count,
+			'article_infos'	=> $this->getMoodInfos($moods),
 		);
 		$this->predisplay($params);
 	}
@@ -221,7 +213,7 @@ class DebinController extends Controller
 	{
 		$dates = array();
 		$tag_ids = array();
-		$where_str = '';
+		$ret_params = array();
 		$tags = explode(',', $request['tags']);
 
 		if (!empty($tags))
@@ -234,7 +226,7 @@ class DebinController extends Controller
 				switch ($tag_infos[1])
 				{
 				case 'tag':
-					$tag_ids[] = mysql_escape_string($tag_infos[2]);
+					$tag_ids[] = $tag_infos[2];
 					break;
 				case 'date':
 					$tag_infos[2][4] = '-';
@@ -307,46 +299,45 @@ class DebinController extends Controller
 	{
 		$params['new_articles'] = $this->getNewArticles();
 		$params['hot_articles'] = $this->getHotArticles();
-		$params['rand_tags'] = $this->getRandTags();
+		$params['rand_tags'] = SqlRepository::getRandTags();
 		$this->display(__CLASS__.'::listAction', $params);
 	}
 
 	private function getNewArticles()
 	{
-		$sql = 'select title, article_id from article where category_id < 5'
-			.' order by updatetime desc limit 10';
-		$new_articles = MySqlOpt::select_query($sql);
+		$new_articles = Repository::findFromArticle(
+			array(
+				'lt' => array('category_id' => 5),
+				'order' => array('updatetime' => 'desc'),
+				'range' => array(0, 10)
+			)
+		);
 		return $new_articles;
 	}
 
 	private function getHotArticles()
 	{
-		$sql = 'select title, article_id from article where category_id < 5'
-			.' order by access_count desc limit 10';
-		$hot_articles = MySqlOpt::select_query($sql);
+		$hot_articles = Repository::findFromArticle(
+			array(
+				'lt' => array('category_id' => 5),
+				'order' => array('access_count' => 'desc'),
+				'range' => array(0, 10)
+			)
+		);
 		return $hot_articles;
 	}
 
-	private function getRandTags()
-	{
-		$sql = 'select * from `tags`'
-			.' where tag_id >= (select floor( max(tag_id) * rand()) from `tags` )'
-			.' order by tag_id limit 20';
-		$rand_tags = MySqlOpt::select_query($sql);
-		return $rand_tags;
-	}
-
-	public function getMoodInfos($mood_infos)
+	public function getMoodInfos($moods)
 	{
 		$ret_infos = array();
-		foreach ($mood_infos as $infos)
+		foreach ($moods as $mood)
 		{
 			$tmp_infos = array(
-				'title'	=> $infos['contents'],
-				'contents'	=> $infos['inserttime'],
+				'title'	=> $mood->get_contents(),
+				'contents'	=> $mood->get_inserttime(),
 			);
 			preg_match('/^(?<month>\d{4}-\d{2})-(?<date>\d{2})/is',
-				$infos['inserttime'], $arr);
+				$mood->get_inserttime(), $arr);
 			$tmp_infos['month'] = str_replace('-', '/', $arr['month']);
 			$tmp_infos['date'] = $arr['date'];
 			$ret_infos[] = $tmp_infos;
