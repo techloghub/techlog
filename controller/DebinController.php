@@ -23,18 +23,24 @@ class DebinController extends Controller
 		$category_id = intval($query_params[0]);
 		$page = isset($query_params[1]) ? intval($query_params[1]) : 1;
 
-		$count_sql = 'select count(*) as count from article'
-			.' where category_id = '.$category_id;
-		$sql = 'select * from article'
-			.' where category_id = '.$category_id
-			.' order by inserttime desc'
-			.' limit '.(($page-1)*$this->limit).', '.$this->limit;
-		$category_sql = 'select category from category'
-			.' where category_id = '.$category_id;
-		$count = MySqlOpt::select_query($count_sql);
-		$article_infos = MySqlOpt::select_query($sql);
-		$category = MySqlOpt::select_query($category_sql);
-		if (!isset($category[0]['category']))
+		$count = Repository::findCountFromArticle(
+			array(
+				'eq' => array('category_id' => $category_id)
+			)
+		);
+		$articles = Repository::findFromArticle(
+			array(
+				'eq' => array('category_id' => $category_id),
+				'order' => array('inserttime' => 'desc'),
+				'range' => array(($page-1)*$this->limit, $this->limit),
+			)
+		);
+		$category = Repository::findCategoryFromCategory(
+			array(
+				'eq' => array('category_id' => $category_id),
+			)
+		);
+		if ($category == false)
 		{
 			header("Location: /index/notfound");
 			return;
@@ -44,10 +50,10 @@ class DebinController extends Controller
 			'page'	=> $page,
 			'base'	=> '/debin/category/'.$category_id,
 			'limit'	=> $this->limit,
-			'title'	=> $category[0]['category'],
+			'title'	=> $category,
 			'method'	=> __METHOD__,
-			'article_count'	=> $count[0]['count'],
-			'article_infos'	=> $this->getArticleInfos($article_infos),
+			'article_count'	=> $count,
+			'article_infos'	=> $this->getArticleInfos($articles),
 		);
 		$this->predisplay($params);
 	}
@@ -66,23 +72,26 @@ class DebinController extends Controller
 		$count_sql = 'select count(*) as count from'
 			.' (select 1 from article_tag_relation'
 			.' where tag_id = '.$tag_id.' group by article_id) as A';
-		$sql = 'select article.*, tags.tag_name'
+		$sql = 'select article.*'
 			.' from article, article_tag_relation, tags'
 			.' where article.article_id = article_tag_relation.article_id'
 			.' and tags.tag_id = article_tag_relation.tag_id'
 			.' and tags.tag_id = '.$tag_id
 			.' order by inserttime desc'
 			.' limit '.(($page-1)*$this->limit).', '.$this->limit;
-		$tag_sql = 'select tag_name from tags where tag_id = '.$tag_id;
 		$count = MySqlOpt::select_query($count_sql);
 		$article_infos = MySqlOpt::select_query($sql);
-		$tag_name = MySqlOpt::select_query($tag_sql);
+		$tag_name = Repository::findTagNameFromTags(
+			array(
+				'eq' => array('tag_id' => $tag_id)
+			)
+		);
 
 		$params = array(
 			'page'	=> $page,
 			'base'	=> '/debin/tag/'.$tag_id,
 			'limit'	=> $this->limit,
-			'title'	=> $tag_name[0]['tag_name'],
+			'title'	=> $tag_name,
 			'method'	=> __METHOD__,
 			'article_count'	=> $count[0]['count'],
 			'article_infos'	=> $this->getArticleInfos($article_infos),
@@ -345,23 +354,25 @@ class DebinController extends Controller
 		return $ret_infos;
 	}
 
-	private function getArticleInfos($article_infos, $is_moode = false)
+	private function getArticleInfos($articles, $is_moode = false)
 	{
+		if (empty($articles))
+			return array();
 		$ret = array();
-		foreach($article_infos as $infos)
+		foreach($articles as $article)
 		{
 			$ret_infos = array();
 
 			preg_match('/^(?<month>\d{4}-\d{2})-(?<date>\d{2})/is',
-				$infos['inserttime'], $arr);
+				$article->get_inserttime(), $arr);
 			$ret_infos['month'] = str_replace('-', '/', $arr['month']);
 			$ret_infos['date'] = $arr['date'];
 
-			$tags = TechlogTools::get_tags($infos['article_id']);
+			$tags = TechlogTools::get_tags($article->get_article_id());
 			if (is_array($tags))
 				$ret_infos['tags'] = array_slice( $tags, 0, 4);
 
-			$contents = TechlogTools::pre_treat_article($infos['draft']);
+			$contents = TechlogTools::pre_treat_article($article->get_draft());
 			$imgpath = StringOpt::spider_string($contents, 'img<![&&]>src="', '"');
 			if ($imgpath == null)
 			{
@@ -371,15 +382,15 @@ class DebinController extends Controller
 			else
 			{
 				$ret_infos['contents'] =
-					'<p><a href="/article/list/'.$infos['article_id'].'" target="_blank">'
+					'<p><a href="/article/list/'.$article->get_article_id().'" target="_blank">'
 					.'<img class="img-thumbnail" alt="200x200" style="height: 200px;"'
 					.' src="'.$imgpath.'"></a></p><br /><p>'
 					.mb_substr(strip_tags($contents), 0, 100, 'utf-8')
 					.'</p>';
 			}
 
-			$ret_infos['title'] = $infos['title'];
-			$ret_infos['article_id'] = $infos['article_id'];
+			$ret_infos['title'] = $article->get_title();
+			$ret_infos['article_id'] = $article->get_article_id();
 			$ret[] = $ret_infos;
 		}
 		return $ret;

@@ -1,7 +1,4 @@
 <?php
-require_once (__DIR__.'/../app/register.php');
-require_once(LIB_PATH.'/TechlogTools.php');
-
 class Repository
 {
 	private static $dbfd;
@@ -10,7 +7,7 @@ class Repository
 	private static $table;
 
 	private static function dbConnect()
-	{
+	{ // {{{
 		if (!empty(self::$pdo_instance))
 			return;
 
@@ -36,36 +33,52 @@ class Repository
 			array(PDO::ATTR_ERRMODE => $mode)
 		);
 		self::$pdo_instance->exec('set names utf8');
-	}
+	} // }}}
 
 	public static function setTable($table)
-	{
+	{ // {{{
 		self::dbConnect();
 		self::$table = $table;
-	}
+	} // }}}
 
 	public static function getTable()
-	{
+	{ // {{{
 		self::dbConnect();
 		return self::$table;
-	}
+	} // }}}
 
 	public static function setdbfd($dbfd)
-	{
+	{ // {{{
 		self::$dbfd = $dbfd;
 		self::$pdo_instance = null;
 		self::dbConnect();
-	}
+	} // }}}
 
 	public static function setDebug($debug)
-	{
+	{ // {{{
 		self::$debug = $debug;
 		self::$pdo_instance = null;
 		self::dbConnect();
-	}
+	} // }}}
+
+	public static function findOneByField($field, $params)
+	{ // {{{
+		self::dbConnect();
+		if (empty(self::$table))
+			return '{"code":-1, "errmsg":"table empty"}';
+		$query_params = array();
+		$sql = 'select '.$field.' from '.self::$table.' where 1'
+			.self::getParams($params, $query_params);
+
+		$stmt = self::$pdo_instance->prepare($sql);
+		$table_class = ucfirst(StringOpt::unlinetocamel(self::$table).'Model');
+		$stmt->execute($query_params);
+		$ret = $stmt->fetch();
+		return isset($ret[$field]) ? $ret[$field] : false;
+	} // }}}
 
 	public static function findBy($params)
-	{
+	{ // {{{
 		self::dbConnect();
 		if (empty(self::$table))
 			return '{"code":-1, "errmsg":"table empty"}';
@@ -78,20 +91,20 @@ class Repository
 		$stmt->execute($query_params);
 		$ret = $stmt->fetchAll(PDO::FETCH_CLASS, $table_class);
 		return $ret;
-	}
+	} // }}}
 
 	public static function findOneBy($params)
-	{
+	{ // {{{
 		self::dbConnect();
 		if (!isset($params['range']))
 			$params['range'] = array(0, 1);
 		$params['range'][1] = 1;
 		$objs = self::findBy($params);
 		return isset($objs[0]) ? $objs[0] : false;
-	}
+	} // }}}
 
 	public static function findCountBy($params)
-	{
+	{ // {{{
 		self::dbConnect();
 		if (empty(self::$table))
 			return '{"code":-1, "errmsg":"table empty"}';
@@ -101,17 +114,17 @@ class Repository
 		$stmt = self::$pdo_instance->prepare($sql);
 		$stmt->execute($query_params);
 		$ret = $stmt->fetch();
-		return isset($ret['total']) : $ret['total'] : false;
-	}
+		return isset($ret['total']) ? $ret['total'] : false;
+	} // }}}
 
 	public static function getInstance()
-	{
+	{ // {{{
 		self::dbConnect();
 		return self::$pdo_instance;
-	}
+	} // }}}
 
 	public static function persist($model)
-	{
+	{ // {{{
 		self::dbConnect();
 		$class = get_class($model);
 		$pattern = '/^(?<table>.*)Model$/';
@@ -124,10 +137,10 @@ class Repository
 		$table = StringOpt::cameltounline(lcfirst($table_infos['table']));
 		self::setTable($table);
 		return $model->is_set_pri() ? self::update($model) : self::insert($model);
-	}
+	} // }}}
 
 	private static function insert($model)
-	{
+	{ // {{{
 		$fields = $model->get_model_fields();
 		$keys = $params_keys = $query_params = array();
 		foreach ($fields as $key)
@@ -166,10 +179,10 @@ class Repository
 			return 'INSERT_ERROR: '.$e->getMessage();
 		}
 		return $insert_id;
-	}
+	} // }}}
 
 	private static function update ($model)
-	{
+	{ // {{{
 		$pri_key = $model->get_pri_key();
 		$fields = $model->get_model_fields();
 		$func = 'get_'.$pri_key;
@@ -207,10 +220,10 @@ class Repository
 		}
 		$func = 'get_'.$pri_key;
 		return $model->$func();
-	}
+	} // }}}
 
 	public static function __callStatic($method, $params)
-	{
+	{ // {{{
 		$pattern = '/^find(?<sth>(.*){0,1})From(?<table>.*)$/';
 		$method_infos = array();
 		if (preg_match($pattern, $method, $method_infos) == false)
@@ -220,12 +233,21 @@ class Repository
 		}
 		$table = StringOpt::cameltounline(lcfirst($method_infos['table']));
 		self::setTable($table);
-		$func = 'find'.$method_infos['sth'].'By';
-		return self::$func($params[0]);
-	}
+		switch ($method_infos['sth'])
+		{
+		case '':
+		case 'One':
+		case 'Count':
+			$func = 'find'.$method_infos['sth'].'By';
+			return self::$func($params[0]);
+		default:
+			$field = StringOpt::cameltounline(lcfirst($method_infos['sth']));
+			return self::findOneByField($field, $params[0]);
+		}
+	} // }}}
 
 	private static function getParams($params, &$query_params)
-	{
+	{ // {{{
 		$sql = '';
 		if (isset($params['eq']))
 		{
@@ -301,6 +323,6 @@ class Repository
 		}
 
 		return $sql;
-	}
+	} // }}}
 }
 ?>
