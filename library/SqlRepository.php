@@ -1,6 +1,23 @@
 <?php
 class SqlRepository
 {
+	public static function getTags($article_id)
+	{ // {{{
+		$sql = 'select C.* from'
+			.' article as A,'
+			.' article_tag_relation as B,'
+			.' tags as C'
+			.' where A.article_id = B.article_id'
+			.' and B.tag_id = C.tag_id'
+			.' and A.article_id = :article_id';
+
+		$pdo = Repository::getInstance();
+		$stmt = $pdo->prepare($sql);
+		$stmt->execute(array(':article_id' => $article_id));
+		$ret = $stmt->fetchAll();
+		return $ret;
+	} // }}}
+
 	public static function getArticleCountByTagId($tag_id)
 	{ // {{{
 		$pdo = Repository::getInstance();
@@ -134,8 +151,8 @@ class SqlRepository
 	} // }}}
 
 	public static function getPVInfos($date)
-	{
-	}
+	{ // {{{
+	} // }}}
 
 	private static function getWhere($request, $ismood = false, $is_root = false)
 	{ // {{{

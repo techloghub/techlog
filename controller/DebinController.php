@@ -264,7 +264,7 @@ class DebinController extends Controller
 			$ret_infos['month'] = str_replace('-', '/', $arr['month']);
 			$ret_infos['date'] = $arr['date'];
 
-			$tags = TechlogTools::get_tags($article->get_article_id());
+			$tags = SqlRepository::getTags($article->get_article_id());
 			if (is_array($tags))
 				$ret_infos['tags'] = array_slice( $tags, 0, 4);
 

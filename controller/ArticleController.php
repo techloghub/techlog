@@ -66,7 +66,7 @@ class ArticleController extends Controller
 			return;
 		}
 
-		$params['tags']		= TechlogTools::get_tags($article_id);
+		$params['tags']		= SqlRepository::getTags($article_id);
 		$params['title']	= $article->get_title();
 		$params['indexs'] = json_decode($article->get_indexs());
 		$params['contents'] = \
