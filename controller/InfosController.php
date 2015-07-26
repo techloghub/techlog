@@ -16,50 +16,14 @@ class InfosController extends Controller
 			$labels[] = $date;
 		}
 
-		$sql = 'select date(time_str) as date, count(*) as total from'
-			.' stats where time_str <= "'.date('Y-m-d', $timestamp).' 23:59:59"'
-			.' and time_str >= "'.date('Y-m-d', $timestamp - 3600*24*(14-1)).' 00:00:00"'
-			.' group by date(time_str) order by time_str';
-		$pv_count = MySqlOpt::select_query($sql);
-		if ($pv_count == false)
-		{
-			header("Location: /index/notfound");
-			return;
-		}
-
+		$pv_count = SqlRepository::getPVInfos($timestamp);
 		foreach ($pv_count as $pv_info)
 			$pv[] = $pv_info['total'];
 
-		$sql = 'select count(*) as total from stats';
-		$all_pv = MySqlOpt::select_query($sql);
-		if ($all_pv == false)
-		{
-			header("Location: /index/notfound");
-			return;
-		}
-		$all_pv = $all_pv[0]['total'];
+		$all_pv = Repository::findCountFromStats();
+		$all_uv = SqlRepository::getAllUV();
 
-		$sql = 'select sum(num) as total from'
-			.' (select date(time_str) as day, count(distinct remote_host) as num'
-			.' from stats group by day) as A';
-		$all_uv = MySqlOpt::select_query($sql);
-		if ($all_uv == false)
-		{
-			header("Location: /index/notfound");
-			return;
-		}
-		$all_uv = $all_uv[0]['total'];
-
-		$sql = 'select category.category_id, category.category, count(*) as total'
-			.' from article, category'
-			.' where article.category_id = category.category_id'
-			.' group by article.category_id';
-		$category_infos = MySqlOpt::select_query($sql);
-		if ($category_infos == false)
-		{
-			header("Location: /index/notfound");
-			return;
-		}
+		$category_infos = SqlRepository::getCategoryInfos();
 
 		$colors = array(
 			array('color'=>'rgba(0, 255, 255, 0.8)',
@@ -90,32 +54,14 @@ class InfosController extends Controller
 			$category_data[] = $temp_infos;
 		}
 
-		$sql = 'select count(*) as total from mood';
-		$mood_infos = MySqlOpt::select_query($sql);
-		if ($mood_infos == false)
-		{
-			header("Location: /index/notfound");
-			return;
-		}
 		$category_data[] = array(
 			'label'	=> '心情小说',
-			'value'	=> intval($mood_infos[0]['total']),
+			'value'	=> intval(Repository::findCountFromMood()),
 			'color'	=> $colors[count($colors)-1]['color'],
 			'highlight'	=> $colors[count($colors)-1]['light'],
 		);
 
-		$sql = 'select a.category_id, a.article_id, b.category, a.title, a.inserttime'
-			.' from article a, category b where not exists'
-			.' ( select 1 from article where category_id=a.category_id'
-			.' and inserttime>a.inserttime )'
-			.' and a.category_id = b.category_id order by category_id';
-		$category_infos = MySqlOpt::select_query($sql);
-		if ($category_infos == false)
-		{
-			header("Location: /index/notfound");
-			return;
-		}
-
+		$category_infos = SqlRepository::getCategoryNewArticle();
 		$category_ids = array('龙潭书斋'=>1, '读书笔记'=>2, '龙渊阁记'=>3, '技术分享'=>4);
 		if ($this->is_root)
 		{

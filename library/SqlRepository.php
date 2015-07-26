@@ -20,11 +20,12 @@ class SqlRepository
 
 	public static function getArticleCountByTagId($tag_id)
 	{ // {{{
-		$pdo = Repository::getInstance();
 		$tag_id = intval($tag_id);
 		$sql = 'select count(*) as count from'
 			.' (select 1 from article_tag_relation'
 			.' where tag_id = '.$tag_id.' group by article_id) as A';
+
+		$pdo = Repository::getInstance();
 		$stmt = $pdo->query($sql);
 		$ret = $stmt->fetch();
 		return isset($ret['count']) ? $ret['count'] : false;
@@ -150,8 +151,56 @@ class SqlRepository
 		return array($ret['total'], $ret['date']);
 	} // }}}
 
-	public static function getPVInfos($date)
+	public static function getPVInfos($timestamp)
 	{ // {{{
+		$sql = 'select date(time_str) as date, count(*) as total from'
+			.' stats where time_str <= "'.date('Y-m-d', $timestamp).' 23:59:59"'
+			.' and time_str >= "'.date('Y-m-d', $timestamp - 3600*24*(14-1)).' 00:00:00"'
+			.' group by date(time_str) order by time_str';
+
+		$pdo = Repository::getInstance();
+		$stmt = $pdo->query($sql);
+		$ret = $stmt->fetchAll();
+		return $ret;
+	} // }}}
+
+	public static function getAllUV()
+	{ // {{{
+		$sql = 'select sum(num) as total from'
+			.' (select date(time_str) as day, count(distinct remote_host) as num'
+			.' from stats group by day) as A';
+
+		$pdo = Repository::getInstance();
+		$stmt = $pdo->query($sql);
+		$ret = $stmt->fetch();
+		return isset($ret['total']) ? $ret['total'] : false;
+	} // }}}
+
+	public static function getCategoryNewArticle()
+	{ // {{{
+		$sql = 'select a.category_id, a.article_id, b.category, a.title, a.inserttime'
+			.' from article a, category b where not exists'
+			.' ( select 1 from article where category_id=a.category_id'
+			.' and inserttime>a.inserttime )'
+			.' and a.category_id = b.category_id order by category_id';
+
+		$pdo = Repository::getInstance();
+		$stmt = $pdo->query($sql);
+		$ret = $stmt->fetchAll();
+		return $ret;
+	} // }}}
+
+	public static function getCategoryInfos()
+	{ // {{{
+		$sql = 'select category.category_id, category.category, count(*) as total'
+			.' from article, category'
+			.' where article.category_id = category.category_id'
+			.' group by article.category_id';
+
+		$pdo = Repository::getInstance();
+		$stmt = $pdo->query($sql);
+		$ret = $stmt->fetchAll();
+		return $ret;
 	} // }}}
 
 	private static function getWhere($request, $ismood = false, $is_root = false)

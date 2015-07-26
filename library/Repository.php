@@ -239,6 +239,7 @@ class Repository
 		case 'One':
 		case 'Count':
 			$func = 'find'.$method_infos['sth'].'By';
+			$params = empty($params) ? array('') : $params;
 			return self::$func($params[0]);
 		default:
 			$field = StringOpt::cameltounline(lcfirst($method_infos['sth']));
