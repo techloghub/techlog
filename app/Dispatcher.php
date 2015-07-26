@@ -1,9 +1,4 @@
 <?php
-require_once(__DIR__.'/../app/register.php');
-require_once(LIB_PATH.'/Controller.php');
-require_once(LIB_PATH.'/TechlogTools.php');
-require_once(LIB_PATH.'/SphinxClient.php');
-
 class Dispatcher
 {
 	private $loader = null;

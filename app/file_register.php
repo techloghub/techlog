@@ -1,0 +1,9 @@
+<?php
+require_once(LIB_PATH.'/StringOpt.php');
+require_once(LIB_PATH.'/Controller.php');
+require_once(LIB_PATH.'/Repository.php');
+require_once(APP_PATH.'/Dispatcher.php');
+require_once(LIB_PATH.'/TechlogTools.php');
+require_once(LIB_PATH.'/SphinxClient.php');
+require_once(LIB_PATH.'/SqlRepository.php');
+?>

@@ -7,6 +7,7 @@ define('DRAFT_PATH', __DIR__.'/../draft');
 define('MODEL_PATH', __DIR__.'/../model');
 define('RESOURCE_PATH', __DIR__.'/../resource');
 define('CONTROLLER_PATH', __DIR__.'/../controller');
+require_once(APP_PATH.'/file_register.php');
 
 $controller_list = array(
 	'ArticleController',

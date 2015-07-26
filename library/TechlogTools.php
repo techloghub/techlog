@@ -1,9 +1,4 @@
 <?php
-require_once (LIB_PATH.'/'.'logopt.php');
-require_once (LIB_PATH.'/'.'stringopt.php');
-require_once (LIB_PATH.'/'.'Repository.php');
-require_once (LIB_PATH.'/'.'SqlRepository.php');
-
 class TechlogTools
 {
 	public static function pre_treat_article ($file)
