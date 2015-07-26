@@ -7,7 +7,6 @@ class DebinController extends Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->sphinx = $this->getSphinx();
 		$this->limit = 10;
 	}
 
@@ -73,9 +72,7 @@ class DebinController extends Controller
 		$articles = SqlRepository::getArticlesByTagId(
 			$tag_id, array(($page-1)*$this->limit, $this->limit));
 		$tag_name = Repository::findTagNameFromTags(
-			array(
-				'eq' => array('tag_id' => $tag_id)
-			)
+			array('eq' => array('tag_id' => $tag_id))
 		);
 
 		$params = array(
@@ -131,14 +128,11 @@ class DebinController extends Controller
 
 	public function searchArticle($request)
 	{
-		$where_str = $this->getWhere($request, false);
-		$count_sql = 'select count(*) as count from article where 1'
-			.$where_str;
-		$article_sql = 'select * from article where 1'.$where_str
-			.' order by inserttime desc'
-			.' limit '.$request['start'].', '.$this->limit;
-		$count = MySqlOpt::select_query($count_sql);
-		$article_infos = MySqlOpt::select_query($article_sql);
+		$request['limit'] = $this->limit;
+		$request['ismood'] = false;
+		$request['isroot'] = $this->is_root;
+		$count = SqlRepository::getArticleMoodCountByRequest($request);
+		$articles = SqlRepository::getArticleMoodByRequest($request);
 
 		$params = array(
 			'page'	=> $request['page'],
@@ -149,8 +143,8 @@ class DebinController extends Controller
 			'search'	=> $request['search'],
 			'opt_type'	=> $request['opt_type'],
 			'category'	=> $request['category'],
-			'article_count'	=> $count[0]['count'],
-			'article_infos'	=> $this->getArticleInfos($article_infos),
+			'article_count'	=> $count,
+			'article_infos'	=> $this->getArticleInfos($articles),
 		);
 
 		$this->predisplay($params);
@@ -158,14 +152,11 @@ class DebinController extends Controller
 
 	public function searchMood($request)
 	{
-		$count_sql = 'select count(*) as count from mood where 1'
-			.$this->getWhere($request, true);
-		$mood_sql = 'select * from mood where 1'
-			.$this->getWhere($request, true)
-			.' order by inserttime desc'
-			.' limit '.(($request['page']-1)*$this->limit).', '.$this->limit;
-		$count = MySqlOpt::select_query($count_sql);
-		$mood_infos = MySqlOpt::select_query($mood_sql);
+		$request['limit'] = $this->limit;
+		$request['ismood'] = true;
+		$request['isroot'] = $this->is_root;
+		$count = SqlRepository::getArticleMoodCountByRequest($request);
+		$moods = SqlRepository::getArticleMoodByRequest($request);
 
 		$params = array(
 			'page'	=> $request['page'],
@@ -177,8 +168,8 @@ class DebinController extends Controller
 			'search'	=> $request['search'],
 			'opt_type'	=> $request['opt_type'],
 			'category'	=> $request['category'],
-			'article_count'	=> $count[0]['count'],
-			'article_infos'	=> $this->getMoodInfos($mood_infos),
+			'article_count'	=> $count,
+			'article_infos'	=> $this->getMoodInfos($moods),
 		);
 		$this->predisplay($params);
 	}
@@ -207,92 +198,6 @@ class DebinController extends Controller
 			isset($input['opt_type']) ? $input['opt_type'] : 'content';
 
 		return $query_info;
-	}
-
-	public function getWhere($request, $ismood = false)
-	{
-		$dates = array();
-		$tag_ids = array();
-		$ret_params = array();
-		$tags = explode(',', $request['tags']);
-
-		if (!empty($tags))
-		{
-			foreach ($tags as $tag)
-			{
-				$tag_infos = explode('_', $tag);
-				if (count($tag_infos) != 3)
-					continue;
-				switch ($tag_infos[1])
-				{
-				case 'tag':
-					$tag_ids[] = $tag_infos[2];
-					break;
-				case 'date':
-					$tag_infos[2][4] = '-';
-					$dates[] = $tag_infos[2];
-					break;
-				default:
-					break;
-				}
-			}
-			if (!$ismood && (!$this->is_root || $request['opt_type'] != 'all'))
-				$where_str .= ' and category_id < 5';
-			else if (!$this->is_root)
-				$where_str .= ' and 0';
-
-			if (!empty($tag_ids) && !$ismood)
-			{
-				$where_str .=
-					' and article_id in ('
-					.' select article_id from article_tag_relation'
-					.' where tag_id in ('.implode(',', $tag_ids).')'
-					.')';
-			}
-
-			if (!empty($dates))
-			{
-				$where_arr = array();
-				foreach ($dates as $date)
-				{
-					$where_arr[] .=
-						'inserttime >= "'.$date.'-01 00:00:00"'
-						.' and inserttime <= "'.$date.'-31 23:59:59"';
-				}
-				$where_str .= ' and ('.implode(' or ', $where_arr).')';
-			}
-		}
-
-		if (!empty($request['search']))
-		{
-			$article_ids = array();
-			$searchs = explode(' ', $request['search']);
-			foreach ($searchs as $key)
-			{
-				$key = trim($key);
-				if (empty($key))
-					continue;
-				$search_ret = $this->sphinx->query($key, $request['opt_type']);
-
-				if (empty($article_ids))
-					$article_ids = array_keys($search_ret['matches']);
-				else
-				{
-					$article_ids =
-						array_intersect(
-							$article_ids,
-							array_keys($search_ret['matches'])
-						);
-				}
-			}
-			if (!$ismood)
-				$where_str .= ' and article_id in ('.implode(',', $article_ids).')';
-			else if ($this->is_root)
-				$where_str .= ' and mood_id in ('.implode(',', $article_ids).')';
-			else
-				$where_str = ' and 0';
-		}
-		return $where_str;
 	}
 
 	private function predisplay($params)
@@ -385,17 +290,6 @@ class DebinController extends Controller
 			$ret[] = $ret_infos;
 		}
 		return $ret;
-	}
-
-	private function getSphinx()
-	{
-		$sphinx = new SphinxClient();
-		$sphinx->setServer("localhost", 9312);
-		$sphinx->setMatchMode(SphinxClient::SPH_MATCH_PHRASE);
-		$sphinx->setLimits(0, 1000);
-		$sphinx->setMaxQueryTime(30);
-
-		return $sphinx;
 	}
 }
 ?>
