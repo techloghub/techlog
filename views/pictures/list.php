@@ -75,7 +75,7 @@
 							<?php echo $image->get_category() ?>
 						</td>
 						<td valign="middle" style="padding-top:50px;"align="center" valign="middle">
-							<?php echo $image->get_image_id() ?>
+							<?php echo $image->get_path() ?>
 						</td>
 						<td valign="middle" style="padding-top:50px;"align="center" valign="middle">
 							<?php echo $image->get_inserttime() ?>
