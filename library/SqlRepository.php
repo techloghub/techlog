@@ -2,7 +2,7 @@
 class SqlRepository
 {
 	public static function getArticleCountByTagId($tag_id)
-	{
+	{ // {{{
 		$pdo = Repository::getInstance();
 		$tag_id = intval($tag_id);
 		$sql = 'select count(*) as count from'
@@ -11,10 +11,10 @@ class SqlRepository
 		$stmt = $pdo->query($sql);
 		$ret = $stmt->fetch();
 		return isset($ret['count']) ? $ret['count'] : false;
-	}
+	} // }}}
 
 	public static function getArticlesByTagId($tag_id, $range)
-	{
+	{ // {{{
 		$pdo = Repository::getInstance();
 		$sql = 'select article.*'
 			.' from article, article_tag_relation, tags'
@@ -28,10 +28,10 @@ class SqlRepository
 		$stmt->execute();
 		$ret = $stmt->fetchAll(PDO::FETCH_CLASS, 'ArticleModel');
 		return $ret;
-	}
+	} // }}}
 
 	public static function getRandTags()
-	{
+	{ // {{{
 		$pdo = Repository::getInstance();
 		$sql = 'select * from `tags`'
 			.' where tag_id >= (select floor(max(tag_id) * rand()) from tags)'
@@ -41,10 +41,10 @@ class SqlRepository
 		$stmt->execute();
 		$ret = $stmt->fetchAll(PDO::FETCH_CLASS, 'TagsModel');
 		return $ret;
-	}
+	} // }}}
 
 	public static function getTagsByArticleId($article_id)
-	{
+	{ // {{{
 		$sql = 'select C.* from'
 			.' article as A,'
 			.' article_tag_relation as B,'
@@ -57,10 +57,10 @@ class SqlRepository
 		$stmt->execute();
 		$ret = $stmt->fetchAll(PDO::FETCH_CLASS, 'TagsModel');
 		return $ret;
-	}
+	} // }}}
 
 	public static function getArticleMoodCountByRequest($request)
-	{
+	{ // {{{
 		$start = $request['start'];
 		$limit = $request['limit'];
 		$is_mood = $request['ismood'];
@@ -74,10 +74,10 @@ class SqlRepository
 		$stmt = $pdo->query($sql);
 		$ret = $stmt->fetch();
 		return isset($ret['count']) ? $ret['count'] : false;
-	}
+	} // }}}
 
 	public static function getArticleMoodByRequest($request)
-	{
+	{ // {{{
 		$start = $request['start'];
 		$limit = $request['limit'];
 		$is_mood = $request['ismood'];
@@ -93,10 +93,23 @@ class SqlRepository
 		$stmt = $pdo->query($sql);
 		$ret = $stmt->fetchAll(PDO::FETCH_CLASS, $model);
 		return $ret;
-	}
+	} // }}}
+
+	public static function getBooknotes()
+	{ // {{{
+		$sql = 'select booknote.* from booknote, article'
+			.' where booknote.index_article_id = article.article_id'
+			.' and booknote.note_id not in (2, 3, 5, 9, 4)'
+			.' order by article.access_count desc';
+
+		$pdo = Repository::getInstance();
+		$stmt = $pdo->query($sql);
+		$ret = $stmt->fetchAll(PDO::FETCH_CLASS, 'BooknoteModel');
+		return $ret;
+	} // }}}
 
 	private static function getWhere($request, $ismood = false, $is_root = false)
-	{
+	{ // {{{
 		$sphinx = self::getSphinx();
 		$where_str = '';
 		$dates = array();
@@ -181,10 +194,10 @@ class SqlRepository
 				$where_str = ' and 0';
 		}
 		return $where_str;
-	}
+	} // }}}
 
 	private static function getSphinx()
-	{
+	{ // {{{
 		$sphinx = new SphinxClient();
 		$sphinx->setServer("localhost", 9312);
 		$sphinx->setMatchMode(SphinxClient::SPH_MATCH_PHRASE);
@@ -192,6 +205,6 @@ class SqlRepository
 		$sphinx->setMaxQueryTime(30);
 
 		return $sphinx;
-	}
+	} // }}}
 }
 ?>
