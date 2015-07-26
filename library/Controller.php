@@ -23,33 +23,24 @@ class Controller
 
 	public function record_access()
 	{
-		if (isset($_SERVER['REMOTE_ADDR']))
-			$remote_host	= $_SERVER['REMOTE_ADDR'];
-		else
-			$remote_host	= "-";
-		if (isset($_SERVER['HTTP_REFERER']))
-			$referer	= $_SERVER['HTTP_REFERER'];
-		else
-			$referer	= "-";
-		if (isset($_SERVER['HTTP_USER_AGENT']))
-			$user_agent	= $_SERVER['HTTP_USER_AGENT'];
-		else
-			$user_agent	= "-";
-
-		$infos = array(
-			'time_str' => 'now()',
-			'remote_host' => $remote_host,
-			'request' => "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'],
-			'referer' => $referer,
-			'user_agent' => $user_agent,
+		$remote_host = isset($_SERVER['REMOTE_ADDR']) ?
+			$_SERVER['REMOTE_ADDR'] : '-';
+		$referer = isset($_SERVER['HTTP_REFERER']) ?
+			$_SERVER['HTTP_REFERER'] : '-';
+		$user_agent = isset($_SERVER['HTTP_USER_AGENT']) ?
+			$_SERVER['HTTP_USER_AGENT'] : '-';
+		
+		$stats = new StatsModel(
+			array(
+				'time_str' => 'now()',
+				'remote_host' => $remote_host,
+				'request' => "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'],
+				'referer' => $referer,
+				'user_agent' => $user_agent,
+			)
 		);
 
-		MySqlOpt::insert('stats', $infos);
-	}
-
-	public function mysql_protect($s)
-	{
-		return "\"" . mysql_escape_string ($s) . "\"";
+		Repository::persist($stats);
 	}
 
 	public function display($func, $params)

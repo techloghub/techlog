@@ -28,7 +28,8 @@ $model_list = array(
 	'EarningsModel',
 	'ImagesModel',
 	'MoodModel',
-	'TagsModel'
+	'TagsModel',
+	'StatsModel',
 );
 
 require_once (LIB_PATH.'/'.'Controller.php');
