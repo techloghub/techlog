@@ -120,6 +120,23 @@ class SqlRepository
 		return $ret;
 	} // }}}
 
+	public static function getUVInfos($date)
+	{ // {{{
+		$sql = 'select date(time_str) as date, count(*) as total from'
+			.' (select time_str from stats where time_str <= "'.$date.' 23:59:59"'
+			.' and time_str >= "'.$date.' 00:00:00" group by remote_host) as A'
+			.' group by date(time_str)';
+
+		$pdo = Repository::getInstance();
+		$stmt = $pdo->query($sql);
+		$ret = $stmt->fetch();
+		return array($ret['total'], $ret['date']);
+	} // }}}
+
+	public static function getPVInfos($date)
+	{
+	}
+
 	private static function getWhere($request, $ismood = false, $is_root = false)
 	{ // {{{
 		$sphinx = self::getSphinx();

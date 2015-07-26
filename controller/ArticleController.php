@@ -82,7 +82,7 @@ class ArticleController extends Controller
 			) === null)
 		{
 			$params['contents'] = '<div class="page-header"><h1>'
-				.$article_info['title']
+				.$article->get_title()
 				.'</h1></div>'.$params['contents'];
 		}
 

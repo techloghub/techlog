@@ -11,18 +11,9 @@ class InfosController extends Controller
 		{
 			$date = date('Y-m-d', $timestamp - 3600*24*(14-1) + $i*3600*24);
 
-			$sql = 'select date(time_str) as date, count(*) as total from'
-				.' (select time_str from stats where time_str <= "'.$date.' 23:59:59"'
-				.' and time_str >= "'.$date.' 00:00:00" group by remote_host) as A'
-				.' group by date(time_str)';
-			$remote_host_count = MySqlOpt::select_query($sql);
-			if ($remote_host_count == false)
-			{
-				header("Location: /index/notfound");
-				return;
-			}
-			$uv[] = $remote_host_count[0]['total'];
-			$labels[] = $remote_host_count[0]['date'];
+			list($total, $date) = SqlRepository::getUVInfos($date);
+			$uv[] = $total;
+			$labels[] = $date;
 		}
 
 		$sql = 'select date(time_str) as date, count(*) as total from'
