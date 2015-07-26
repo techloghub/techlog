@@ -140,11 +140,11 @@ class TechlogTools
 				if ($id != null)
 				{
 					$image_id = intval(trim($id));
-					$sql = 'select path from images where image_id='.$image_id;
-					$path = MySqlOpt::select_query($sql);
-					if (isset($path[0]['path']))
+					$path = Repository::findPathFromImages(
+						array('eq' => array('image_id' => $image_id))
+					);
+					if ($path != false)
 					{
-						$path = $path[0]['path'];
 						$line =
 							str_replace(
 								'id="'.$id.'"',
@@ -243,10 +243,11 @@ class TechlogTools
 			else if (substr($line, 0, 2) == '<a')
 			{
 				$id = StringOpt::spider_string($line, 'id="', '"');
-				$sql = 'select title from article where article_id = '.intval($id);
-				$title = MySqlOpt::select_query($sql);
-				$title = empty($title[0]) ?
-					'ERROR：加载失败' : $title[0]['title'];
+				$title = Repository::findTitleFromArticle(
+					array('eq' => array('article_id' => $id))
+				);
+				if (!$title)
+					$title = 'ERROR：加载失败';
 				$contents .= '<p><a target="_blank" href="/article/list/'.intval($id).'">'
 					.$title.'</a></p>';
 			}
@@ -301,22 +302,20 @@ class TechlogTools
 			return -1;
 		if (!empty($id))
 		{
-			$sql = 'select path from images where image_id='.$id;
-			$info = MySqlOpt::select_query($sql);
-			if (isset($info[0]['path']))
+			$image = Repository::findOneFromImages(
+				array('eq' => array('image_id' => $id))
+			);
+			if ($image != false)
 			{
-				$path = $info[0]['path'];
+				$path = $image->get_path();
 				$blog_image = WEB_PATH.'/resource/'.$path;
 				unlink($blog_image);
 				$ret = copy($file, $blog_image);
 				if ($ret == false)
 					return -2;
-				MySqlOpt::update(
-					'images',
-					array('md5'=>md5_file($blog_image),
-					'category'=>$category),
-					array('image_id'=>$id)
-				);
+				$image->set_md5(md5_file($blog_image));
+				$image->set_category($category);
+				$id = Repository::persist($image);
 			}
 			else
 				return -4;
@@ -331,13 +330,15 @@ class TechlogTools
 			$ret = copy($file, $blog_image);
 			if ($ret == false)
 				return -5;
-			$id = MySqlOpt::insert('images',
-				array('md5'=>md5_file($blog_image),
-				'inserttime'=>'now()',
-				'path'=>$path,
-				'category'=>$category),
-				true
+			$image = new ImagesModel(
+				array(
+					'md5' => md5_file($blog_image),
+					'path' => $path,
+					'category' => $category,
+					'inserttime' => 'now()'
+				)
 			);
+			$id = Repository::persist($image);
 		}
 		if (!is_dir('/home/zeyu/Documents/images'))
 		{
@@ -356,29 +357,19 @@ class TechlogTools
 			echo $file_path.PHP_EOL;
 			return false;
 		}
-		$db_parrams = array();
-		$db_parrams['md5'] = md5_file($file_path);
 		$pos = strpos($file_path, '/html/');
 		if ($pos === false)
 			return false;
-		$db_parrams['path'] = substr($file_path, $pos+strlen('/html/'));
-		$db_parrams['category'] = $category;
-		$ret = MySqlOpt::insert('images', $db_parrams, true);
-		if ($ret == false)
-		{
-			LogOpt::set('exception', 'insert_into_images_error',
-				MySqlOpt::errno(), MySqlOpt::error()
-			);
-		}
-		else
-		{
-			LogOpt::set('info', 'insert_into_images_success',
-				'image_id', $ret,
-				'path', $path,
-				'category', $category
-			);
-		}
-		return $ret;
+		$image = new ImagesModel(
+			array(
+				'md5' => md5_file($file_path),
+				'path' => substr($file_path, $pos+strlen('/html/')),
+				'category' => $category,
+				'inserttime' => 'now()'
+			)
+		);
+		$id = Repository::persist($image);
+		return $id;
 	}
 	public static function get_index ($html_str)
 	{
