@@ -1,6 +1,5 @@
 <?php
 require_once (__DIR__.'/../app/register.php');
-require_once (LIB_PATH.'/TechlogTools.php');
 LogOpt::init('article_creater', true);
 $options = getopt('i:t:g:c:d:a:');
 if (!isset($options['t']) || !isset($options['g']) || !isset($options['c']))
