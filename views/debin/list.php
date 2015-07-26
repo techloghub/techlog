@@ -139,7 +139,7 @@
 							<?php foreach ($params['rand_tags'] as $tag) { ?>
 							<li>
 							<h2 style="line-height:30px">
-								<a href="/debin/tag/<?php echo $tag->get_tag_id() ?>" target="_blank"><?php echo $infos->get_tag_name() ?></a>
+								<a href="/debin/tag/<?php echo $tag->get_tag_id() ?>" target="_blank"><?php echo $tag->get_tag_name() ?></a>
 							</h2>
 							</li>
 							<?php } ?>
