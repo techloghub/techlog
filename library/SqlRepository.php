@@ -108,6 +108,18 @@ class SqlRepository
 		return $ret;
 	} // }}}
 
+	public static function getTagIdCount()
+	{ // {{{
+		$sql = 'select tag_id,count(*) as article_count from article_tag_relation'
+			.' group by tag_id'
+			.' order by article_count desc, inserttime desc';
+
+		$pdo = Repository::getInstance();
+		$stmt = $pdo->query($sql);
+		$ret = $stmt->fetchAll();
+		return $ret;
+	} // }}}
+
 	private static function getWhere($request, $ismood = false, $is_root = false)
 	{ // {{{
 		$sphinx = self::getSphinx();
