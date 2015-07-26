@@ -24,24 +24,26 @@ class PicturesController extends Controller
 		$category = $request['category'];
 		if ($request['category'] == 'all')
 			$request['category'] = '';
-		$where_str = $this->getWhere($request);
-		$sql = 'select count(*) as count from images where 1'
-			.$where_str;
-		$count = MySqlOpt::select_query($sql);
-		$count = $count[0]['count'];
+		$query_params = $this->getQueryParams($request);
+		$count = Repository::findCountFromImages($query_params);
 		$start = ($page-1)*$this->limit;
-		$sql = 'select * from images where 1'.$where_str
-			.' order by inserttime desc limit '.$start.', '.$this->limit;
-		$infos = MySqlOpt::select_query($sql);
-		$sql = 'select category from images group by category';
-		$category_infos = MySqlOpt::select_query($sql);
-		$category_list = array('all');
-		foreach ($category_infos as $cat)
-			$category_list[] = $cat['category'];
+		$images = Repository::findFromImages(array(
+			'order' => array('inserttime' => 'desc'),
+			'range' => array($start, $this->limit)
+		));
+		$category_list = array(
+			'all',
+			'icon',
+			'mood',
+			'article',
+			'earnings',
+			'booknote',
+			'background',
+		);
 		$params = array(
 			'page'	=> $page,
 			'count'	=> $count,
-			'infos'	=> $infos,
+			'images'	=> $images,
 			'title'	=> '龙潭相册',
 			'limit'	=> $this->limit,
 			'category'	=> $category,
@@ -121,21 +123,21 @@ class PicturesController extends Controller
 			$params[$key] = isset($input[$key]) ? $input[$key] : '';
 		return $params;
 	}
-	private function getWhere($request)
+	private function getQueryParams($request)
 	{
-		$sql = '';
+		$params = array();
 		foreach ($request as $key => $value)
 		{
 			if (empty($value))
 				continue;
 			if ($key == 'start_time')
-				$sql .= ' and inserttime >= "'.mysql_escape_string($value).'"';
+				$params['ge']['inserttime'] = $value;
 			else if ($key == 'end_time')
-				$sql .= ' and inserttime <= "'.mysql_escape_string($value).'"';
+				$params['le']['inserttime'] = $value;
 			else
-				$sql .= ' and '.$key.'="'.mysql_escape_string($value).'"';
+				$params['eq'][$key] = $value;
 		}
-		return $sql;
+		return $params;
 	}
 }
 ?>
