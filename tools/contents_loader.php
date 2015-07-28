@@ -1,7 +1,5 @@
 <?php
 require_once (__DIR__.'/../app/register.php');
-require_once (LIB_PATH.'/TechlogTools.php');
-
 LogOpt::init('contents_loader', true);
 
 $draft_files = scandir(DRAFT_PATH);
@@ -12,19 +10,14 @@ foreach ($draft_files as $draft)
 	$article_id = StringOpt::spider_string($draft, 'draft', '.tpl');
 	if (empty($article_id))
 		continue;
-	$sql = 'select title from article where article_id='.$article_id;
-	$article_info = MySqlOpt::select_query($sql);
-	if ($article_info == null)
+	$title = findTitleFromArticle(
+		array('eq' => array('article_id' => $article_id)));
+	if ($title == false)
 	{
-		LogOpt::set('exception', '草稿原文不存在',
-			'article_id', $article_id,
-			MySqlOpt::errno(), MySqlOpt::error()
-		);
-
+		LogOpt::set('exception', '草稿原文不存在', 'article_id', $article_id);
 		continue;
 	}
-	echo '是否加载该草稿到日志原文？'
-		.'《'.$article_info[0]['title'].'》'
+	echo '是否加载该草稿到日志原文？《'.$title.'》'
 		.'(arctile_id:'.$article_id.') [y/N]';
 
 	$sure = fgets(STDIN);
@@ -66,17 +59,16 @@ foreach ($draft_files as $draft)
 				'image_path', $image_path);
 			return;
 		}
-		$query = 'select image_id from images where path="'.$image_path.'"';
-		$image_id = MySqlOpt::select_query($query);
-		if ($image_id == null)
+		$image_id = Repository::findImageIdFromImages(
+			array('eq' => array('path' => $image_path)));
+		if ($image_id == false)
 		{
 			$full_path = WEB_PATH.'/resource/'.$image_path;
 			$image_id = TechlogTools::load_image($full_path, 'article');
 			if ($image_id == false)
 			{
 				LogOpt::set('exception', '添加图片到数据库失败',
-					'image_path', $image_path,
-					MySqlOpt::errno(), MySqlOpt::error()
+					'image_path', $image_path
 				);
 
 				return;
@@ -90,6 +82,7 @@ foreach ($draft_files as $draft)
 		}
 	}
 
+	$article = find
 	$ret = MySqlOpt::update('article', $infos, array('article_id'=>$article_id));
 	if ($ret == null)
 	{

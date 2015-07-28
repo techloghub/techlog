@@ -1,6 +1,5 @@
 <?php
 require_once (__DIR__.'/../app/register.php');
-require_once (LIB_PATH.'/TechlogTools.php');
 
 $options = getopt('t:');
 if (!isset($options['t']))

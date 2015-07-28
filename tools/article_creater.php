@@ -47,17 +47,19 @@ while (1)
 		echo '文中目标图片不存在'."\t".$image_path.PHP_EOL;
 		return;
 	}
-	$query = 'select image_id from images where path="'.$image_path.'"';
-	$image_id = MySqlOpt::select_query($query);
-	if ($image_id == null)
+	$image_id = findImageIdFromImages(
+		array(
+			'eq' => array('path' => $image_path)
+		)
+	);
+	if ($image_id == false)
 	{
 		$full_path = WEB_PATH.'/resource/'.$image_path;
 		$image_id = TechlogTools::load_image ($full_path, 'article');
 		if ($image_id == null)
 		{
 			LogOpt::set('exception', '添加图片到数据库失败',
-				'image_path', $image_path,
-				MySqlOpt::errno(), MySqlOpt::error()
+				'image_path', $image_path
 			);
 			return;
 		}
@@ -70,13 +72,14 @@ while (1)
 }
 // 获取 category_id
 $query = 'select category_id from category where category="'.$options['c'].'"';
-$category_info = MySqlOpt::select_query($query);
-if ($category_info == null)
+$infos['category_id'] = Repository::findCategoryIdFromCategory(
+	array('eq' => array('category' => $options['c']))
+);
+if ($infos['category_id'] == false)
 {
 	echo '指定category不存在'."\t".$options['c']."\t".PHP_EOL;
 	return;
 }
-$infos['category_id'] = $category_info[0]['category_id'];
 // 获取 title、title_desc、updatetime
 $infos['title'] = $options['t'];
 if (isset($options['d']))
@@ -90,31 +93,30 @@ if (isset($options['a']))
 // 插入日志
 if (isset($options['i']))
 {
-	$ret = MySqlOpt::update(
-		'article',
-		$infos,
-		array('article_id'=>$options['i'])
-	);
-	if ($ret == null)
+	$article = findOneFromArticle(
+		array('eq' => array('article_id' => $options['i'])));
+	if ($article == false)
 	{
-		LogOpt::set ('exception', '日志更新失败',
-			'article_id', $options['i'],
-			MySqlOpt::errno(), MySqlOpt::error()
+		LogOpt::set('exception', '日志不存在',
+			'article_id', $options['i']
 		);
 		return;
 	}
-	$article_id = $options['i'];
+	foreach ($infos as $key => $value)
+	{
+		$func = 'set_'.$key;
+		$article->$func($value);
+	}
 }
 else
 {
-	$article_id = MySqlOpt::insert('article', $infos, true);
-	if ($article_id == false)
-	{
-		LogOpt::set ('exception', '日志插入失败',
-			MySqlOpt::errno().':'.MySqlOpt::error()
-		);
-		return;
-	}
+	$article = new ArticleModel($infos);
+}
+$article_id = Repository::persist($article);
+if ($article_id == false)
+{
+	LogOpt::set ('exception', '日志插入失败');
+	return;
 }
 LogOpt::set ('info', '日志插入成功',
 	'article_id', $article_id,
@@ -134,30 +136,28 @@ foreach ($tags as $tag)
 	if ($tag == '')
 		continue;
 	$query = 'select tag_id from tags where tag_name="'.$tag.'"';
-	$tag_infos = MySqlOpt::select_query($query);
-	if ($tag_infos == null)
+	$tag_id = findTagIdFromTags(array('eq' => array('tag_name' => $tag)));
+	if ($tag_id == false)
 	{
-		$tag_id = MySqlOpt::insert('tags', array('tag_name'=>$tag), true);
+		$tag = new TagsModel(array('tag_name' => $tag));
+		$tag_id = persist($tag);
 		if ($tag_id == false)
 		{
-			LogOpt::set ('exception', 'tag 添加失败',
-				MySqlOpt::errno(), MySqlOpt::error()
-			);
+			LogOpt::set ('exception', 'tag 添加失败');
 			continue;
 		}
 	}
-	else
-		$tag_id = $tag_infos[0]['tag_id'];
-	$params = array();
-	$params['article_id'] = $article_id;
-	$params['tag_id'] = $tag_id;
-	$relation_id = MySqlOpt::insert('article_tag_relation', $params, true);
+	$article_tag_relation = new ArticleTagRelationModel(
+		array(
+			'article_id' => $article_id,
+			'tag_id' => $tag_id
+		)
+	);
+	$relation_id = Repository::persist($article_tag_relation);
 	if ($relation_id == false)
 	{
 		LogOpt::set('exception', 'article_tag_relation 更新失败',
-			'article_id', $article_id,
-			'tag_id', $tag_id,
-			MySqlOpt::errno(), MySqlOpt::error()
+			'article_id', $article_id, 'tag_id', $tag_id
 		);
 		continue;
 	}
