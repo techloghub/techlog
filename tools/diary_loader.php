@@ -1,9 +1,6 @@
 <?php
 require_once (__DIR__.'/../app/register.php');
-require_once (LIB_PATH.'/TechlogTools.php');
-
 ini_set('date.timezone','Asia/Shanghai');
-
 LogOpt::init('diary_loader', true);
 
 $options = getopt('t:');
@@ -71,6 +68,7 @@ if ($indexs != null)
 	$infos['indexs'] = $indexs;
 
 $infos['updatetime'] = 'now()';
+$infos['inserttime'] = 'now()';
 $article = new ArticleModel($infos);
 $article_id = Repository::persist($article);
 if ($article_id == false)
