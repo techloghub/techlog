@@ -194,11 +194,16 @@ class Repository
 			$func = 'get_'.$key;
 			if ($model->$func() !== $old_model->$func())
 			{
-				$set_params[] = $key.'=:'.$key;
-				$query_params[':'.$key] = $model->$func();
+				if ($model->$func() == 'now()')
+					$set_params[] = $key.'=now()';
+				else
+				{
+					$set_params[] = $key.'=:'.$key;
+					$query_params[':'.$key] = $model->$func();
+				}
 			}
 		}
-		if (!empty($query_params))
+		if (!empty($set_params))
 		{
 			try
 			{
