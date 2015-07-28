@@ -10,7 +10,7 @@ foreach ($draft_files as $draft)
 	$article_id = StringOpt::spider_string($draft, 'draft', '.tpl');
 	if (empty($article_id))
 		continue;
-	$title = findTitleFromArticle(
+	$title = Repository::findTitleFromArticle(
 		array('eq' => array('article_id' => $article_id)));
 	if ($title == false)
 	{
