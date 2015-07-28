@@ -5,14 +5,14 @@ class Controller
 
 	public function __construct()
 	{
-		$conf = file_get_contents('/etc/zeyu203/techlog.conf');
-		$conf = unserialize(base64_decode($conf));
+		$config = file_get_contents(APP_PATH.'/config.json');
+		$config = json_decode($config, true);
 
 		if (isset($_COOKIE["LoginInfo"])
-			&& $_COOKIE["LoginInfo"] == $conf['admin']['logininfo']
+			&& $_COOKIE["LoginInfo"] == $config['admin']['logininfo']
 		)
 		{
-			setcookie('LoginInfo', $conf['admin']['logininfo'], time()+1800, '/');
+			setcookie('LoginInfo', $config['admin']['logininfo'], time()+1800, '/');
 			$this->is_root = true;
 		}
 		else

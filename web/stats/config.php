@@ -1,13 +1,13 @@
 <?php
+define('APP_PATH', __DIR__.'/../../app');
 
-$conf = file_get_contents('/etc/zeyu203/techlog.conf');
-$conf = unserialize(base64_decode($conf));
-$conf = $conf['database'];
+$config = file_get_contents(APP_PATH.'/config.json');
+$config = json_decode($config, true);
+$conf = $config['db'];
 
 $sql_host  = $conf['host'];
-$sql_login = $conf['user'];
-$sql_passe = $conf['pwd'];
-$sql_dbase = $conf['db'];
+$sql_login = $conf['username'];
+$sql_passe = $conf['password'];
+$sql_dbase = $conf['dbname'];
 $sql_table = 'stats';
-
 ?>
