@@ -86,10 +86,7 @@ if (isset($options['d']))
 	$infos['title_desc'] = $options['d'];
 $infos['updatetime'] = 'now()';
 // 设置inserttime
-if (isset($options['a']))
-{
-	$infos['inserttime'] = $options['a'];
-}
+$infos['inserttime'] = isset($options['a']) ? $options['a'] : 'now()';
 // 插入日志
 if (isset($options['i']))
 {
@@ -136,11 +133,11 @@ foreach ($tags as $tag)
 	if ($tag == '')
 		continue;
 	$query = 'select tag_id from tags where tag_name="'.$tag.'"';
-	$tag_id = findTagIdFromTags(array('eq' => array('tag_name' => $tag)));
+	$tag_id = Repository::findTagIdFromTags(array('eq' => array('tag_name' => $tag)));
 	if ($tag_id == false)
 	{
 		$tag = new TagsModel(array('tag_name' => $tag));
-		$tag_id = persist($tag);
+		$tag_id = Repository::persist($tag);
 		if ($tag_id == false)
 		{
 			LogOpt::set ('exception', 'tag 添加失败');
