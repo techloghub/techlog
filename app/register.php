@@ -17,6 +17,8 @@ require_once(LIB_PATH.'/TechlogTools.php');
 require_once(LIB_PATH.'/SphinxClient.php');
 require_once(LIB_PATH.'/SqlRepository.php');
 
+ini_set('date.timezone','Asia/Shanghai');
+
 $controller_list = array(
 	'ArticleController',
 	'IndexController',

@@ -1,5 +1,4 @@
 <?php
-ini_set('date.timezone','Asia/Shanghai');
 require_once(__DIR__.'/../app/register.php');
 
 if (strpos(__DIR__, 'example_techlog') !== false) {

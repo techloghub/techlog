@@ -1,10 +1,7 @@
 <?php
 require_once (__DIR__.'/../app/register.php');
-require_once (LIB_PATH.'/TechlogTools.php');
-
-ini_set('date.timezone','Asia/Shanghai');
-
 LogOpt::init('mood_loader', true);
+
 $options = getopt('i:c:d:');
 if (isset($options['c']) && trim($options['c']) != '')
 {

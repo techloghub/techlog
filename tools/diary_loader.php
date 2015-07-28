@@ -1,6 +1,5 @@
 <?php
 require_once (__DIR__.'/../app/register.php');
-ini_set('date.timezone','Asia/Shanghai');
 LogOpt::init('diary_loader', true);
 
 $options = getopt('t:');
