@@ -42,23 +42,19 @@ while (1)
 
 		return;
 	}
-	$query = 'select image_id from images where path="'.$image_path.'"';
-	$image_id = MySqlOpt::select_query($query);
-	if ($image_id == null)
+	$image_id = Repository::findImageIdFromImages(
+		array('eq' => array('path' => $image_path)));
+	if ($image_id == false)
 	{
 		$full_path = WEB_PATH.'/resource/'.$image_path;
 		$image_id = TechlogTools::load_image($full_path, 'article');
 		if ($image_id == false)
 		{
 			LogOpt::set('exception', '添加图片到数据库失败',
-				'image_path', $image_path,
-				MySqlOpt::errno(), MySqlOpt::error()
-			);
+				'image_path', $image_path);
 		}
 		LogOpt::set('info', '添加图片到数据库成功',
-			'image_id', $image_id,
-			'image_path', $image_path
-		);
+			'image_id', $image_id, 'image_path', $image_path);
 
 		$image_ids[] = $image_id;
 	}
@@ -75,13 +71,11 @@ if ($indexs != null)
 	$infos['indexs'] = $indexs;
 
 $infos['updatetime'] = 'now()';
-$article_id = MySqlOpt::insert('article', $infos, true);
-
-if ($article_id == null)
+$article = new ArticleModel($infos);
+$article_id = Repository::persist($article);
+if ($article_id == false)
 {
-	LogOpt::set('exception', 'article insert error',
-		MySqlOpt::errno(), MySqlOpt::error()
-	);
+	LogOpt::set('exception', 'article insert error');
 	return;
 }
 
