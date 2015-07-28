@@ -9,26 +9,28 @@ $options = getopt('i:c:d:');
 if (isset($options['c']) && trim($options['c']) != '')
 {
 	$infos = array();
-	if (isset($options['i']) && trim($options['i']) != '')
-	{
-		$infos['inserttime'] = $options['i'];
-	}
-	$infos ['contents'] = $options['c'];
+	$infos['inserttime'] = isset($options['i']) ? $options['i'] : 'now()';
+	$infos['contents'] = $options['c'];
 	if (isset($options['d']) && trim($options['d']) != '')
 	{
-		$infos['mood_id'] = $options['d'];
+		$mood = Repository::findOneFromMood(
+			array('eq' => array('mood_id' => $options['d'])));
+		foreach ($infos as $key=>$value)
+		{
+			$func = 'set_'.$key;
+			$mood->$func($value);
+		}
 	}
-	$mood_id = MySqlOpt::insert('mood', $infos, true);
+	else
+	{
+		$mood = new MoodModel($infos);
+	}
+	$mood_id = Repository::persist($mood);
 	if ($mood_id === false)
 	{
-		LogOpt::set('exception', 'mood add error',
-			MySqlOpt::errno(), MySqlOpt::error()
-		);
-
+		LogOpt::set('exception', 'mood add error');
 		continue;
 	}
-	unset($infos['contents']);
-	unset($infos['mood_id']);
 	LogOpt::set('info', 'mood add success', 'mood_id', $mood_id);
 }
 else
@@ -49,22 +51,14 @@ else
 			$sure = fgets(STDIN);
 			if (trim($sure[0]) == 'Y' || trim($sure[0]) == 'y')
 			{
-				$mood_id = MySqlOpt::insert(
-					'mood',
-					array('contents'=>$contents),
-					true
-				);
-
+				$mood = new MoodModel(array( 'contents' => $contents));
+				$mood_id = Repository::persist($mood);
 				if ($mood_id === false)
 				{
 					LogOpt::set('exception', 'mood add error',
-						MySqlOpt::errno(), MySqlOpt::error(),
-						'contents', $contents
-					);
-
+						'contents', $contents);
 					continue;
 				}
-
 				LogOpt::set('info', 'mood add success', 'mood_id', $mood_id);
 			}
 		}
