@@ -82,18 +82,19 @@ foreach ($draft_files as $draft)
 		}
 	}
 
-	$article = find
-	$ret = MySqlOpt::update('article', $infos, array('article_id'=>$article_id));
-	if ($ret == null)
+	$article = Repository::findOneFromArticle(array('eq' => array('article_id' => $article_id)));
+	foreach ($infos as $key=>$value)
 	{
-		LogOpt::set ('exception', 'article 更新失败',
-			'article_id', $article_id,
-			MySqlOpt::errno(), MySqlOpt::error()
-		);
-
+		$func = 'set_'.$key;
+		$article->$func($value);
+	}
+	$ret = Repository::persist($article);
+	if ($ret == false)
+	{
+		LogOpt::set ('exception', 'article 更新失败', 'article_id', $article_id);
 		return;
 	}
-	LogOpt::set ('info', 'article 更新成功', 'article_id', $article_id);
+	LogOpt::set ('info', 'article 更新成功', 'article_id', $ret);
 	unlink($draft_file);
 }
 ?>
