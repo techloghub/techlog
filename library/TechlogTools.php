@@ -270,6 +270,7 @@ class TechlogTools
 		}
 		return $contents;
 	}
+
 	private static function str_trans($str, $nbsp = true)
 	{
 		$str = str_replace('&', '&amp;', $str);
@@ -280,6 +281,7 @@ class TechlogTools
 			$str = str_replace(' ', '&nbsp;', $str);
 		return $str;
 	}
+
 	/**
 	 * return:
 	 * 		0 : success
@@ -343,6 +345,7 @@ class TechlogTools
 		rename($file, '/home/zeyu/Documents/'.$path);
 		return $id;
 	}
+
 	public static function load_image ($path, $category='')
 	{
 		$file_path = self::getfilepath($path);
@@ -365,6 +368,7 @@ class TechlogTools
 		$id = Repository::persist($image);
 		return $id;
 	}
+
 	public static function get_index ($html_str)
 	{
 		$str = $html_str;
