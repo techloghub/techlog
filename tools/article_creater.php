@@ -47,7 +47,7 @@ while (1)
 		echo '文中目标图片不存在'."\t".$image_path.PHP_EOL;
 		return;
 	}
-	$image_id = findImageIdFromImages(
+	$image_id = Repository::findImageIdFromImages(
 		array(
 			'eq' => array('path' => $image_path)
 		)
@@ -90,7 +90,7 @@ $infos['inserttime'] = isset($options['a']) ? $options['a'] : 'now()';
 // 插入日志
 if (isset($options['i']))
 {
-	$article = findOneFromArticle(
+	$article = Repository::findOneFromArticle(
 		array('eq' => array('article_id' => $options['i'])));
 	if ($article == false)
 	{

@@ -70,7 +70,7 @@
 					<?php foreach ($params['images'] as $image) { ?>
 					<tr>
 						<td valign="middle" style="padding-top:50px;"align="center"><?php echo $image->get_image_id() ?></td>
-						<td valign="middle" align="center"><a href="<?php echo $image->get_image_id() ?>" target="_blank"><img class="img-thumbnail" alt="100x100" style="margin-right:10px; margin-left:10px; margin-top:10px; margin-bottom:10px; height:100px; width:100px;" src="<?php echo $image->get_path() ?>" title="<?php echo $image->get_image_id() ?>"/></a></td>
+						<td valign="middle" align="center"><a href="<?php echo $image->get_path() ?>" target="_blank"><img class="img-thumbnail" alt="100x100" style="margin-right:10px; margin-left:10px; margin-top:10px; margin-bottom:10px; height:100px; width:100px;" src="<?php echo $image->get_path() ?>" title="<?php echo $image->get_image_id() ?>"/></a></td>
 						<td valign="middle" style="padding-top:50px;"align="center">
 							<?php echo $image->get_category() ?>
 						</td>
