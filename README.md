@@ -49,27 +49,13 @@ http://techlog.cn
 │   └── revise_article.php
 ├── views
 │   ├── article
-│   │   └── list.php
 │   ├── base
-│   │   ├── base.php
-│   │   ├── debin.php
-│   │   ├── footer.php
-│   │   └── modal.php
 │   ├── debin
-│   │   ├── list.php
-│   │   └── page.php
 │   ├── index
-│   │   ├── list.php
-│   │   └── notfound.php
 │   ├── infos
-│   │   └── list.php
 │   ├── note
-│   │   └── list.php
 │   ├── pictures
-│   │   ├── list.php
-│   │   └── page.php
 │   └── search
-│       └── list.php
 └── web
     ├── app.php
     ├── resource -> /home/zeyu/Documents/resource/
