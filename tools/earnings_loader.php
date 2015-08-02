@@ -35,7 +35,10 @@ $article = new ArticleModel(
 		'title' => $month.'财报',
 		'updatetime' => 'now()',
 		'inserttime' => 'now()',
-		'draft' => '<div>'.PHP_EOL.'<!-- 图片大小：700*467 -->'.PHP_EOL.'</div>',
+		'draft' => '<div>'.PHP_EOL.'<!-- 图片大小：700*467 -->'.PHP_EOL
+			.'</div>'.PHP_EOL.'<h1>总收入\支出报表'.PHP_EOL
+			.'<h3>支出报表'.PHP_EOL.'<h3>收入报表'.PHP_EOL
+			.'<h1>财务分析',
 		'category_id' => 6
 	)
 );
