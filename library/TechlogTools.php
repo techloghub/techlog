@@ -242,7 +242,7 @@ class TechlogTools
 				);
 				if (!$title)
 					$title = 'ERROR：加载失败';
-				$contents .= '<p><a target="_blank" href="/article/list/'.intval($id).'">'
+				$contents .= '<p><a target="_blank" href="/article/list/'.$id.'">'
 					.$title.'</a></p>';
 			}
 			else

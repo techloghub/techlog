@@ -19,7 +19,6 @@ class EarningsController extends Controller
 		if ($drw_beg > $drw_end)
 			list($drw_beg, $drw_end) = array($drw_end, $drw_beg);
 
-		$query = 'select * from earnings order by month desc limit 24';
 		$earnings = Repository::findFromEarnings(
 			array(
 				'order' => array('month' => 'desc'),
