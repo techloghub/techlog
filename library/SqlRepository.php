@@ -270,23 +270,31 @@ class SqlRepository
 					continue;
 				$search_ret = $sphinx->query($key, $request['opt_type']);
 
-				if (empty($article_ids))
-					$article_ids = array_keys($search_ret['matches']);
-				else
+				if (isset($search_ret['matches']))
 				{
-					$article_ids =
-						array_intersect(
-							$article_ids,
-							array_keys($search_ret['matches'])
-						);
+					if (empty($article_ids))
+						$article_ids = array_keys($search_ret['matches']);
+					else
+					{
+						$article_ids =
+							array_intersect(
+								$article_ids,
+								array_keys($search_ret['matches'])
+							);
+					}
 				}
 			}
-			if (!$ismood)
-				$where_str .= ' and article_id in ('.implode(',', $article_ids).')';
-			else if ($is_root)
-				$where_str .= ' and mood_id in ('.implode(',', $article_ids).')';
+			if (!empty($article_ids) && (!$ismood || $is_root))
+			{
+				if (!$ismood)
+					$where_str .= ' and article_id in ('.implode(',', $article_ids).')';
+				else if ($is_root)
+					$where_str .= ' and mood_id in ('.implode(',', $article_ids).')';
+			}
 			else
+			{
 				$where_str = ' and 0';
+			}
 		}
 		return $where_str;
 	} // }}}
