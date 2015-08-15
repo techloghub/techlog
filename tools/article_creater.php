@@ -132,11 +132,10 @@ foreach ($tags as $tag)
 	$tag = trim($tag);
 	if ($tag == '')
 		continue;
-	$query = 'select tag_id from tags where tag_name="'.$tag.'"';
 	$tag_id = Repository::findTagIdFromTags(array('eq' => array('tag_name' => $tag)));
 	if ($tag_id == false)
 	{
-		$tag = new TagsModel(array('tag_name' => $tag));
+		$tag = new TagsModel(array('tag_name' => $tag, 'inserttime' => 'now()'));
 		$tag_id = Repository::persist($tag);
 		if ($tag_id == false)
 		{
@@ -147,7 +146,8 @@ foreach ($tags as $tag)
 	$article_tag_relation = new ArticleTagRelationModel(
 		array(
 			'article_id' => $article_id,
-			'tag_id' => $tag_id
+			'tag_id' => $tag_id,
+			'inserttime' => 'now()'
 		)
 	);
 	$relation_id = Repository::persist($article_tag_relation);
