@@ -26,11 +26,12 @@ class PicturesController extends Controller
 			$request['category'] = '';
 		$query_params = $this->getQueryParams($request);
 		$count = Repository::findCountFromImages($query_params);
+
 		$start = ($page-1)*$this->limit;
-		$images = Repository::findFromImages(array(
-			'order' => array('inserttime' => 'desc'),
-			'range' => array($start, $this->limit)
-		));
+		$query_params['order'] = array('inserttime' => 'desc');
+		$query_params['range'] = array($start, $this->limit);
+		$images = Repository::findFromImages($query_params);
+
 		$category_list = array(
 			'all',
 			'icon',
@@ -40,6 +41,7 @@ class PicturesController extends Controller
 			'booknote',
 			'background',
 		);
+
 		$params = array(
 			'page'	=> $page,
 			'count'	=> $count,
@@ -53,6 +55,7 @@ class PicturesController extends Controller
 			$params[$key] = $value;
 		$this->display(__METHOD__, $params);
 	}
+
 	public function insertAction()
 	{
 		if (!$this->is_root)
