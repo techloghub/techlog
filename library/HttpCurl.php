@@ -5,7 +5,6 @@ class HttpCurl
 	private static $user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/3.0.195.32 Safari/532.0';
     private static $max_redirects = 8;
 	private static $connect_timeout = 20;
-	private static $http_header = null;
 
     private function __clone()
     {
@@ -26,7 +25,6 @@ class HttpCurl
 			.' Chrome/3.0.195.32 Safari/532.0';
 		self::$max_redirects = 8;
 		self::$connect_timeout = 20;
-		self::$http_header = null;
 
 		self::$handle = curl_init();
         curl_setopt(self::$handle, CURLOPT_USERAGENT, self::$user_agent);
@@ -38,8 +36,8 @@ class HttpCurl
         curl_setopt(self::$handle, CURLOPT_MAXREDIRS, self::$max_redirects);
         curl_setopt(self::$handle, CURLOPT_HTTPHEADER, array('Expect:'));
         curl_setopt(self::$handle, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt(self::$handle, CURLOPT_HEADERFUNCTION, 'self::header_handler');
-        curl_setopt(self::$handle, CURLOPT_HEADER, FALSE);
+        curl_setopt(self::$handle, CURLOPT_HEADER, TRUE);
+		curl_setopt(self::$handle, CURLOPT_NOBODY, FALSE);
         #curl_setopt(self::$handle, CURLOPT_ENCODING, 'gzip,deflate');
 	}
 
@@ -93,35 +91,37 @@ class HttpCurl
 		curl_setopt(self::$handle, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt(self::$handle, CURLOPT_URL, $url);
 		$ret = array();
-		$ret['body'] = curl_exec(self::$handle);
-        $ret['http_code'] = curl_getinfo(self::$handle, CURLINFO_HTTP_CODE);
-		$ret['http_info'] = curl_getinfo(self::$handle);
-		if ($ret['body'] == false)
+		$response = curl_exec(self::$handle);
+		if ($response == false)
+		{
 			$ret['error'] = curl_error(self::$handle);
-		$ret['header'] = self::$http_header;
+		}
+		else
+		{
+			list($header, $ret['body']) = explode("\r\n\r\n", $response, 2);
+			$ret['header'] = self::header_handler($header);
+		}
+        $ret['code'] = curl_getinfo(self::$handle, CURLINFO_HTTP_CODE);
+		$ret['info'] = curl_getinfo(self::$handle);
 
 		return $ret;
 	}
 
-    private static function header_handler($curl_handle, $header)
+    private static function header_handler($header)
     {
-		self::$http_header = array();
-        $i = strpos($header, ':');
-        if(!empty($i))
-        {
-            $key = str_replace('-', '_', strtolower(substr($header, 0, $i)));
-            $value = trim(substr($header, $i + 2));
-            if(isset(self::$http_header[$key]))
-            {
-				self::$http_header[$key] .= ';' . $value;
-            }
-            else
-            {
-				self::$http_header[$key] = $value;
-            }
-        }
-
-        return strlen($header);
+		$arr = explode("\n", $header);
+		$http_header = array('http_code' => $arr[0]);
+		for ($i=1; $i<count($arr); $i++)
+		{
+			$pos = strpos($arr[$i], ':');
+            $key = str_replace('-', '_', strtolower(substr($arr[$i], 0, $pos)));
+            $value = trim(substr($arr[$i], $pos + 2));
+			if (isset($http_header[$key]))
+                $http_header[$key] .= ';' . $value;
+			else
+                $http_header[$key] = $value;
+		}
+        return $http_header;
     }
 
 	public static function set_authorize($username = null, $password = null)
@@ -160,7 +160,4 @@ class HttpCurl
 		curl_setopt(self::$handle, CURLOPT_COOKIE, $set_cookie);
 	}
 }
-
-$ret = HttpCurl::get('http://techlog.cn');
-var_dump($ret);
 ?>
