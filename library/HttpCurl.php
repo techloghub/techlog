@@ -38,7 +38,6 @@ class HttpCurl
         curl_setopt(self::$handle, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt(self::$handle, CURLOPT_HEADER, TRUE);
 		curl_setopt(self::$handle, CURLOPT_NOBODY, FALSE);
-        #curl_setopt(self::$handle, CURLOPT_ENCODING, 'gzip,deflate');
 	}
 
 	public static function __callStatic($name, $params)
@@ -57,18 +56,9 @@ class HttpCurl
 		{
 		case 'POST':
 			curl_setopt(self::$handle, CURLOPT_POST, TRUE);
-			curl_setopt(self::$handle, CURLOPT_POSTFIELDS, $params);
 			break;
 		case 'PUT':
 			curl_setopt(self::$handle, CURLOPT_PUT, TRUE);
-			if($params != null)
-			{
-				$temp_file = tmpFile();
-				fwrite($temp_file, $params);
-				fseek($temp_file, 0);
-				curl_setopt(self::$handle, CURLOPT_INFILE, $temp_file);
-				curl_setopt(self::$handle, CURLOPT_INFILESIZE, strlen($params));
-			}
 			break;
 		case 'GET':
 			if (!empty($params))
@@ -88,6 +78,8 @@ class HttpCurl
 		default:
 			break;
 		}
+		if ($method != 'GET' && $params != null)
+			curl_setopt(self::$handle, CURLOPT_POSTFIELDS, $params);
 		curl_setopt(self::$handle, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt(self::$handle, CURLOPT_URL, $url);
 		$ret = array();

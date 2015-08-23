@@ -49,7 +49,7 @@ for ($i=1; $i<=$pageCount; $i++)
 			$es_params['fromAcc'] = $infos['srcAcc'];
 			$es_params['toAcc'] = $infos['tgtAcc'];
 			$es_params['money'] = $infos['transin'];
-			$es_params['currency'] = ($infos['srcMflag'] == '￥' ? '人民币' : '美元');
+			$infos['mflag'] = $infos['srcMflag'];
 		}
 		else
 		{
@@ -57,7 +57,21 @@ for ($i=1; $i<=$pageCount; $i++)
 			$es_params['fromAcc'] = $infos['acc'];
 			$es_params['toAcc'] = '';
 			$es_params['money'] = $infos['money'];
-			$es_params['currency'] = ($infos['mflag'] == '￥' ? '人民币' : '美元');
+		}
+		switch ($infos['mflag'])
+		{
+		case '￥':
+			$es_params['currency'] = '人民币';
+			break;
+		case '◎':
+			$es_params['currency'] = '虚拟币';
+			break;
+		case '$':
+			$es_params['currency'] = '美元';
+			break;
+		default:
+			$es_params['currency'] = '';
+			break;
 		}
 		$category = explode('-', $infos['typeTitle']);
 		$es_params['category'] = $category[0];
