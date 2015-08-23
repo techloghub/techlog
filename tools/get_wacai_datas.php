@@ -1,17 +1,17 @@
 <?php
 require_once (__DIR__.'/../app/register.php');
 
-$options = getopt('b:e:');
-if (!isset ($options['b']) || !isset($options['e']))
+$options = getopt('m:');
+if (!isset ($options['m']))
 {
-	echo 'usage: php get_earnings_from_wacai.php -b begin_month -e end_month'
+	echo 'usage: php get_wacai_datas.php -m month'
 		.PHP_EOL;
 	exit;
 }
 
 HttpCurl::set_cookie(get_cookie());
 $url = 'https://www.wacai.com/biz/ledger_list.action?'
-	.'cond.date='.$options['b'].'-01&cond.date_end='.$options['e'].'-31'
+	.'cond.date='.$options['m'].'-01&cond.date_end='.$options['m'].'-31'
 	.'&cond.reimbursePrefer=0&cond.withDaySum=false&pageInfo.pageIndex=';
 $pageCount = 1;
 for ($i=1; $i<=$pageCount; $i++)
