@@ -2,9 +2,9 @@
 class HttpCurl
 {
 	private static $handle = null;
-	private static $user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/3.0.195.32 Safari/532.0';
+	private static $user_agent = null;
     private static $max_redirects = 8;
-	private static $connect_timeout = 20;
+	private static $connect_timeout = 0.5;
 
     private function __clone()
     {
@@ -23,8 +23,8 @@ class HttpCurl
 		self::$user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US)'
 			.' AppleWebKit/532.0 (KHTML, like Gecko)'
 			.' Chrome/3.0.195.32 Safari/532.0';
-		self::$max_redirects = 8;
-		self::$connect_timeout = 20;
+		self::$max_redirects = 5;
+		self::$connect_timeout = 0.5;
 
 		self::$handle = curl_init();
         curl_setopt(self::$handle, CURLOPT_USERAGENT, self::$user_agent);
@@ -60,14 +60,14 @@ class HttpCurl
 			curl_setopt(self::$handle, CURLOPT_POSTFIELDS, $params);
 			break;
 		case 'PUT':
-			curl_setopt(self::$curl_handle, CURLOPT_PUT, TRUE);
+			curl_setopt(self::$handle, CURLOPT_PUT, TRUE);
 			if($params != null)
 			{
 				$temp_file = tmpFile();
 				fwrite($temp_file, $params);
 				fseek($temp_file, 0);
-				curl_setopt(self::$curl_handle, CURLOPT_INFILE, $temp_file);
-				curl_setopt(self::$curl_handle, CURLOPT_INFILESIZE, strlen($params));
+				curl_setopt(self::$handle, CURLOPT_INFILE, $temp_file);
+				curl_setopt(self::$handle, CURLOPT_INFILESIZE, strlen($params));
 			}
 			break;
 		case 'GET':
@@ -95,6 +95,7 @@ class HttpCurl
 		if ($response == false)
 		{
 			$ret['error'] = curl_error(self::$handle);
+			$ret['body'] = false;
 		}
 		else
 		{
