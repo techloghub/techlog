@@ -3,7 +3,8 @@ require_once (__DIR__.'/../app/register.php');
 
 HttpCurl::set_cookie(get_cookie());
 
-$url = 'https://www.wacai.com/setting/account_list.action?reqBalance=true&type=all&pageInfo.pageIndex=';
+$url = 'https://www.wacai.com/setting/account_list.action'
+	.'?reqBalance=true&type=all&pageInfo.pageIndex=';
 $pageCount = 1;
 for ($i=1; $i<=$pageCount; $i++)
 {
@@ -38,17 +39,24 @@ for ($i=1; $i<=$pageCount; $i++)
 				$es_params['name']			= $acc_infos['name'];
 				$es_params['cardNo']		= (isset($acc_infos['origCard']['cardNo']) ?
 					$acc_infos['origCard']['cardNo'] : '');
-				$es_url = 'http://localhost:9200/wacai/account/'.$acc_infos['id'].'/_create';
+				$es_url = 'http://localhost:9200/wacai/account/'
+					.$acc_infos['id'].'/_create';
 				$ret = HttpCurl::post($es_url, json_encode($es_params));
 				if ($ret['code'] == 409)
 				{
-					echo $infos['id']."\t".json_encode($es_params).PHP_EOL;
+					echo 'WARNING: DUPLICATE_INFO'."\t"
+						.$infos['id']."\t".json_encode($es_params).PHP_EOL;
 				}
 				else if ($ret['body'] == false
 					|| !in_array($ret['code'], array(200, 201)))
 				{
 					var_dump($ret);
 					exit;
+				}
+				else
+				{
+					echo 'INFO: BACKUP'."\t".$infos['id']."\t"
+						.json_encode($es_params).PHP_EOL;
 				}
 			}
 		}
