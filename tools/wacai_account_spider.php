@@ -45,7 +45,7 @@ for ($i=1; $i<=$pageCount; $i++)
 				if ($ret['code'] == 409)
 				{
 					echo 'WARNING: DUPLICATE_INFO'."\t"
-						.$infos['id']."\t".json_encode($es_params).PHP_EOL;
+						.$acc_infos['id']."\t".json_encode($es_params).PHP_EOL;
 				}
 				else if ($ret['body'] == false
 					|| !in_array($ret['code'], array(200, 201)))
@@ -55,7 +55,7 @@ for ($i=1; $i<=$pageCount; $i++)
 				}
 				else
 				{
-					echo 'INFO: BACKUP'."\t".$infos['id']."\t"
+					echo 'INFO: BACKUP'."\t".$acc_infos['id']."\t"
 						.json_encode($es_params).PHP_EOL;
 				}
 			}
@@ -86,6 +86,11 @@ for ($i=1; $i<=$pageCount; $i++)
 				{
 					var_dump($ret);
 					exit;
+				}
+				else
+				{
+					echo 'INFO: BACKUP'."\t".$acc_infos['id']."\t"
+						.json_encode($es_params).PHP_EOL;
 				}
 			}
 		}

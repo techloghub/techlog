@@ -84,6 +84,7 @@ for ($i=1; $i<=$pageCount; $i++)
 		{
 			echo 'WARNING: DUPLICATE RECORD'."\t".$infos['id']."\t"
 				.json_encode($es_params).PHP_EOL;
+			continue;
 		}
 		else if ($ret['body'] == false
 			|| !in_array($ret['code'], array(200, 201)))
@@ -91,25 +92,24 @@ for ($i=1; $i<=$pageCount; $i++)
 			var_dump($ret);
 			exit;
 		}
-		else
-		{
-			echo 'INFO: BACKUP'."\t".$infos['id']."\t"
-				.json_encode($es_params).PHP_EOL;
-		}
+		echo 'INFO: BACKUP'."\t".$infos['id']."\t"
+			.json_encode($es_params).PHP_EOL;
 
 		$acc_url = 'http://localhost:9200/wacai/account/'.$es_params['fromAcc'];
 		$ret = HttpCurl::get($acc_url);
 		$ret = $ret['body'];
 		$acc_infos = json_decode($ret, true);
-		if ($acc_infos == false || $acc_infos['found'] == false)
-			continue;
-		$acc_infos = $acc_infos['_source'];
-		if ($es_params['recType'] == 2 || $es_params['recType'] == 5)
-			$acc_infos['money'] += $es_params['money'];
-		else
-			$acc_infos['money'] -= $es_params['money'];
-		$acc_infos['updatetime'] = date('Y-m-d H:i:s', time());
-		$ret = HttpCurl::post($acc_url, json_encode($acc_infos));
+		if ($acc_infos != false && $acc_infos['found'] != false)
+		{
+			$acc_infos = $acc_infos['_source'];
+			if ($es_params['recType'] == 2 || $es_params['recType'] == 5)
+				$acc_infos['money'] += $es_params['money'];
+			else
+				$acc_infos['money'] -= $es_params['money'];
+			$acc_infos['orderNo']++;
+			$acc_infos['updatetime'] = date('Y-m-d H:i:s', time());
+			$ret = HttpCurl::post($acc_url, json_encode($acc_infos));
+		}
 
 		if (!isset($es_params['toAcc']))
 			continue;
@@ -121,6 +121,7 @@ for ($i=1; $i<=$pageCount; $i++)
 			continue;
 		$acc_infos = $acc_infos['_source'];
 		$acc_infos['money'] += $es_params['money'];
+		$acc_infos['orderNo']++;
 		$acc_infos['updatetime'] = date('Y-m-d H:i:s', time());
 		HttpCurl::post($acc_url, json_encode($acc_infos));
 	}
