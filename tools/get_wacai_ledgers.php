@@ -52,6 +52,20 @@ for ($i=1; $i<=$pageCount; $i++)
 			$es_params['money'] = $infos['transin'];
 			$infos['mflag'] = $infos['srcMflag'];
 		}
+		else if ($es_params['recType'] == 4)
+		{
+			$es_params['type'] = $infos['type'];
+			$es_params['fromAcc'] = $infos['srcAcc'];
+			$es_params['toAcc'] = $infos['acc'];
+			$es_params['money'] = $infos['money'];
+		}
+		else if ($es_params['recType'] == 5)
+		{
+			$es_params['type'] = $infos['type'];
+			$es_params['fromAcc'] = $infos['acc'];
+			$es_params['toAcc'] = $infos['srcAcc'];
+			$es_params['money'] = $infos['money'];
+		}
 		else
 		{
 			$es_params['type'] = $infos['type'];
@@ -82,8 +96,8 @@ for ($i=1; $i<=$pageCount; $i++)
 		$ret = HttpCurl::post($es_url, json_encode($es_params));
 		if ($ret['code'] == 409)
 		{
-			echo 'WARNING: DUPLICATE RECORD'."\t".$infos['id']."\t"
-				.json_encode($es_params).PHP_EOL;
+			#echo 'WARNING: DUPLICATE RECORD'."\t".$infos['id']."\t"
+			#	.json_encode($es_params).PHP_EOL;
 			continue;
 		}
 		else if ($ret['body'] == false
@@ -102,7 +116,7 @@ for ($i=1; $i<=$pageCount; $i++)
 		if ($acc_infos != false && $acc_infos['found'] != false)
 		{
 			$acc_infos = $acc_infos['_source'];
-			if ($es_params['recType'] == 2 || $es_params['recType'] == 5)
+			if ($es_params['recType'] == 2)
 				$acc_infos['money'] += $es_params['money'];
 			else
 				$acc_infos['money'] -= $es_params['money'];
