@@ -84,7 +84,8 @@ for ($i=1; $i<=$pageCount; $i++)
 		{
 			echo $infos['id']."\t".json_encode($es_params).PHP_EOL;
 		}
-		else if ($ret['body'] == false || !in_array($ret['code'], array(200, 201)))
+		else if ($ret['body'] == false
+			|| !in_array($ret['code'], array(200, 201)))
 		{
 			var_dump($ret);
 			exit;

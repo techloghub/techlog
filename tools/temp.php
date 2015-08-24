@@ -34,13 +34,55 @@ for ($i=1; $i<=$pageCount; $i++)
 				$es_params['inserttime']	= date('Y-m-d H:i:s', time());
 				$es_params['updatetime']	= date('Y-m-d H:i:s', time());
 				$es_params['category']		= $acc_infos['typeName'];
-				$es_params['money']			= $acc_infos['balance'];
+				$es_params['money']			= $acc_infos['initMoney'];
+				$es_params['name']			= $acc_infos['name'];
 				$es_params['cardNo']		= (isset($acc_infos['origCard']['cardNo']) ?
-					intval($acc_infos['origCard']['cardNo']) : 0);
-				var_dump($es_params);
-				exit;
+					$acc_infos['origCard']['cardNo'] : '');
+				$es_url = 'http://localhost:9200/wacai/account/'.$acc_infos['id'].'/_create';
+				$ret = HttpCurl::put($es_url, json_encode($es_params));
+				if ($ret['code'] == 409)
+				{
+					echo $infos['id']."\t".json_encode($es_params).PHP_EOL;
+				}
+				else if ($ret['body'] == false
+					|| !in_array($ret['code'], array(200, 201)))
+				{
+					var_dump($ret);
+					exit;
+				}
 			}
 		}
+		if (isset($infos['accs']))
+		{
+			foreach ($infos['accs'] as $acc_infos)
+			{
+				$es_params = array();
+				$es_params['currency']		= $acc_infos['moneyType']['name'];
+				$es_params['orderNo']		= $acc_infos['moneyType']['orderno'];
+				$es_params['inserttime']	= date('Y-m-d H:i:s', time());
+				$es_params['updatetime']	= date('Y-m-d H:i:s', time());
+				$es_params['category']		= $acc_infos['typeName'];
+				$es_params['money']			= $acc_infos['initMoney'];
+				$es_params['cardNo']		= (isset($acc_infos['origCard']['cardNo']) ?
+					$acc_infos['origCard']['cardNo'] : '');
+				$es_params['name']			= $acc_infos['name'];
+				$es_url = 'http://localhost:9200/wacai/account/'
+					.$acc_infos['id'].'/_create';
+				$ret = HttpCurl::put($es_url, json_encode($es_params));
+				if ($ret['code'] == 409)
+				{
+					echo $infos['id']."\t".json_encode($es_params).PHP_EOL;
+				}
+				else if ($ret['body'] == false
+					|| !in_array($ret['code'], array(200, 201)))
+				{
+					var_dump($ret);
+					exit;
+				}
+			}
+		}
+
+		sleep(3);
 	}
 }
 
