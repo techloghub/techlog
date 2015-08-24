@@ -1,8 +1,8 @@
 <?php
 require_once (__DIR__.'/../app/register.php');
 
-$options = getopt('m:');
-if (!isset ($options['m']))
+$options = getopt('b:e:');
+if (!isset ($options['b']))
 {
 	echo 'usage: php get_wacai_datas.php -m month'
 		.PHP_EOL;
@@ -11,7 +11,7 @@ if (!isset ($options['m']))
 
 HttpCurl::set_cookie(get_cookie());
 $url = 'https://www.wacai.com/biz/ledger_list.action?'
-	.'cond.date='.$options['m'].'-01&cond.date_end='.$options['m'].'-31'
+	.'cond.date='.$options['b'].'-01&cond.date_end='.$options['e'].'-31'
 	.'&cond.reimbursePrefer=0&cond.withDaySum=false&pageInfo.pageIndex=';
 $pageCount = 1;
 for ($i=1; $i<=$pageCount; $i++)
@@ -79,10 +79,11 @@ for ($i=1; $i<=$pageCount; $i++)
 		$es_params['subcategory'] = (isset($category[1]) ? $category[1] : '');
 
 		$es_url = 'http://localhost:9200/wacai/ledgers/'.$infos['id'].'/_create';
-		$ret = HttpCurl::put($es_url, json_encode($es_params));
+		$ret = HttpCurl::post($es_url, json_encode($es_params));
 		if ($ret['code'] == 409)
 		{
-			echo $infos['id']."\t".json_encode($es_params).PHP_EOL;
+			echo 'WARNING: DUPLICATE RECORD'."\t".$infos['id']."\t"
+				.json_encode($es_params).PHP_EOL;
 		}
 		else if ($ret['body'] == false
 			|| !in_array($ret['code'], array(200, 201)))
@@ -90,6 +91,38 @@ for ($i=1; $i<=$pageCount; $i++)
 			var_dump($ret);
 			exit;
 		}
+		else
+		{
+			echo 'INFO: BACKUP'."\t".$infos['id']."\t"
+				.json_encode($es_params).PHP_EOL;
+		}
+
+		$acc_url = 'http://localhost:9200/wacai/account/'.$es_params['fromAcc'];
+		$ret = HttpCurl::get($acc_url);
+		$ret = $ret['body'];
+		$acc_infos = json_decode($ret, true);
+		if ($acc_infos == false || $acc_infos['found'] == false)
+			continue;
+		$acc_infos = $acc_infos['_source'];
+		if ($es_params['recType'] == 2 || $es_params['recType'] == 5)
+			$acc_infos['money'] += $es_params['money'];
+		else
+			$acc_infos['money'] -= $es_params['money'];
+		$acc_infos['updatetime'] = date('Y-m-d H:i:s', time());
+		$ret = HttpCurl::post($acc_url, json_encode($acc_infos));
+
+		if (!isset($es_params['toAcc']))
+			continue;
+		$acc_url = 'http://localhost:9200/wacai/account/'.$es_params['toAcc'];
+		$ret = HttpCurl::get($acc_url);
+		$ret = $ret['body'];
+		$acc_infos = json_decode($ret, true);
+		if ($acc_infos == false || $acc_infos['found'] == false)
+			continue;
+		$acc_infos = $acc_infos['_source'];
+		$acc_infos['money'] += $es_params['money'];
+		$acc_infos['updatetime'] = date('Y-m-d H:i:s', time());
+		HttpCurl::post($acc_url, json_encode($acc_infos));
 	}
 	sleep(3);
 }

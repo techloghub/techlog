@@ -30,7 +30,7 @@ for ($i=1; $i<=$pageCount; $i++)
 			{
 				$es_params = array();
 				$es_params['currency']		= $acc_infos['moneyType']['name'];
-				$es_params['orderNo']		= $acc_infos['moneyType']['orderno'];
+				$es_params['orderNo']		= 0;
 				$es_params['inserttime']	= date('Y-m-d H:i:s', time());
 				$es_params['updatetime']	= date('Y-m-d H:i:s', time());
 				$es_params['category']		= $acc_infos['typeName'];
@@ -39,7 +39,7 @@ for ($i=1; $i<=$pageCount; $i++)
 				$es_params['cardNo']		= (isset($acc_infos['origCard']['cardNo']) ?
 					$acc_infos['origCard']['cardNo'] : '');
 				$es_url = 'http://localhost:9200/wacai/account/'.$acc_infos['id'].'/_create';
-				$ret = HttpCurl::put($es_url, json_encode($es_params));
+				$ret = HttpCurl::post($es_url, json_encode($es_params));
 				if ($ret['code'] == 409)
 				{
 					echo $infos['id']."\t".json_encode($es_params).PHP_EOL;
@@ -58,7 +58,7 @@ for ($i=1; $i<=$pageCount; $i++)
 			{
 				$es_params = array();
 				$es_params['currency']		= $acc_infos['moneyType']['name'];
-				$es_params['orderNo']		= $acc_infos['moneyType']['orderno'];
+				$es_params['orderNo']		= 0;
 				$es_params['inserttime']	= date('Y-m-d H:i:s', time());
 				$es_params['updatetime']	= date('Y-m-d H:i:s', time());
 				$es_params['category']		= $acc_infos['typeName'];
@@ -68,7 +68,7 @@ for ($i=1; $i<=$pageCount; $i++)
 				$es_params['name']			= $acc_infos['name'];
 				$es_url = 'http://localhost:9200/wacai/account/'
 					.$acc_infos['id'].'/_create';
-				$ret = HttpCurl::put($es_url, json_encode($es_params));
+				$ret = HttpCurl::post($es_url, json_encode($es_params));
 				if ($ret['code'] == 409)
 				{
 					echo $infos['id']."\t".json_encode($es_params).PHP_EOL;
