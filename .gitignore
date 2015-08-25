@@ -3,4 +3,4 @@ wise/
 metronic_v3.6.1
 app/config.json
 .*.swp
-log/
+app/log/
