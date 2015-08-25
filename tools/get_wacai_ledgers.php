@@ -1,8 +1,8 @@
 <?php
 require_once (__DIR__.'/../app/register.php');
 
-$options = getopt('b:e:');
-if (!isset ($options['b']))
+$options = getopt('m:');
+if (!isset ($options['m']))
 {
 	echo 'usage: php get_wacai_datas.php -m month'
 		.PHP_EOL;
@@ -11,7 +11,7 @@ if (!isset ($options['b']))
 
 HttpCurl::set_cookie(get_cookie());
 $url = 'https://www.wacai.com/biz/ledger_list.action?'
-	.'cond.date='.$options['b'].'-01&cond.date_end='.$options['e'].'-31'
+	.'cond.date='.$options['m'].'-01&cond.date_end='.$options['m'].'-31'
 	.'&cond.reimbursePrefer=0&cond.withDaySum=false&pageInfo.pageIndex=';
 $pageCount = 1;
 for ($i=1; $i<=$pageCount; $i++)
@@ -96,8 +96,8 @@ for ($i=1; $i<=$pageCount; $i++)
 		$ret = HttpCurl::post($es_url, json_encode($es_params));
 		if ($ret['code'] == 409)
 		{
-			#echo 'WARNING: DUPLICATE RECORD'."\t".$infos['id']."\t"
-			#	.json_encode($es_params).PHP_EOL;
+			echo 'WARNING: DUPLICATE RECORD'."\t".$infos['id']."\t"
+				.json_encode($es_params).PHP_EOL;
 			continue;
 		}
 		else if ($ret['body'] == false
