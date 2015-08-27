@@ -13,6 +13,7 @@ class StringOpt
 	public static function cameltounline($value)
 	{
 		$ret = '';
+		$value = lcfirst($value);
 		for ($i=0; $i<mb_strlen($value); ++$i)
 		{
 			if ($value[$i] >= 'A' && $value[$i] <= 'Z')
