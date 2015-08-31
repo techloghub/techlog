@@ -60,25 +60,10 @@ class HttpCurl
 		case 'PUT':
 			curl_setopt(self::$handle, CURLOPT_PUT, TRUE);
 			break;
-		case 'GET':
-			if (!empty($params))
-			{
-				if (is_array($params))
-				{
-					$params_arr = array();
-					foreach ($params as $key=>$value)
-					{
-						$params_arr[] = $key.'='.$value;
-					}
-					$params = implode('&', $params_arr);
-				}
-				$url .= '?'.$params;
-			}
-			break;
 		default:
 			break;
 		}
-		if ($method != 'GET' && $params != null)
+		if ($params != null)
 			curl_setopt(self::$handle, CURLOPT_POSTFIELDS, $params);
 		curl_setopt(self::$handle, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt(self::$handle, CURLOPT_URL, $url);

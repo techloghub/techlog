@@ -55,15 +55,15 @@ for ($i=1; $i<=$pageCount; $i++)
 		else if ($es_params['recType'] == 4)
 		{
 			$es_params['type'] = $infos['type'];
-			$es_params['fromAcc'] = $infos['srcAcc'];
-			$es_params['toAcc'] = $infos['acc'];
+			$es_params['fromAcc'] = $infos['acc'];
+			$es_params['toAcc'] = $infos['srcAcc'];
 			$es_params['money'] = $infos['money'];
 		}
 		else if ($es_params['recType'] == 5)
 		{
 			$es_params['type'] = $infos['type'];
-			$es_params['fromAcc'] = $infos['acc'];
-			$es_params['toAcc'] = $infos['srcAcc'];
+			$es_params['fromAcc'] = $infos['srcAcc'];
+			$es_params['toAcc'] = $infos['acc'];
 			$es_params['money'] = $infos['money'];
 		}
 		else
@@ -116,7 +116,7 @@ for ($i=1; $i<=$pageCount; $i++)
 		if ($acc_infos != false && $acc_infos['found'] != false)
 		{
 			$acc_infos = $acc_infos['_source'];
-			if ($es_params['recType'] == 2)
+			if ($es_params['recType'] == 2 || $es_params['recType'] == 4 || $es_params['recType'] == 5)
 				$acc_infos['money'] += $es_params['money'];
 			else
 				$acc_infos['money'] -= $es_params['money'];
@@ -134,7 +134,10 @@ for ($i=1; $i<=$pageCount; $i++)
 		if ($acc_infos == false || $acc_infos['found'] == false)
 			continue;
 		$acc_infos = $acc_infos['_source'];
-		$acc_infos['money'] += $es_params['money'];
+		if ($es_params['recType'] == 4 || $es_params['recType'] == 5)
+			$acc_infos['money'] -= $es_params['money'];
+		else
+			$acc_infos['money'] += $es_params['money'];
 		$acc_infos['orderNo']++;
 		$acc_infos['updatetime'] = date('Y-m-d H:i:s', time());
 		HttpCurl::post($acc_url, json_encode($acc_infos));
