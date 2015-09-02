@@ -1,8 +1,13 @@
 <?php
 require_once (__DIR__.'/../app/register.php');
 
-HttpCurl::set_cookie(get_cookie());
+echo '是否抓取挖财账目信息？ [y/N]';
 
+$sure = fgets(STDIN);
+if (trim($sure[0]) != 'Y' && trim($sure[0]) != 'y')
+	exit;
+
+HttpCurl::set_cookie(get_cookie());
 $url = 'https://www.wacai.com/setting/account_list.action'
 	.'?reqBalance=true&type=all&pageInfo.pageIndex=';
 $pageCount = 1;
