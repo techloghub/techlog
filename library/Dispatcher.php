@@ -28,6 +28,10 @@ class Dispatcher
 			'replace'	=> '/debin/category/$1/1',
 		),
 		array(
+			'pattern'	=> '/^.*debin\.php\?category=mood$/i',
+			'replace'	=> '/debin/mood/1',
+		),
+		array(
 			'pattern'	=> '/^.*note\.php$/i',
 			'replace'	=> '/note',
 		),
