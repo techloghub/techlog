@@ -9,75 +9,49 @@ class EarningsController extends Controller
 			return;
 		}
 
-		$det_beg = empty($_GET['beg']) ? date('Y-m', time()) : $_GET['beg'];
-		$det_end = empty($_GET['end']) ? '2013-09' : $_GET['end'];
-		if ($det_beg > $det_end)
-			list($det_beg, $det_end) = array($det_end, $det_beg);
-		$drw_beg = empty($_GET['drw_beg']) ?
-			date('Y-m', time()) : $_GET['drw_beg'];
-		$drw_end = empty($_GET['drw_end']) ? '2013-09' : $_GET['drw_end'];
-		if ($drw_beg > $drw_end)
-			list($drw_beg, $drw_end) = array($drw_end, $drw_beg);
-
-		$earnings = Repository::findFromEarnings(
-			array(
-				'order' => array('month' => 'desc'),
-				'range' => array(0, 24)
-			)
-		);
-		$earn_infos = array();
-		$month = array();
-		$income = array();
-		$expend = array();
-
-		$index = 0;
-
-		foreach ($earnings as $earning)
+		$time = time();
+		$labels = array();
+		$expends = array();
+		$incomes = array();
+		for ($i=24; $i>=1; $i--)
 		{
-			$infos = array();
-
-			if ($earning->get_month() >= $det_beg
-				and $earning->get_month() <= $det_end
-				and $index < 12
-			)
+			$query_params = array();
+			$beg_month = date('Y-m-01 00:00:00', $time - $i*3600*24*30);
+			$end_month = date('Y-m-t 23:59:59', $time - $i*3600*24*30);
+			$query_params['query']['bool']['must'][] =
+				array('term' => array('recType' => 1));
+			$query_params['query']['bool']['must'][] =
+				array('range' => array('date' => array( 'gte' => $beg_month,
+							'lte' => $end_month)));
+			$query_params['aggs']['totalfee'] =
+				array('sum' => array('field' => 'money'));
+			$query_params['size'] = 0;
+			$ret = ESRepository::getWacaiLedgersList($query_params);
+			if ($ret === false || !isset($ret['aggregations']['totalfee']['value']))
 			{
-				$infos['idx_href'] = '/article/list/'.$earning->get_article_id();
-
-				$path = Repository::findPathFromImages(
-					array('eq' => array('image_id' => $earning->get_image_id()))
-				);
-
-				$infos['image_path'] = $path;
-				$infos['title'] = $earning->get_month();
-				$infos['descs'] = '结余:&nbsp;&nbsp;'
-					.($earning->get_income() - $earning->get_expend());
-				$earn_infos[] = $infos;
-				$index++;
+				header("Location: /index/notfound");
+				return;
 			}
+			$expends[] = round($ret['aggregations']['totalfee']['value'], 2);
 
-			if ($earning->get_month() >= $drw_beg and $earning->get_month() <= $drw_end)
+			$query_params['query']['bool']['must'][0]['term']['recType'] = 2;
+			$ret = ESRepository::getWacaiLedgersList($query_params);
+			if ($ret === false || !isset($ret['aggregations']['totalfee']['value']))
 			{
-				$month[] = $earning->get_month();
-				$income[] = $earning->get_income();
-				$expend[] = $earning->get_expend();
+				header("Location: /index/notfound");
+				return;
 			}
+			$incomes[] = round($ret['aggregations']['totalfee']['value'], 2);
+
+			$labels[] = date('Y-m', $time - $i*3600*24*30);
 		}
-		$average = round((array_sum($income)-array_sum($expend))/count($month), 2);
-
 		$params = array(
-			'det_beg_month'	=> $det_beg,
-			'det_end_month'	=> $det_end,
-			'drw_beg_month'	=> $drw_beg,
-			'drw_end_month'	=> $drw_end,
-			'labels'	=> json_encode(array_reverse($month)),
-			'income'	=> json_encode(array_reverse($income)),
-			'expend'	=> json_encode(array_reverse($expend)),
-			'average'	=> $average,
-			'infos'	=> $earn_infos,
-			'category_id'	=> 1,
-			'title'	=> '龙潭财报',
+			'incomes' => json_encode($incomes),
+			'expends' => json_encode($expends),
+			'labels' => json_encode($labels),
 		);
-		$this->display('NoteController::listAction', $params);
+
+		$this->display(__METHOD__, $params);
 	}
 }
 ?>

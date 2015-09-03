@@ -16,6 +16,7 @@ require_once(LIB_PATH.'/Dispatcher.php');
 require_once(LIB_PATH.'/TechlogTools.php');
 require_once(LIB_PATH.'/SphinxClient.php');
 require_once(LIB_PATH.'/SqlRepository.php');
+require_once(LIB_PATH.'/ESRepository.php');
 require_once(LIB_PATH.'/HttpCurl.php');
 
 ini_set('date.timezone','Asia/Shanghai');
