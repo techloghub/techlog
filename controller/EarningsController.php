@@ -21,11 +21,45 @@ class EarningsController extends Controller
 			return;
 		}
 
-		$avg = $this->getAvg(false);
-		list($labels, $expends, $incomes) = $this->getInOutDatas(24, false);
+		$begMonth = date('Y-m', time()-24*3600*30*24);
+		$endMonth = date('Y-m',
+			time()-24*3600*intval(date('t', strtotime('-1 month'))));
+		if (isset($_REQUEST['beg_month']))
+			$begMonth = $_REQUEST['beg_month'];
+		if (isset($_REQUEST['end_month']))
+			$endMonth = $_REQUEST['end_month'];
+		if (strtotime($begMonth) == false || strtotime($endMonth) == false
+			|| strtotime($begMonth) > strtotime($endMonth) - 3600*24*30
+			|| strtotime($endMonth) < strtotime('2013-10')
+		)
+		{
+			$begMonth = date('Y-m', time()-24*3600*30*24);
+			$endMonth = date('Y-m',
+				time()-24*3600*intval(date('t', strtotime('-1 month'))));
+		}
+		$avg = $this->getAvg('2013-09', $endMonth, false);
+		if ($avg === false)
+		{
+			header("Location: /index/notfound");
+			return;
+		}
+		list($labels, $expends, $incomes) =
+			$this->getInOutDatas($begMonth, $endMonth, false);
+		if ($labels === false)
+		{
+			header("Location: /index/notfound");
+			return;
+		}
 		list($inCategories, $outCategories) = $this->getCategories('', '', false);
+		if ($inCategories === false)
+		{
+			header("Location: /index/notfound");
+			return;
+		}
 
 		$params = array(
+			'beg_month' => $begMonth,
+			'end_month' => $endMonth,
 			'incomes' => json_encode($incomes),
 			'expends' => json_encode($expends),
 			'labels' => json_encode($labels),
@@ -37,6 +71,94 @@ class EarningsController extends Controller
 		);
 
 		$this->display(__METHOD__, $params);
+	}
+
+	public function reloadActionAjax()
+	{
+		$begMonth = $_REQUEST['beg_month'];
+		$endMonth = $_REQUEST['end_month'];
+		if (strtotime($begMonth) == false || strtotime($endMonth) == false
+			|| strtotime($begMonth) > strtotime($endMonth) - 3600*24*30
+			|| strtotime($endMonth) < strtotime('2013-10')
+		)
+		{
+			return json_encode(array('code' => -1, 'msg' => 'params error'));
+		}
+		if (strtotime($begMonth) < strtotime('2013-09'))
+		{
+			$begMonth = '2013-09';
+		}
+		if (strtotime($endMonth) >
+			time()-24*3600*intval(date('t', strtotime('-1 month'))))
+		{
+			$endMonth = date('Y-m',
+				time()-24*3600*intval(date('t', strtotime('-1 month'))));
+		}
+		$avg = $this->getAvg($begMonth, $endMonth, false);
+		if ($avg === false)
+		{
+			header("Location: /index/notfound");
+			return;
+		}
+		list($labels, $expends, $incomes) =
+			$this->getInOutDatas($begMonth, $endMonth, false);
+		if ($labels === false)
+		{
+			header("Location: /index/notfound");
+			return;
+		}
+		list($inCategories, $outCategories) = $this->getCategories($begMonth, $endMonth, false);
+		if ($inCategories === false)
+		{
+			header("Location: /index/notfound");
+			return;
+		}
+		return json_encode(
+			array(
+				'code' => 0,
+				'beg_month' => $begMonth,
+				'end_month' => $endMonth,
+				'incomes' => $incomes,
+				'expends' => $expends,
+				'labels' => $labels,
+				'inCategories' => $inCategories,
+				'outCategories' => $outCategories,
+				'avg' => $avg,
+				'income' => $this->income,
+				'expend' => $this->expend,
+			)
+		);
+	}
+
+	public function redrawActionAjax()
+	{
+		$begMonth = $endMonth = $_REQUEST['month'];
+		if (strtotime($begMonth) == false)
+		{
+			return json_encode(array('code' => -1, 'msg' => 'PARAMS ERROR'));
+		}
+		$avg = $this->getAvg($begMonth, $endMonth, false);
+		if ($avg === false)
+		{
+			return json_encode(array('code' => -1, 'msg' => 'getAvg ERROR'));
+		}
+		list($inCategories, $outCategories) = $this->getCategories($begMonth, $endMonth, false);
+		if ($inCategories === false)
+		{
+			return json_encode(array('code' => -1, 'msg' => 'getCategories ERROR'));
+		}
+		return json_encode(
+			array(
+				'code' => 0,
+				'beg_month' => $begMonth,
+				'end_month' => $begMonth,
+				'inCategories' => $inCategories,
+				'outCategories' => $outCategories,
+				'avg' => $avg,
+				'income' => $this->income,
+				'expend' => $this->expend,
+			)
+		);
 	}
 
 	private function getCategories($begMonth, $endMonth, $useHouseFund)
@@ -68,8 +190,7 @@ class EarningsController extends Controller
 		$ret = ESRepository::getWacaiLedgersList($query_params);
 		if ($ret === false || !isset($ret['aggregations']['uniq']['buckets']))
 		{
-			header("Location: /index/notfound");
-			exit;
+			return array(false, false);
 		}
 		$inCategories = array();
 		$outCategories = array();
@@ -90,8 +211,7 @@ class EarningsController extends Controller
 		$ret = ESRepository::getWacaiLedgersList($query_params);
 		if ($ret === false || !isset($ret['aggregations']['uniq']['buckets']))
 		{
-			header("Location: /index/notfound");
-			exit;
+			return array(false, false);
 		}
 		$i = 0;
 		foreach ($ret['aggregations']['uniq']['buckets'] as $infos)
@@ -109,9 +229,8 @@ class EarningsController extends Controller
 		return array($inCategories, $outCategories);
 	}
 
-	private function getAvg($useHouseFund)
+	private function getAvg($begMonth, $endMonth, $useHouseFund)
 	{
-		$time = time();
 		$query_params = array();
 		if (!$useHouseFund)
 		{
@@ -120,40 +239,57 @@ class EarningsController extends Controller
 		}
 		$query_params['query']['bool']['must'][] =
 			array('term' => array('recType' => 2));
+		if (!empty($begMonth))
+		{
+			$query_params['query']['bool']['must'][] = array('range' =>
+				array('date' => array('gte' => $begMonth.'-01 00:00:00')));
+		}
+		if (!empty($endMonth))
+		{
+			$enddate = date('Y-m-t 23:59:59', strtotime($endMonth));
+			$query_params['query']['bool']['must'][] = array('range' =>
+				array('date' => array('lte' => $enddate)));
+		}
 		$query_params['aggs']['totalfee'] =
 			array('sum' => array('field' => 'money'));
 		$query_params['size'] = 0;
 		$ret = ESRepository::getWacaiLedgersList($query_params);
 		if ($ret === false || !isset($ret['aggregations']['totalfee']['value']))
 		{
-			header("Location: /index/notfound");
-			exit;
+			return false;
 		}
 		$this->income = round($ret['aggregations']['totalfee']['value'], 2);
 		$query_params['query']['bool']['must'][0]['term']['recType'] = 1;
 		$ret = ESRepository::getWacaiLedgersList($query_params);
 		if ($ret === false || !isset($ret['aggregations']['totalfee']['value']))
 		{
-			header("Location: /index/notfound");
-			exit;
+			return false;
 		}
-		$this->expend = round($ret['aggregations']['totalfee']['value']);
+		$this->expend = round($ret['aggregations']['totalfee']['value'], 2);
 		$avg = $this->income - $this->expend;
-		$avg = round($avg/(($time - 1377964800)/(3600*24*30)), 2);
+		$avg = round($avg/intval((strtotime($endMonth) - strtotime($begMonth))/(3600*24*30) + 1), 2);
 		return $avg;
 	}
 
-	private function getInOutDatas($monthCount, $useHouseFund)
+	private function getInOutDatas($begMonth, $endMonth, $useHouseFund)
 	{
 		$time = time();
 		$labels = array();
 		$expends = array();
 		$incomes = array();
-		for ($i=$monthCount; $i>=1; $i--)
+
+		$begtime = strtotime($begMonth);
+		$endtime = strtotime($endMonth);
+		if ($endtime - $begtime < 3600*24*30)
+		{
+			return array(false, false, false);
+		}
+
+		while (1)
 		{
 			$query_params = array();
-			$beg_month = date('Y-m-01 00:00:00', $time - $i*3600*24*30);
-			$end_month = date('Y-m-t 23:59:59', $time - $i*3600*24*30);
+			$beg_month = date('Y-m-01 00:00:00', $begtime);
+			$end_month = date('Y-m-t 23:59:59', $begtime);
 			$query_params['query']['bool']['must'][] =
 				array('term' => array('recType' => 1));
 			if (!$useHouseFund)
@@ -171,9 +307,7 @@ class EarningsController extends Controller
 			if ($ret === false
 				|| !isset($ret['aggregations']['totalfee']['value']))
 			{
-				exit;
-				header("Location: /index/notfound");
-				exit;
+				return array(false, false, false);
 			}
 			$expends[] = round($ret['aggregations']['totalfee']['value'], 2);
 
@@ -182,12 +316,14 @@ class EarningsController extends Controller
 			if ($ret === false
 				|| !isset($ret['aggregations']['totalfee']['value']))
 			{
-				header("Location: /index/notfound");
-				exit;
+				return array(false, false, false);
 			}
 			$incomes[] = round($ret['aggregations']['totalfee']['value'], 2);
 
-			$labels[] = date('Y-m', $time - $i*3600*24*30);
+			$labels[] = date('Y-m', $begtime);
+			$begtime += 24*3600*intval(date('t', $begtime));
+			if ($endtime - $begtime < 0)
+				break;
 		}
 		return array($labels, $expends, $incomes);
 	}
