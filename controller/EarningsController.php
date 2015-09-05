@@ -37,7 +37,7 @@ class EarningsController extends Controller
 			$endMonth = date('Y-m',
 				time()-24*3600*intval(date('t', strtotime('-1 month'))));
 		}
-		$avg = $this->getAvg('2013-09', $endMonth, false);
+		$avg = $this->getAvg($begMonth, $endMonth, false);
 		if ($avg === false)
 		{
 			header("Location: /index/notfound");
