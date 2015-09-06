@@ -35,7 +35,7 @@ class EarningsController extends Controller
 			header("Location: /index/notfound");
 			return;
 		}
-		list($inCategories, $outCategories) = $this->getCategories($begMonth, $endMonth, false);
+		list($inCategories, $outCategories) = $this->getCategoryDatas($begMonth, $endMonth, false);
 		if ($inCategories === false)
 		{
 			header("Location: /index/notfound");
@@ -70,10 +70,10 @@ class EarningsController extends Controller
 		{
 			return json_encode(array('code' => -1, 'msg' => 'getAvg ERROR'));
 		}
-		list($inCategories, $outCategories) = $this->getCategories($begMonth, $endMonth, false);
+		list($inCategories, $outCategories) = $this->getCategoryDatas($begMonth, $endMonth, false);
 		if ($inCategories === false)
 		{
-			return json_encode(array('code' => -1, 'msg' => 'getCategories ERROR'));
+			return json_encode(array('code' => -1, 'msg' => 'getCategoryDatas ERROR'));
 		}
 		return json_encode(
 			array(
@@ -123,7 +123,7 @@ class EarningsController extends Controller
 		return array($begMonth, $endMonth);
 	}
 
-	private function getCategories($begMonth, $endMonth, $useHouseFund)
+	private function getCategoryDatas($begMonth, $endMonth, $useHouseFund)
 	{
 		$query_params = array();
 		if (!$useHouseFund)
