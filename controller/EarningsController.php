@@ -22,6 +22,7 @@ class EarningsController extends Controller
 		}
 
 		list($begMonth, $endMonth) = $this->getBegEndMonth($_REQUEST);
+		$categories = $this->getCategories();
 		$avg = $this->getAvg($begMonth, $endMonth, false);
 		if ($avg === false)
 		{
@@ -29,7 +30,7 @@ class EarningsController extends Controller
 			return;
 		}
 		list($labels, $expends, $incomes) =
-			$this->getInOutDatas($beg, $endMonth, false);
+			$this->getInOutDatas($begMonth, $endMonth, false);
 		if ($labels === false)
 		{
 			header("Location: /index/notfound");
@@ -43,6 +44,7 @@ class EarningsController extends Controller
 		}
 
 		$params = array(
+			'title' => '龙泉财报',
 			'beg_month' => $begMonth,
 			'end_month' => $endMonth,
 			'incomes' => json_encode($incomes),
@@ -53,6 +55,7 @@ class EarningsController extends Controller
 			'avg' => $avg,
 			'income' => $this->income,
 			'expend' => $this->expend,
+			'categories' => $categories
 		);
 
 		$this->display(__METHOD__, $params);
@@ -63,30 +66,67 @@ class EarningsController extends Controller
 		$begMonth = $endMonth = $_REQUEST['month'];
 		if (strtotime($begMonth) == false)
 		{
-			return json_encode(array('code' => -1, 'msg' => 'PARAMS ERROR'));
+			return array('code' => -1, 'msg' => 'PARAMS ERROR');
 		}
 		$avg = $this->getAvg($begMonth, $endMonth, false);
 		if ($avg === false)
 		{
-			return json_encode(array('code' => -1, 'msg' => 'getAvg ERROR'));
+			return array('code' => -1, 'msg' => 'getAvg ERROR');
 		}
 		list($inCategories, $outCategories) = $this->getCategoryDatas($begMonth, $endMonth, false);
 		if ($inCategories === false)
 		{
-			return json_encode(array('code' => -1, 'msg' => 'getCategoryDatas ERROR'));
+			return array('code' => -1, 'msg' => 'getCategoryDatas ERROR');
 		}
-		return json_encode(
-			array(
-				'code' => 0,
-				'beg_month' => $begMonth,
-				'end_month' => $begMonth,
-				'inCategories' => $inCategories,
-				'outCategories' => $outCategories,
-				'avg' => $avg,
-				'income' => $this->income,
-				'expend' => $this->expend,
+		return array(
+			'code' => 0,
+			'beg_month' => $begMonth,
+			'end_month' => $begMonth,
+			'inCategories' => $inCategories,
+			'outCategories' => $outCategories,
+			'avg' => $avg,
+			'income' => $this->income,
+			'expend' => $this->expend,
+		);
+	}
+
+	public function reloadActionAjax()
+	{
+		list($begMonth, $endMonth) = $this->getBegEndMonth($_REQUEST);
+		list($labels, $expends, $incomes) =
+			$this->getInOutDatas($begMonth, $endMonth, false, $_REQUEST['category']);
+		return array(
+			'code' => 0,
+			'labels' => $labels,
+			'expends' => $expends,
+			'incomes' => $incomes
+		);
+	}
+
+	private function getCategories()
+	{
+		$query_params = array(
+			'size' => 0,
+			'aggs' => array(
+				'categories' => array(
+					'terms' => array(
+						'field' => 'category',
+						'size' => 0
+					)
+				)
 			)
 		);
+		$ret = ESRepository::getWacaiLedgersList($query_params);
+		if ($ret === false || !isset($ret['aggregations']['categories']['buckets']))
+		{
+			return array();
+		}
+		$categories = array();
+		foreach ($ret['aggregations']['categories']['buckets'] as $infos)
+		{
+			$categories[] = $infos['key'];
+		}
+		return $categories;
 	}
 
 	private function getBegEndMonth($request)
@@ -233,7 +273,7 @@ class EarningsController extends Controller
 		return $avg;
 	}
 
-	private function getInOutDatas($begMonth, $endMonth, $useHouseFund, $categroy = null)
+	public function getInOutDatas($begMonth, $endMonth, $useHouseFund, $category = null)
 	{
 		$time = time();
 		$labels = array();
@@ -257,11 +297,19 @@ class EarningsController extends Controller
 			if (!empty($category))
 			{
 				$query_params['query']['bool']['must'][] =
-					array('term' => array('categroy' => $category));
+					array('term' => array('category' => $category));
 			}
 			if (!$useHouseFund)
 			{
 				$query_params['query']['bool']['must_not'][] = array('term' =>
+					array('fromAcc' => '0b45af0bd5e741dbbe8e796f13943736'));
+			}
+			if ($category == '公积金')
+			{
+				$query_params = array();
+				$query_params['query']['bool']['must'][] =
+					array('term' => array('recType' => 1));
+				$query_params['query']['bool']['must'][] = array('term' =>
 					array('fromAcc' => '0b45af0bd5e741dbbe8e796f13943736'));
 			}
 			$query_params['query']['bool']['must'][] =
@@ -274,18 +322,24 @@ class EarningsController extends Controller
 			if ($ret === false
 				|| !isset($ret['aggregations']['totalfee']['value']))
 			{
-				return array(false, false, false);
+				$expends[] = 0;
 			}
-			$expends[] = round($ret['aggregations']['totalfee']['value'], 2);
+			else
+			{
+				$expends[] = round($ret['aggregations']['totalfee']['value'], 2);
+			}
 
 			$query_params['query']['bool']['must'][0]['term']['recType'] = 2;
 			$ret = ESRepository::getWacaiLedgersList($query_params);
 			if ($ret === false
 				|| !isset($ret['aggregations']['totalfee']['value']))
 			{
-				return array(false, false, false);
+				$incomes[] = 0;
 			}
-			$incomes[] = round($ret['aggregations']['totalfee']['value'], 2);
+			else
+			{
+				$incomes[] = round($ret['aggregations']['totalfee']['value'], 2);
+			}
 
 			$labels[] = date('Y-m', $begtime);
 			$begtime += 24*3600*intval(date('t', $begtime));

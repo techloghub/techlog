@@ -18,7 +18,7 @@ class MsgchkController {
 			setcookie('LoginInfo', $config['admin']['logininfo'], time()+1800, '/');
 		}
 
-		return json_encode($result);
+		return $result;
 	}
 }
 ?>
