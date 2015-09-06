@@ -89,7 +89,10 @@ class Dispatcher
 					echo '{"code":1, "msg":"ERROR: MUST BE AN AJAX REQUEST"}';
 					exit;
 				}
-				echo $obj->$func($params);
+				$ret = $obj->$func($params);
+				$ret = empty($ret) ?
+					'' : (is_string($ret) ? $ret : json_encode($ret));
+				echo $ret;
 				$obj_exsists = true;
 			}
 		}
