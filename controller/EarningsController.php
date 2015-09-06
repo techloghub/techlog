@@ -25,9 +25,13 @@ class EarningsController extends Controller
 		$endMonth = date('Y-m',
 			time()-24*3600*intval(date('t', strtotime('-1 month'))));
 		if (isset($_REQUEST['beg_month']))
+		{
 			$begMonth = $_REQUEST['beg_month'];
+		}
 		if (isset($_REQUEST['end_month']))
+		{
 			$endMonth = $_REQUEST['end_month'];
+		}
 		if (strtotime($begMonth) == false || strtotime($endMonth) == false
 			|| strtotime($begMonth) > strtotime($endMonth) - 3600*24*30
 			|| strtotime($endMonth) < strtotime('2013-10')
@@ -37,20 +41,33 @@ class EarningsController extends Controller
 			$endMonth = date('Y-m',
 				time()-24*3600*intval(date('t', strtotime('-1 month'))));
 		}
+		if (strtotime($endMonth) > time()-24*3600*intval(date('t', strtotime('-1 month'))))
+		{
+			$endMonth = date('Y-m',
+				time()-24*3600*intval(date('t', strtotime('-1 month'))));
+		}
+		if (strtotime($begMonth) < strtotime('2013-09'))
+		{
+			$begMonth = '2013-09';
+		}
 		$avg = $this->getAvg($begMonth, $endMonth, false);
 		if ($avg === false)
 		{
 			header("Location: /index/notfound");
 			return;
 		}
+		if (strtotime($endMonth) - strtotime($begMonth) > 24*3600*30*24)
+			$beg = date('Y-m', strtotime($endMonth) - 24*3600*30*24);
+		else
+			$beg = $begMonth;
 		list($labels, $expends, $incomes) =
-			$this->getInOutDatas($begMonth, $endMonth, false);
+			$this->getInOutDatas($beg, $endMonth, false);
 		if ($labels === false)
 		{
 			header("Location: /index/notfound");
 			return;
 		}
-		list($inCategories, $outCategories) = $this->getCategories('', '', false);
+		list($inCategories, $outCategories) = $this->getCategories($begMonth, $endMonth, false);
 		if ($inCategories === false)
 		{
 			header("Location: /index/notfound");
@@ -71,63 +88,6 @@ class EarningsController extends Controller
 		);
 
 		$this->display(__METHOD__, $params);
-	}
-
-	public function reloadActionAjax()
-	{
-		$begMonth = $_REQUEST['beg_month'];
-		$endMonth = $_REQUEST['end_month'];
-		if (strtotime($begMonth) == false || strtotime($endMonth) == false
-			|| strtotime($begMonth) > strtotime($endMonth) - 3600*24*30
-			|| strtotime($endMonth) < strtotime('2013-10')
-		)
-		{
-			return json_encode(array('code' => -1, 'msg' => 'params error'));
-		}
-		if (strtotime($begMonth) < strtotime('2013-09'))
-		{
-			$begMonth = '2013-09';
-		}
-		if (strtotime($endMonth) >
-			time()-24*3600*intval(date('t', strtotime('-1 month'))))
-		{
-			$endMonth = date('Y-m',
-				time()-24*3600*intval(date('t', strtotime('-1 month'))));
-		}
-		$avg = $this->getAvg($begMonth, $endMonth, false);
-		if ($avg === false)
-		{
-			header("Location: /index/notfound");
-			return;
-		}
-		list($labels, $expends, $incomes) =
-			$this->getInOutDatas($begMonth, $endMonth, false);
-		if ($labels === false)
-		{
-			header("Location: /index/notfound");
-			return;
-		}
-		list($inCategories, $outCategories) = $this->getCategories($begMonth, $endMonth, false);
-		if ($inCategories === false)
-		{
-			header("Location: /index/notfound");
-			return;
-		}
-		return json_encode(
-			array(
-				'code' => 0,
-				'beg_month' => $begMonth,
-				'end_month' => $endMonth,
-				'incomes' => $incomes,
-				'expends' => $expends,
-				'labels' => $labels,
-				'inCategories' => $inCategories,
-				'outCategories' => $outCategories,
-				'avg' => $avg,
-				'income' => $this->income,
-				'expend' => $this->expend,
-			)
-		);
 	}
 
 	public function redrawActionAjax()
@@ -280,10 +240,6 @@ class EarningsController extends Controller
 
 		$begtime = strtotime($begMonth);
 		$endtime = strtotime($endMonth);
-		if ($endtime - $begtime < 3600*24*30)
-		{
-			return array(false, false, false);
-		}
 
 		while (1)
 		{
