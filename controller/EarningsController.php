@@ -21,45 +21,13 @@ class EarningsController extends Controller
 			return;
 		}
 
-		$begMonth = date('Y-m', time()-24*3600*30*24);
-		$endMonth = date('Y-m',
-			time()-24*3600*intval(date('t', strtotime('-1 month'))));
-		if (isset($_REQUEST['beg_month']))
-		{
-			$begMonth = $_REQUEST['beg_month'];
-		}
-		if (isset($_REQUEST['end_month']))
-		{
-			$endMonth = $_REQUEST['end_month'];
-		}
-		if (strtotime($begMonth) == false || strtotime($endMonth) == false
-			|| strtotime($begMonth) > strtotime($endMonth) - 3600*24*30
-			|| strtotime($endMonth) < strtotime('2013-10')
-		)
-		{
-			$begMonth = date('Y-m', time()-24*3600*30*24);
-			$endMonth = date('Y-m',
-				time()-24*3600*intval(date('t', strtotime('-1 month'))));
-		}
-		if (strtotime($endMonth) > time()-24*3600*intval(date('t', strtotime('-1 month'))))
-		{
-			$endMonth = date('Y-m',
-				time()-24*3600*intval(date('t', strtotime('-1 month'))));
-		}
-		if (strtotime($begMonth) < strtotime('2013-09'))
-		{
-			$begMonth = '2013-09';
-		}
+		list($begMonth, $endMonth) = $this->getBegEndMonth($_REQUEST);
 		$avg = $this->getAvg($begMonth, $endMonth, false);
 		if ($avg === false)
 		{
 			header("Location: /index/notfound");
 			return;
 		}
-		if (strtotime($endMonth) - strtotime($begMonth) > 24*3600*30*24)
-			$beg = date('Y-m', strtotime($endMonth) - 24*3600*30*24);
-		else
-			$beg = $begMonth;
 		list($labels, $expends, $incomes) =
 			$this->getInOutDatas($beg, $endMonth, false);
 		if ($labels === false)
@@ -119,6 +87,40 @@ class EarningsController extends Controller
 				'expend' => $this->expend,
 			)
 		);
+	}
+
+	private function getBegEndMonth($request)
+	{
+		$begMonth = date('Y-m', time()-24*3600*30*24);
+		$endMonth = date('Y-m',
+			time()-24*3600*intval(date('t', strtotime('-1 month'))));
+		if (isset($request['beg_month']))
+		{
+			$begMonth = $request['beg_month'];
+		}
+		if (isset($request['end_month']))
+		{
+			$endMonth = $request['end_month'];
+		}
+		if (strtotime($begMonth) == false || strtotime($endMonth) == false
+			|| strtotime($begMonth) > strtotime($endMonth) - 3600*24*30
+			|| strtotime($endMonth) < strtotime('2013-10')
+		)
+		{
+			$begMonth = date('Y-m', time()-24*3600*30*24);
+			$endMonth = date('Y-m',
+				time()-24*3600*intval(date('t', strtotime('-1 month'))));
+		}
+		if (strtotime($endMonth) > time()-24*3600*intval(date('t', strtotime('-1 month'))))
+		{
+			$endMonth = date('Y-m',
+				time()-24*3600*intval(date('t', strtotime('-1 month'))));
+		}
+		if (strtotime($begMonth) < strtotime('2013-09'))
+		{
+			$begMonth = '2013-09';
+		}
+		return array($begMonth, $endMonth);
 	}
 
 	private function getCategories($begMonth, $endMonth, $useHouseFund)
@@ -231,13 +233,17 @@ class EarningsController extends Controller
 		return $avg;
 	}
 
-	private function getInOutDatas($begMonth, $endMonth, $useHouseFund)
+	private function getInOutDatas($begMonth, $endMonth, $useHouseFund, $categroy = null)
 	{
 		$time = time();
 		$labels = array();
 		$expends = array();
 		$incomes = array();
 
+		if (strtotime($endMonth) - strtotime($begMonth) > 24*3600*30*24)
+			$begMonth = date('Y-m', strtotime($endMonth) - 24*3600*30*24);
+		else
+			$begMonth = $begMonth;
 		$begtime = strtotime($begMonth);
 		$endtime = strtotime($endMonth);
 
@@ -248,6 +254,11 @@ class EarningsController extends Controller
 			$end_month = date('Y-m-t 23:59:59', $begtime);
 			$query_params['query']['bool']['must'][] =
 				array('term' => array('recType' => 1));
+			if (!empty($category))
+			{
+				$query_params['query']['bool']['must'][] =
+					array('term' => array('categroy' => $category));
+			}
 			if (!$useHouseFund)
 			{
 				$query_params['query']['bool']['must_not'][] = array('term' =>
