@@ -132,7 +132,14 @@ function redraw_func(evt)
 
 function reload_category(category)
 {
-	$('#chose_btn').html(category + ' <span class="caret"></span></span>');
+	if (category != '')
+	{
+		$('#chose_btn').html(category + ' <span class="caret"></span></span>');
+	}
+	else
+	{
+		$('#chose_btn').html('全部 <span class="caret"></span></span>');
+	}
 	$.ajax(
 		{
 			'url' : '/earnings/reload',
