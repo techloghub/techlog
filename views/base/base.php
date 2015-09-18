@@ -50,16 +50,16 @@ function echo_ifset($params, $key)
 							<a href="/">龙潭斋</a>
 							</li>
 							<li>
-							<a href="/note">读书笔记</a>
+							<a href="/note">笔记源码</a>
 							</li>
 							<li>
-							<a href="/debin/category/1">龙潭书斋</a>
+							<a href="/debin/category/1">源码解读</a>
 							</li>
 							<li>
-							<a href="/debin/category/4">技术分享</a>
+							<a href="/debin/category/4">技术乱炖</a>
 							</li>
 							<li>
-							<a href="/debin/category/3">龙渊阁记</a>
+							<a href="/debin/category/3">随笔轧志</a>
 							</li>
 							<?php if ($params['is_root']): ?>
 								<li>
