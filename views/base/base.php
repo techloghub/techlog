@@ -50,10 +50,10 @@ function echo_ifset($params, $key)
 							<a href="/">龙潭斋</a>
 							</li>
 							<li>
-							<a href="/note">笔记源码</a>
+							<a href="/note">技术专题</a>
 							</li>
 							<li>
-							<a href="/debin/category/1">源码解读</a>
+							<a href="/debin/category/1">专题解读</a>
 							</li>
 							<li>
 							<a href="/debin/category/4">技术乱炖</a>
