@@ -217,7 +217,7 @@ class Repository
 				$stmt->execute($query_params);
 				self::$pdo_instance->commit();
 			}
-			catch(PDOExecption $e)
+			catch(PDOException $e)
 			{
 				$dbh->rollback();
 				return 'UPDATE_ERROR: '.$e->getMessage();

@@ -150,7 +150,15 @@ foreach ($tags as $tag)
 			'inserttime' => 'now()'
 		)
 	);
-	$relation_id = Repository::persist($article_tag_relation);
+	try
+	{
+		$relation_id = Repository::persist($article_tag_relation);
+	} catch (PDOException $e) {
+		LogOpt::set('exception', 'article_tag_relation 已存在',
+			'article_id', $article_id, 'tag_id', $tag_id
+		);
+		continue;
+	}
 	if ($relation_id == false)
 	{
 		LogOpt::set('exception', 'article_tag_relation 更新失败',
