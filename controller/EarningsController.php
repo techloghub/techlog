@@ -36,7 +36,8 @@ class EarningsController extends Controller
 			header("Location: /index/notfound");
 			return;
 		}
-		list($inCategories, $outCategories) = $this->getCategoryDatas($begMonth, $endMonth, false);
+		list($inCategories, $outCategories) =
+			$this->getCategoryDatas($begMonth, $endMonth, false);
 		if ($inCategories === false)
 		{
 			header("Location: /index/notfound");
@@ -73,7 +74,8 @@ class EarningsController extends Controller
 		{
 			return array('code' => -1, 'msg' => 'getAvg ERROR');
 		}
-		list($inCategories, $outCategories) = $this->getCategoryDatas($begMonth, $endMonth, false);
+		list($inCategories, $outCategories) =
+			$this->getCategoryDatas($begMonth, $endMonth, false);
 		if ($inCategories === false)
 		{
 			return array('code' => -1, 'msg' => 'getCategoryDatas ERROR');
@@ -94,7 +96,8 @@ class EarningsController extends Controller
 	{
 		list($begMonth, $endMonth) = $this->getBegEndMonth($_REQUEST);
 		list($labels, $expends, $incomes) =
-			$this->getInOutDatas($begMonth, $endMonth, false, $_REQUEST['category']);
+			$this->getInOutDatas(
+				$begMonth, $endMonth, false, $_REQUEST['category']);
 		return array(
 			'code' => 0,
 			'labels' => $labels,
@@ -117,7 +120,8 @@ class EarningsController extends Controller
 			)
 		);
 		$ret = ESRepository::getWacaiLedgersList($query_params);
-		if ($ret === false || !isset($ret['aggregations']['categories']['buckets']))
+		if ($ret === false
+			|| !isset($ret['aggregations']['categories']['buckets']))
 		{
 			return array();
 		}
@@ -151,7 +155,8 @@ class EarningsController extends Controller
 			$endMonth = date('Y-m',
 				time()-24*3600*intval(date('t', strtotime('-1 month'))));
 		}
-		if (strtotime($endMonth) > time()-24*3600*intval(date('t', strtotime('-1 month'))))
+		if (strtotime($endMonth) >
+			time()-24*3600*intval(date('t', strtotime('-1 month'))))
 		{
 			$endMonth = date('Y-m',
 				time()-24*3600*intval(date('t', strtotime('-1 month'))));
@@ -187,7 +192,8 @@ class EarningsController extends Controller
 		$query_params['size'] = 0;
 		$query_params['aggs']['uniq'] = array(
 			'terms' => array('field' => 'category', 'size' => 0),
-			'aggs' => array('totalfee' => array('sum' => array('field' => 'money')))
+			'aggs' => array(
+				'totalfee' => array('sum' => array('field' => 'money')))
 		);
 		$ret = ESRepository::getWacaiLedgersList($query_params);
 		if ($ret === false || !isset($ret['aggregations']['uniq']['buckets']))

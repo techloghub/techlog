@@ -5,7 +5,7 @@
 <div class="container projects">
 	<div class="row">
 		<div class='span8'></div>
-		<div class='span2'>
+		<div class='span1'>
 			<button type="button" class="btn btn-default dropdown-toggle" value="content" style="height:40px" data-toggle="dropdown" name="chose_btn" id="chose_btn">
 				全部 <span class="caret"></span>
 			</button>
@@ -16,6 +16,7 @@
 				<?php } ?>
 			</ul>
 		</div>
+		<div class='span1'><button style="height: 40px" class="btn btn-default" onclick="window.open('http://techlog.cn/debin/category/6')">分 析</button></div>
 		<div id="line">
 			<canvas id="out_in_lines" width="980px" height="300px"></canvas>
 		</div>
@@ -31,10 +32,10 @@
 		</div>
 		<div class='span1'></div>
 		<div class='span1'>
-				<input type="text" id="beg_month" class="form-control" placeholder="BEG_MONTH" value="<?php echo_ifset($params, 'beg_month') ?>"/>
+				<input type="text" id="beg_month" class="form-control" placeholder="BEG_MONTH" style="width:85px" value="<?php echo_ifset($params, 'beg_month') ?>"/>
 		</div>
 		<div class='span1'>
-				<input type="text" id="end_month" class="form-control" placeholder="END_MONTH" value="<?php echo_ifset($params, 'end_month') ?>"/>
+				<input type="text" id="end_month" class="form-control" placeholder="END_MONTH" style="width:85px" value="<?php echo_ifset($params, 'end_month') ?>"/>
 		</div>
 		<div class='span1'>
 				<button type="submit" onclick="reload_func()" class="btn btn-default">查&nbsp;&nbsp;询</button>&nbsp;&nbsp;
