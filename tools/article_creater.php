@@ -157,6 +157,8 @@ foreach ($tags as $tag)
 		LogOpt::set('exception', 'article_tag_relation 已存在',
 			'article_id', $article_id, 'tag_id', $tag_id
 		);
+		$pdo = Repository::getInstance();
+		$pdo->rollback();
 		continue;
 	}
 	if ($relation_id == false)
