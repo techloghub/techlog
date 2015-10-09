@@ -82,7 +82,11 @@ foreach ($draft_files as $draft)
 		}
 	}
 
-	$article = Repository::findOneFromArticle(array('eq' => array('article_id' => $article_id)));
+	$article = Repository::findOneFromArticle(
+		array(
+			'eq' => array('article_id' => $article_id)
+		)
+	);
 	foreach ($infos as $key=>$value)
 	{
 		$func = 'set_'.$key;

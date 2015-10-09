@@ -42,8 +42,9 @@ for ($i=1; $i<=$pageCount; $i++)
 				$es_params['category']		= $acc_infos['typeName'];
 				$es_params['money']			= $acc_infos['initMoney'];
 				$es_params['name']			= $acc_infos['name'];
-				$es_params['cardNo']		= (isset($acc_infos['origCard']['cardNo']) ?
-					$acc_infos['origCard']['cardNo'] : '');
+				$es_params['cardNo']		=
+					(isset($acc_infos['origCard']['cardNo']) ?
+				   		$acc_infos['origCard']['cardNo'] : '');
 				$es_url = 'http://localhost:9200/wacai/account/'
 					.$acc_infos['id'].'/_create';
 				$ret = HttpCurl::post($es_url, json_encode($es_params));
@@ -76,8 +77,9 @@ for ($i=1; $i<=$pageCount; $i++)
 				$es_params['updatetime']	= date('Y-m-d H:i:s', time());
 				$es_params['category']		= $acc_infos['typeName'];
 				$es_params['money']			= $acc_infos['initMoney'];
-				$es_params['cardNo']		= (isset($acc_infos['origCard']['cardNo']) ?
-					$acc_infos['origCard']['cardNo'] : '');
+				$es_params['cardNo']		=
+					(isset($acc_infos['origCard']['cardNo']) ?
+						$acc_infos['origCard']['cardNo'] : '');
 				$es_params['name']			= $acc_infos['name'];
 				$es_url = 'http://localhost:9200/wacai/account/'
 					.$acc_infos['id'].'/_create';

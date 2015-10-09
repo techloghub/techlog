@@ -6,7 +6,8 @@ $options = getopt('b:i:d:');
 
 if (!isset($options['b']) || !isset($options['i']))
 {
-	echo "usage: php note_loader.php -b bookname -i bookimageid [-d desc]".PHP_EOL;
+	echo 'usage: php note_loader.php -b bookname -i bookimageid [-d desc]'
+		.PHP_EOL;
 	return; 
 }
 
@@ -35,7 +36,8 @@ if ($article_id == false)
 	LogOpt::set('exception', 'new_note_insert_into_article_error');
 	return false;
 }
-LogOpt::set('info', 'new_note_insert_into_article_success', 'article_id', $article_id);
+LogOpt::set('info', 'new_note_insert_into_article_success',
+	'article_id', $article_id);
 
 $infos = array();
 $infos['index_article_id'] = $article_id;
@@ -58,5 +60,6 @@ if ($note_id == false)
 	LogOpt::set('exception', 'new_note_insert_into_booknote_error');
 	return false;
 }
-LogOpt::set('info', 'new_note_insert_into_booknote_success', 'note_id', $note_id);
+LogOpt::set('info', 'new_note_insert_into_booknote_success',
+	'note_id', $note_id);
 ?>

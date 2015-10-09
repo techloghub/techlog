@@ -132,7 +132,8 @@ foreach ($tags as $tag)
 	$tag = trim($tag);
 	if ($tag == '')
 		continue;
-	$tag_id = Repository::findTagIdFromTags(array('eq' => array('tag_name' => $tag)));
+	$tag_id =
+		Repository::findTagIdFromTags(array('eq' => array('tag_name' => $tag)));
 	if ($tag_id == false)
 	{
 		$tag = new TagsModel(array('tag_name' => $tag, 'inserttime' => 'now()'));

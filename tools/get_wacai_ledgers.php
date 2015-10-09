@@ -39,10 +39,14 @@ for ($i=1; $i<=$pageCount; $i++)
 			continue;
 		}
 		$es_params = array();
-		$es_params['date']			= (isset($infos['date']) ? $infos['date'] : '');
-		$es_params['recType']		= (isset($infos['recType']) ? $infos['recType'] : '');
-		$es_params['tag'] 			= (isset($infos['tag']) ? $infos['tag'] : '');
-		$es_params['comment'] 		= (isset($infos['comment']) ? $infos['comment'] : '');
+		$es_params['date']			=
+			(isset($infos['date']) ? $infos['date'] : '');
+		$es_params['recType']		=
+			(isset($infos['recType']) ? $infos['recType'] : '');
+		$es_params['tag'] 			=
+			(isset($infos['tag']) ? $infos['tag'] : '');
+		$es_params['comment'] 		=
+			(isset($infos['comment']) ? $infos['comment'] : '');
 		$es_params['inserttime']	= date('Y-m-d H:i:s', time());
 		if ($es_params['recType'] == 3)
 		{
