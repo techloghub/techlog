@@ -79,9 +79,6 @@ function echo_ifset($params, $key)
 						<ul class="nav navbar-nav navbar-right">
 							<?php if ($params['is_root']): ?>
 								<li>
-								<a href="/stats/?">站长工具</a>
-								</li>
-								<li>
 								<a href="/article/test">草稿</a>
 								</li>
 								<li>
