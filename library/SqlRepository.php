@@ -232,8 +232,13 @@ class SqlRepository
 					break;
 				}
 			}
-			if (!$ismood && (!$is_root || $request['opt_type'] != 'all'))
+			// 查询 article 并且非 root 或者查询内容（非全部内容）限制分类
+			if (!$ismood
+				&& (!$is_root
+					|| ($request['opt_type'] != 'all'
+						&& $request['opt_type'] != 'title')))
 				$where_str .= ' and category_id < 5';
+			// 禁止非 root 查询 mood
 			else if (!$is_root)
 				$where_str .= ' and 0';
 
