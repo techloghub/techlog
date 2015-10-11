@@ -41,7 +41,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="mod-realcontent mod-cs-contentblock">
+			<div class="mod-realcontent mod-cs-contentblock" <?php if (isset($params['ismood']) && $params['ismood']): ?>style="background-color:rgba(255,255,255,.6)"<?php endif ?>>
 				<div class=cs-contentblock-bg>
 				</div>
 				<div class=item-head>
