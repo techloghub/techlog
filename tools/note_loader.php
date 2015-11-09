@@ -39,19 +39,13 @@ if ($article_id == false)
 LogOpt::set('info', 'new_note_insert_into_article_success',
 	'article_id', $article_id);
 
-$infos = array();
-$infos['index_article_id'] = $article_id;
-$infos['image_id'] = $image_id;
-$infos['updatetime'] = 'now()';
-if ($descs != null)
-	$infos['descs'] = $descs;
-
 $booknote = new BooknoteModel(
 	array(
 		'index_article_id' => $article_id,
 		'image_id' => $image_id,
 		'updatetime' => 'now()',
 		'inserttime' => 'now()',
+		'descs' => $descs
 	)
 );
 $note_id = Repository::persist($booknote);
