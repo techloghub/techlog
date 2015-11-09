@@ -192,6 +192,8 @@ function reload_category(category)
 						redraw_func(evt);
 					}
 				);
+				$('#out_in_lines').css('width', '980px');
+				$('#out_in_lines').css('height', '300px');
 			}
 		}
 	);
@@ -229,5 +231,7 @@ $(document).ready(function()
 		$('#search_ul').css('top', oTop + chose_btn.offsetHeight);
 	}
 );
+$('#out_in_lines').css('width', '980px');
+$('#out_in_lines').css('height', '300px');
 </script>
 <?php require(VIEW_PATH.'/base/footer.php'); ?>
