@@ -26,7 +26,7 @@
 <style type="text/css">
 	#customDoc
 	{
-		background:url(<?php echo $params['background'] ?>) fixed no-repeat;
+		background:<?php echo $params['background'] ?> fixed no-repeat;
 		background-size:cover;
 	}
 	#customDoc .mod-cs-contentblock

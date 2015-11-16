@@ -46,8 +46,12 @@ class Controller
 	public function display($func, $params)
 	{
 		$params['background'] = $this->is_root ?
-			'images/183755241795a6aac850b8.jpg'
-			: 'images/17183518883b16614c2fe8.jpg';
+			'url(images/183755241795a6aac850b8.jpg)'
+			: 'url(images/17183518883b16614c2fe8.jpg)';
+		if (TechlogTools::isMobile())
+		{
+			$params['background'] = '#F2F0F1';
+		}
 
 		$pattern = '/^(?<class>.+)Controller::(?<func>.+)Action/is';
 		if (preg_match($pattern, $func, $arr) == false)
@@ -60,6 +64,7 @@ class Controller
 		$file = $class.'/'.$func.'.php';
 
 		$params['is_root'] = $this->is_root;
+		$params['is_mobile'] = TechlogTools::isMobile();
 
 		if (empty($class) || empty($func) || !file_exists(VIEW_PATH.'/'.$file))
 			header("Location: /index/notfound");

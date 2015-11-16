@@ -10,7 +10,10 @@ class ArticleController extends Controller
 		}
 
 		$params = $this->getArticle(intval($query_params[0]));
-		$this->display(__METHOD__, $params);
+		if (!TechlogTools::isMobile())
+			$this->display(__METHOD__, $params);
+		else
+			$this->display(__CLASS__.'::mobileAction', $params);
 	}
 
 	public function testAction($query_params)
@@ -48,7 +51,10 @@ class ArticleController extends Controller
 		if (count($index) > 0)
 			$params['indexs'] = $index;
 
-		$this->display(__CLASS__.'::listAction', $params);
+		if (!TechlogTools::isMobile())
+			$this->display(__CLASS__.'::listAction', $params);
+		else
+			$this->display(__CLASS__.'::mobileAction', $params);
 	}
 
 	private function getArticle($article_id)
@@ -79,7 +85,9 @@ class ArticleController extends Controller
 				$params['contents'],
 				'"page-header"',
 				'</div>'
-			) === null)
+			) === null
+			&& !TechlogTools::isMobile()
+		)
 		{
 			$params['contents'] = '<div class="page-header"><h1>'
 				.$article->get_title()

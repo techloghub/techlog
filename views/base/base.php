@@ -104,6 +104,6 @@ function echo_ifset($params, $key)
 			</header>
 		</div>
 	</head>
-	<body style="background: url(<?php echo $params['background'] ?>) fixed no-repeat; background-size: cover;">
+	<body style="background: <?php echo $params['background'] ?> fixed no-repeat; background-size: cover;">
 	<link href='/resource/bootstrap/css/nav.css'  rel="stylesheet">
 	<?php require(VIEW_PATH.'/base/modal.php'); ?>

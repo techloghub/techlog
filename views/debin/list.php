@@ -1,4 +1,39 @@
 <?php require(VIEW_PATH.'/base/base.php'); ?>
+<?php if ($params['is_mobile']): ?>
+<style>
+.mod-bloglist {
+	width:80%;
+}
+.mod-blog-pagerbar, .mod-cs-pagebar {
+	background:#ddd;
+	-webkit-box-shadow:2px 2px 10px #000;
+	-moz-box-shadow:2px 2px 10px #000;
+	box-shadow:2px 2px 10px #000;
+}
+.mod-realcontent, .mod-cs-contentblock, .cs-contentblock-bg {
+	width:100%;
+	background:#aaa;
+	-webkit-box-shadow:2px 2px 10px #000;
+	-moz-box-shadow:2px 2px 10px #000;
+	box-shadow:2px 2px 10px #000;
+}
+.item-content, .cs-contentblock-detailcontent {
+	width:100%;
+}
+</style>
+<?php else:?>
+<style>
+.mod-realcontent, .mod-cs-contentblock, .cs-contentblock-bg {
+	width:620px;
+	-webkit-box-shadow:2px 2px 10px #e7e5e6;
+	-moz-box-shadow:2px 2px 10px #e7e5e6;
+	box-shadow:2px 2px 10px #e7e5e6;
+}
+.item-content, .cs-contentblock-detailcontent {
+	width: 580px;
+}
+</style>
+<?php endif ?>
 <br />
 <br />
 <br />
@@ -81,6 +116,7 @@
 			<?php require(VIEW_PATH.'/debin/page.php'); ?>
 
 			</section>
+			<?php if (!$params['is_mobile']): ?>
 			<section class="mod-rightsidebar clearfix mod-cs-sidebar">
 			<div class=mod-siderbar>
 				<section id=qFriendlyLinks style="font-size:14px;">
@@ -178,6 +214,7 @@
 					</div>
 				</div>
 				</section>
+				<?php endif ?>
 			</div>
 			</section>
 			<script src="http://hi.bdimg.com/static/qbase/js/mod/mod_foot.js?v=382c615f.js">
