@@ -125,7 +125,7 @@ function resize()
 					$(this).width($(this).parent().attr('alt'));
 			}
 		}
-	)
+	);
 }
 </script>
 

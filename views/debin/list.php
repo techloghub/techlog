@@ -17,8 +17,11 @@
 	-moz-box-shadow:2px 2px 10px #000;
 	box-shadow:2px 2px 10px #000;
 }
-.item-content, .cs-contentblock-detailcontent {
+.q-summary, .item-content, .cs-contentblock-detailcontent {
 	width:100%;
+}
+.mod-blogitem {
+	padding-left:120px;
 }
 </style>
 <?php else:?>
