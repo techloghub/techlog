@@ -11,6 +11,7 @@ class ArticleModel
 	private $draft;
 	private $access_count;
 	private $online;
+	private $comment_count;
 
 	public function __construct($params = array())
 	{
@@ -110,6 +111,15 @@ class ArticleModel
 	public function set_online($value)
 	{
 		$this->online = $value;
+		return $this;
+	}
+	public function get_comment_count()
+	{
+		return $this->comment_count;
+	}
+	public function set_comment_count($value)
+	{
+		$this->comment_count = $value;
 		return $this;
 	}
 	public function set($params)
