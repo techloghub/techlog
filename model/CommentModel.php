@@ -8,6 +8,7 @@ class CommentModel
 	private $qq;
 	private $reply;
 	private $online;
+	private $nickname;
 
 	public function __construct($params = array())
 	{
@@ -80,6 +81,15 @@ class CommentModel
 	public function set_online($value)
 	{
 		$this->online = $value;
+		return $this;
+	}
+	public function get_nickname()
+	{
+		return $this->nickname;
+	}
+	public function set_nickname($value)
+	{
+		$this->nickname = $value;
 		return $this;
 	}
 	public function set($params)

@@ -79,6 +79,8 @@ class ArticleController extends Controller
 			TechlogTools::pre_treat_article($article->get_draft());
 		$params['title_desc']	= $article->get_title_desc();
 		$params['article_category_id']	= $article->get_category_id();
+		$params['comment_count'] = intval($article->get_comment_count());
+		$params['comments'] = $this->getComments($article_id);
 
 		if (
 			StringOpt::spider_string(
@@ -104,6 +106,10 @@ class ArticleController extends Controller
 			.($article->get_access_count()+1);
 
 		return $params;
+	}
+
+	private function getComments($article_id)
+	{
 	}
 }
 ?>

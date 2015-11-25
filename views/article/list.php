@@ -21,7 +21,6 @@
 	<div class="container bs-docs-container" style="margin-bottom:80px;">
 		<?php if(!empty($params['contents'])): ?>
 		<div class="row">
-			<?php if(!empty($params['indexs'])): ?>
 			<div id="index">
 			<script src="/resource/stickUp-master/stickUp.min.js"></script>
 			<style>
@@ -37,14 +36,24 @@
 							<li>
 							<a href="#">回到顶端</a>
 							</li>
+							<?php if(!empty($params['indexs'])): ?>
 							<?php foreach($params['indexs'] as $idx_key=>$idx_val) { ?>
 							<li>
 							<a href="#<?php echo $idx_key ?>"><?php echo $idx_val ?></a>
 							</li>
 							<?php } ?>
+							<?php endif ?>
 							<?php if(isset($params['article_category_id']) && !in_array($params['article_category_id'], array(2, 5, 6))): ?>
 							<li>
 							<a href="#tags">标签</a>
+							</li>
+							<?php if($params['comment_count'] > 0): ?>
+							<li>
+							<a href="#comment">评论 (<?php echo $params['comment_count'] ?>)</a>
+							</li>
+							<?php endif ?>
+							<li>
+							<a href="#addcomment">添加评论</a>
 							</li>
 							<?php endif ?>
 						</ul>
@@ -54,10 +63,6 @@
 		</div>
 		<div id="md3" style="display:block" class="col-md-3"></div>
 		<div id="md9" class="col-md-9" role="main">
-		<?php else: ?>
-		<div id="md3" style="display:none" class="col-md-3"></div>
-		<div id="md9" class="col-md-12" role="main">
-			<?php endif ?>
 					<div class="bs-docs-section">
 						<?php echo $params['contents'] ?>
 						<?php if(!in_array($params['article_category_id'], array(2, 5, 6))): ?>
@@ -76,6 +81,46 @@
 			<?php endif ?>
 		</div>
 	</div>
+	<?php if(isset($params['article_category_id']) && !in_array($params['article_category_id'], array(2, 5, 6))): ?>
+	<?php if($params['comment_count'] > 0): ?>
+	<div class="container bs-docs-container" style="margin-bottom:80px;">
+		<div class="row">
+			<div id="comment" class="col-md-12" role="main">
+				<div class="bs-docs-section">
+					<div class="page-header">
+						<h1 id="commentlist">评论</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<?php endif ?>
+	<div class="container bs-docs-container" style="margin-bottom:80px;">
+		<div class="row">
+			<div id="addcomment" class="col-md-12" role="main">
+				<div class="bs-docs-section">
+					<div class="page-header">
+						<h1 id="add">添加评论</h1>
+						<form class="navbar-form navbar-left" role="addcomment" id="commentform" method="post" action="javascript:void(0)">
+							<div class="input-group" style="margin-top:10px;margin-bottom:10px;">
+								<span class="input-group-addon">昵称</span>
+								<input type="text" class="form-control" name="qq" id="qq" placeholder="QQ" value="<?php echo_ifset($params, 'qq') ?>" style="width:300px;margin-right:20px"/>
+							</div>
+							<div class="input-group" style="margin-top:10px;margin-bottom:10px;">
+								<span class="input-group-addon">QQ 号码</span>
+								<input type="text" class="form-control" name="qq" id="qq" placeholder="QQ" value="<?php echo_ifset($params, 'qq') ?>" style="width:300px;margin-right:20px"/>
+							</div>
+							<div class="input-group" style="margin-top:10px;margin-bottom:10px;">
+								<span class="input-group-addon">电子邮箱</span>
+								<input type="text" class="form-control" name="email" id="email" placeholder="Email" style="width:300px;" value="<?php echo_ifset($params, 'email') ?>"/>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<?php endif ?>
 </div>
 <script src="/resource/zeyu_blog/js/article.js"></script>
 <?php require(VIEW_PATH.'/base/footer.php'); ?>
