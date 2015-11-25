@@ -9,6 +9,8 @@ class CommentModel
 	private $reply;
 	private $online;
 	private $nickname;
+	private $floor;
+	private $content;
 
 	public function __construct($params = array())
 	{
@@ -90,6 +92,24 @@ class CommentModel
 	public function set_nickname($value)
 	{
 		$this->nickname = $value;
+		return $this;
+	}
+	public function get_floor()
+	{
+		return $this->floor;
+	}
+	public function set_floor($value)
+	{
+		$this->floor = $value;
+		return $this;
+	}
+	public function get_content()
+	{
+		return $this->content;
+	}
+	public function set_content($value)
+	{
+		$this->content = $value;
 		return $this;
 	}
 	public function set($params)

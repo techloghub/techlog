@@ -57,6 +57,41 @@ class ArticleController extends Controller
 			$this->display(__CLASS__.'::mobileAction', $params);
 	}
 
+	public function commentActionAjax()
+	{
+		$input = $_POST;
+		if (!isset($input['article_id'])
+			|| intval($input['article_id']) == 0
+			|| !isset($input['qq'])
+			|| !isset($input['nickname'])
+			|| !isset($input['email'])
+			|| !isset($input['content']))
+		{
+			$result = array('code' => '-1',
+				'msg' => '请勿攻击接口，否则封禁 IP，谢谢');
+			return $result;
+		}
+
+		$params = array('eq' => array('article_id' => $input['article_id']));
+		$article = Repository::findOneFromArticle($params);
+		if ($article == false)
+		{
+			$result = array('code' => '-1',
+				'msg' => '评论失败，请刷新后重新评论，谢谢');
+			return $result;
+		}
+		$infos = $input;
+		$infos['floor'] = $article->get_comment_count() + 1;
+		$infos['inserttime'] = date('Y-m-d H:i:s', time());
+		$comment = new CommentModel($infos);
+		Repository::persist($comment);
+		$article->set_comment_count($article->get_comment_count() + 1);
+		Repository::persist($article);
+
+		$result = array('code' => 0, 'msg' => '评论成功');
+		return $result;
+	}
+
 	private function getArticle($article_id)
 	{
 		$params = array();
@@ -75,12 +110,14 @@ class ArticleController extends Controller
 		$params['tags']		= SqlRepository::getTags($article_id);
 		$params['title']	= $article->get_title();
 		$params['indexs'] = json_decode($article->get_indexs());
-		$params['contents'] = \
+		$params['contents'] =
 			TechlogTools::pre_treat_article($article->get_draft());
 		$params['title_desc']	= $article->get_title_desc();
 		$params['article_category_id']	= $article->get_category_id();
 		$params['comment_count'] = intval($article->get_comment_count());
-		$params['comments'] = $this->getComments($article_id);
+		$params['comments'] = ($params['comment_count'] > 0 ?
+			SqlRepository::getComments($article_id) : array());
+		$params['article_id'] = $article->get_article_id();
 
 		if (
 			StringOpt::spider_string(
@@ -106,10 +143,6 @@ class ArticleController extends Controller
 			.($article->get_access_count()+1);
 
 		return $params;
-	}
-
-	private function getComments($article_id)
-	{
 	}
 }
 ?>

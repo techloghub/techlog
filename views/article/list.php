@@ -90,6 +90,10 @@
 					<div class="page-header">
 						<h1 id="commentlist">评论</h1>
 					</div>
+					<?php foreach ($params['comments'] as $comment) { ?>
+					<p><h4 style="margin-right:5px;color:#0047dd"><i style="margin-right:5px; color:#000"><?php echo $comment->get_floor() ?>#</i><?php echo $comment->get_nickname() ?>: </h4></p>
+					<p><?php echo htmlspecialchars($comment->get_content()) ?></p>
+					<?php } ?>
 				</div>
 			</div>
 		</div>
@@ -103,16 +107,24 @@
 						<h1 id="add">添加评论</h1>
 						<form class="navbar-form navbar-left" role="addcomment" id="commentform" method="post" action="javascript:void(0)">
 							<div class="input-group" style="margin-top:10px;margin-bottom:10px;">
-								<span class="input-group-addon">昵称</span>
+								<span class="input-group-addon" style="width:120px;">昵称</span>
+								<input type="text" class="form-control" name="qq" id="nickname" placeholder="nickname" value="<?php echo_ifset($params, 'nickname') ?>" style="width:300px;margin-right:20px"/>
+								<i style="color:#f00;diplay:none" id="errmsg"></i>
+							</div>
+							<div class="input-group" style="margin-top:10px;margin-bottom:10px;">
+								<span class="input-group-addon" style="width:120px;">QQ 号码</span>
 								<input type="text" class="form-control" name="qq" id="qq" placeholder="QQ" value="<?php echo_ifset($params, 'qq') ?>" style="width:300px;margin-right:20px"/>
 							</div>
 							<div class="input-group" style="margin-top:10px;margin-bottom:10px;">
-								<span class="input-group-addon">QQ 号码</span>
-								<input type="text" class="form-control" name="qq" id="qq" placeholder="QQ" value="<?php echo_ifset($params, 'qq') ?>" style="width:300px;margin-right:20px"/>
+								<span class="input-group-addon" style="width:120px;">电子邮箱</span>
+								<input type="email" class="form-control" name="email" id="email" placeholder="Email" style="width:300px;" value="<?php echo_ifset($params, 'email') ?>"/>
 							</div>
 							<div class="input-group" style="margin-top:10px;margin-bottom:10px;">
-								<span class="input-group-addon">电子邮箱</span>
-								<input type="text" class="form-control" name="email" id="email" placeholder="Email" style="width:300px;" value="<?php echo_ifset($params, 'email') ?>"/>
+								<textarea class="form-control" rows="10" class="col-md-12" id="comment_content"></textarea>
+							</div>
+							<div class="input-group" style="float:right; margin-top:10px;margin-bottom:10px;">
+								<input type="hidden" style="display:none" name="article_id" id="article_id" value="<?php echo $params['article_id'] ?>"/>
+								<button class="btn btn-primary btn-lg" type="submit" role="button" onclick="submitcomment()">提交评论</button>
 							</div>
 						</form>
 					</div>
