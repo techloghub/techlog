@@ -18,7 +18,7 @@
 <br/>
 <br/>
 <div class="container_wrapper">
-	<div class="container bs-docs-container" style="margin-bottom:80px;">
+	<div class="container bs-docs-container" id="article_content" style="margin-bottom:80px;">
 		<?php if(!empty($params['contents'])): ?>
 		<div class="row">
 			<div id="index">
