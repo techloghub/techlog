@@ -4,7 +4,7 @@ class SqlRepository
 	public static function getComments($article_id)
 	{ // {{{
 		$sql = 'select * from comment'
-			.' where article_id = :article_id order by inserttime desc';
+			.' where article_id = :article_id order by inserttime asc';
 
 		$pdo = Repository::getInstance();
 		$stmt = $pdo->prepare($sql);

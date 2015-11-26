@@ -64,6 +64,8 @@ class ArticleController extends Controller
 			|| intval($input['article_id']) == 0
 			|| !isset($input['qq'])
 			|| !isset($input['nickname'])
+			|| !isset($input['replyfloor'])
+			|| !isset($input['reply'])
 			|| !isset($input['email'])
 			|| !isset($input['content']))
 		{
@@ -81,8 +83,11 @@ class ArticleController extends Controller
 			return $result;
 		}
 		$infos = $input;
+		$infos['ip'] = $_SERVER["REMOTE_ADDR"];
 		$infos['floor'] = $article->get_comment_count() + 1;
 		$infos['inserttime'] = date('Y-m-d H:i:s', time());
+		if ($input['reply'])
+			$infos['reply'] = $input['replyfloor'];
 		$comment = new CommentModel($infos);
 		Repository::persist($comment);
 		$article->set_comment_count($article->get_comment_count() + 1);

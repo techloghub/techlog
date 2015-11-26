@@ -11,6 +11,7 @@ class CommentModel
 	private $nickname;
 	private $floor;
 	private $content;
+	private $ip;
 
 	public function __construct($params = array())
 	{
@@ -110,6 +111,15 @@ class CommentModel
 	public function set_content($value)
 	{
 		$this->content = $value;
+		return $this;
+	}
+	public function get_ip()
+	{
+		return $this->ip;
+	}
+	public function set_ip($value)
+	{
+		$this->ip = $value;
 		return $this;
 	}
 	public function set($params)

@@ -91,8 +91,12 @@
 						<h1 id="commentlist">评论</h1>
 					</div>
 					<?php foreach ($params['comments'] as $comment) { ?>
-					<p><h4 style="margin-right:5px;color:#0047dd"><i style="margin-right:5px; color:#000"><?php echo $comment->get_floor() ?>#</i><?php echo $comment->get_nickname() ?>: </h4></p>
-					<p><?php echo htmlspecialchars($comment->get_content()) ?></p>
+					<p>
+						<h4 style="margin-right:5px;color:#0047dd">
+							<i style="margin-right:5px; color:#000"><?php echo $comment->get_floor() ?>#</i><?php echo $comment->get_nickname() ?>: <i style="margin-left:10px; color:#000; font-size:60%"><a href="javascript:void(0)" onclick="reply(<?php echo $comment->get_floor(); ?>, '<?php echo $comment->get_nickname() ?>')">(回复)</a></i>
+						</h4>
+					</p>
+					<p><?php if ($comment->get_reply() > 0): ?><i style="margin-right:5px; color:#0047dd">回复：<?php echo $comment->get_reply() ?>#</i><?php endif ?><?php echo htmlspecialchars($comment->get_content()) ?></p>
 					<?php } ?>
 				</div>
 			</div>
@@ -119,11 +123,17 @@
 								<span class="input-group-addon" style="width:120px;">电子邮箱</span>
 								<input type="email" class="form-control" name="email" id="email" placeholder="Email" style="width:300px;" value="<?php echo_ifset($params, 'email') ?>"/>
 							</div>
+							<div class="input-group" id="reply_checkbox" style="display:none; margin-top:10px; margin-bottom:10px; display:none">
+								<label>
+									<input type="checkbox" id="relycheckbox"/><span id="replytext" style="cursor: pointer; color:#0047dd; margin-left:10px;"></span>
+								</label>
+							</div>
 							<div class="input-group" style="margin-top:10px;margin-bottom:10px;">
 								<textarea class="form-control" rows="10" class="col-md-12" id="comment_content"></textarea>
 							</div>
 							<div class="input-group" style="float:right; margin-top:10px;margin-bottom:10px;">
 								<input type="hidden" style="display:none" name="article_id" id="article_id" value="<?php echo $params['article_id'] ?>"/>
+								<input type="hidden" style="display:none" name="replyfloor" id="replyfloor" value=""/>
 								<button class="btn btn-primary btn-lg" type="submit" role="button" onclick="submitcomment()">提交评论</button>
 							</div>
 						</form>
