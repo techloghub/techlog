@@ -74,6 +74,15 @@ class ArticleController extends Controller
 			return $result;
 		}
 
+		if (!$this->is_root
+			&& ($input['email'] == 'zeyu203@qq.com'
+				|| $input['nickname'] == '博主'))
+		{
+			$result = array('code' => '-1',
+				'msg' => '请勿冒充博主');
+			return $result;
+		}
+
 		$params = array('eq' => array('article_id' => $input['article_id']));
 		$article = Repository::findOneFromArticle($params);
 		if ($article == false)
