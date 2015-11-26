@@ -85,8 +85,8 @@ $infos['title'] = $options['t'];
 if (isset($options['d']))
 	$infos['title_desc'] = $options['d'];
 $infos['updatetime'] = 'now()';
-// 设置inserttime
 $infos['inserttime'] = isset($options['a']) ? $options['a'] : 'now()';
+$infos['comment_count'] = 0;
 // 插入日志
 if (isset($options['i']))
 {

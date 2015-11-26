@@ -8,6 +8,10 @@ class CommentModel
 	private $qq;
 	private $reply;
 	private $online;
+	private $nickname;
+	private $floor;
+	private $content;
+	private $ip;
 
 	public function __construct($params = array())
 	{
@@ -80,6 +84,42 @@ class CommentModel
 	public function set_online($value)
 	{
 		$this->online = $value;
+		return $this;
+	}
+	public function get_nickname()
+	{
+		return $this->nickname;
+	}
+	public function set_nickname($value)
+	{
+		$this->nickname = $value;
+		return $this;
+	}
+	public function get_floor()
+	{
+		return $this->floor;
+	}
+	public function set_floor($value)
+	{
+		$this->floor = $value;
+		return $this;
+	}
+	public function get_content()
+	{
+		return $this->content;
+	}
+	public function set_content($value)
+	{
+		$this->content = $value;
+		return $this;
+	}
+	public function get_ip()
+	{
+		return $this->ip;
+	}
+	public function set_ip($value)
+	{
+		$this->ip = $value;
 		return $this;
 	}
 	public function set($params)
