@@ -13,6 +13,8 @@ class Controller
 		)
 		{
 			setcookie('LoginInfo', $config['admin']['logininfo'], time()+1800, '/');
+			setcookie('unick', base64_encode('博主'), time()+1800, '/');
+			setcookie('uemad', base64_encode('zeyu203@qq.com'), time()+1800, '/');
 			$this->is_root = true;
 		}
 		else
