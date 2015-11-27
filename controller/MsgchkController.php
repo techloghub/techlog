@@ -16,6 +16,8 @@ class MsgchkController {
 			$result['code'] = 0;
 			$result['msg'] = '登录成功';
 			setcookie('LoginInfo', $config['admin']['logininfo'], time()+1800, '/');
+			setcookie('unick', base64_encode('博主'), time()+1800, '/');
+			setcookie('uemad', base64_encode('zeyu203@qq.com'), time()+1800, '/');
 		}
 
 		return $result;

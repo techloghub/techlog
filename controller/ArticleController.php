@@ -10,6 +10,12 @@ class ArticleController extends Controller
 		}
 
 		$params = $this->getArticle(intval($query_params[0]));
+		if (isset($_COOKIE['unick']))
+			$params['nickname'] = base64_decode($_COOKIE['unick']);
+		if (isset($_COOKIE['uqno']))
+			$params['qq'] = base64_decode($_COOKIE['uqno']);
+		if (isset($_COOKIE['uemad']))
+			$params['email'] = base64_decode($_COOKIE['uemad']);
 		if (!TechlogTools::isMobile())
 			$this->display(__METHOD__, $params);
 		else
@@ -101,6 +107,10 @@ class ArticleController extends Controller
 		Repository::persist($comment);
 		$article->set_comment_count($article->get_comment_count() + 1);
 		Repository::persist($article);
+
+		setcookie('unick', base64_encode($comment->get_nickname()), 0, '/');
+		setcookie('uqno', base64_encode($comment->get_qq()), 0, '/');
+		setcookie('uemad', base64_encode($comment->get_email()), 0, '/');
 
 		$result = array('code' => 0, 'msg' => '评论成功');
 		return $result;

@@ -94,9 +94,6 @@ function echo_ifset($params, $key)
 								<li>
 								<a href="javascript:void(0)" data-toggle="modal" data-target="#login_modal">登录</a>
 								</li>
-								<li>
-								<a href="javascript:void(0)" onclick="jAlert('对不起，暂时不支持注册，有任何交流，请发邮件至 zeyu203@qq.com', '温馨提示')">注册</a>
-								</li>
 							<?php endif ?>
 						</ul>
 					</nav>
