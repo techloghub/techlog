@@ -144,7 +144,7 @@ class Dispatcher
 		$uri_infos['class'] = isset($uri_infos['class']) ?
 			ucfirst(strtolower($uri_infos['class'])).'Controller' : 'IndexController';
 		$uri_infos['func'] = isset($uri_infos['func']) ?
-			strtolower($uri_infos['func']).'Action' : 'listAction';
+			StringOpt::unlinetocamel($uri_infos['func']).'Action' : 'listAction';
 		$uri_infos['params'] = isset($uri_infos['params']) ?
 			explode('/', $uri_infos['params']) : array();
 

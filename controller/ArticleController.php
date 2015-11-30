@@ -117,6 +117,31 @@ class ArticleController extends Controller
 		return $result;
 	}
 
+	public function onlineCommentActionAjax()
+	{
+		if (!$this->is_root)
+		{
+			return array('code' => -1, 'msg' => '抱歉，您没有权限进行该操作');
+		}
+		if (empty($_REQUEST['comment_id'])
+			|| !isset($_REQUEST['online'])
+		) {
+			return array('code' => -1, 'msg' => '参数错误');
+		}
+		$comment_id = $_REQUEST['comment_id'];
+		$online = intval($_REQUEST['online']) == 0 ? 1 : 0;
+
+		$params = array('eq' => array('comment_id' => $comment_id));
+		$comment = Repository::findOneFromComment($params);
+		if ($comment == false)
+		{
+			return array('code' => -1, 'msg' => '没有找到相应评论');
+		}
+		$comment->set_online($online);
+		Repository::persist($comment);
+		return array('code' => 0, 'msg' => '成功');
+	}
+
 	private function getArticle($article_id)
 	{
 		$params = array();
@@ -136,7 +161,7 @@ class ArticleController extends Controller
 		$params['title']	= $article->get_title();
 		$params['indexs']	= json_decode($article->get_indexs());
 		$params['comments']	= ($article->get_comment_count() > 0 ?
-			SqlRepository::getComments($article_id) : array());
+			SqlRepository::getComments($article_id, $this->is_root) : array());
 		$params['contents'] =
 			TechlogTools::pre_treat_article($article->get_draft());
 		$params['title_desc']	= $article->get_title_desc();

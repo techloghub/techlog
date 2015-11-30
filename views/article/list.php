@@ -93,10 +93,10 @@
 					<?php foreach ($params['comments'] as $comment) { ?>
 					<p>
 						<h4 style="margin-right:5px;color:<?php if ($comment->get_nickname() == '博主' && $comment->get_email() == 'zeyu203@qq.com'): ?>#6800C9<?php else: ?>#0047dd<?php endif ?>">
-						<i style="margin-right:5px; color:#000"><?php echo $comment->get_floor() ?>#</i><?php echo $comment->get_nickname() ?>: <i style="margin-left:10px; margin-right:50px; color:#000; font-size:60%"><a href="javascript:void(0)" onclick="reply(<?php echo $comment->get_floor(); ?>, '<?php echo $comment->get_nickname() ?>')">(回复)</a></i><i style="color:#000; font-size:60%"><?php if ($params['is_root']): echo "QQ: ".$comment->get_qq()." EMAIL: ".$comment->get_email() ?><?php endif ?></i>
+						<i style="margin-right:5px; color:#000"><?php echo $comment->get_floor() ?>#</i><?php echo $comment->get_nickname() ?>: <i style="margin-left:10px; margin-right:50px; color:#000; font-size:60%"><a href="javascript:void(0)" onclick="reply(<?php echo $comment->get_floor(); ?>, '<?php echo $comment->get_nickname() ?>')">(回复)</a><?php if ($params['is_root']): ?><a style="margin-left:10px; color:#e00" href="javascript:void(0)" onclick="onoffcomment('<?php echo $comment->get_comment_id() ?>', '<?php echo $comment->get_online() ?>')">(<?php if ($comment->get_online()): echo '下线' ?><?php else: echo '上线' ?><?php endif ?>)</a><?php endif ?></i><i style="color:#000; font-size:60%"><?php if ($params['is_root']): echo "QQ: ".$comment->get_qq()." EMAIL: ".$comment->get_email() ?><?php endif ?></i>
 						</h4>
 					</p>
-					<p><?php if ($comment->get_reply() > 0): ?><i style="margin-right:5px; color:#0047dd">回复：<?php echo $comment->get_reply() ?>#</i><?php endif ?><?php echo htmlspecialchars($comment->get_content()) ?></p>
+					<p><?php if ($comment->get_reply() > 0): ?><i style="margin-right:5px; color:#0047dd">回复：<?php echo $comment->get_reply() ?>#</i><?php endif ?><?php if (!$comment->get_online()): ?><i style="color:#f0f"><?php endif ?><?php echo htmlspecialchars($comment->get_content()) ?><?php if (!$comment->get_online()): ?></i><?php endif ?></p>
 					<?php } ?>
 				</div>
 			</div>
