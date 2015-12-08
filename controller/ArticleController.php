@@ -102,6 +102,7 @@ class ArticleController extends Controller
 		$infos['online'] = 1;
 		$infos['floor'] = $article->get_comment_count() + 1;
 		$infos['inserttime'] = date('Y-m-d H:i:s', time());
+		$infos['updatetime'] = date('Y-m-d H:i:s', time());
 		if ($input['reply'])
 			$infos['reply'] = $input['replyfloor'];
 		$comment = new CommentModel($infos);
