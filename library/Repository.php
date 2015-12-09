@@ -150,7 +150,7 @@ class Repository
 			if ($key == $model->get_pri_key())
 				continue;
 			$keys[] = $key;
-			if ($value == 'now()')
+			if ($value === 'now()')
 			{
 				$params_keys[] = 'now()';
 			}
