@@ -13,7 +13,7 @@
     <link rel="icon" href="http://techlog.cn/images/icon.png">
 	<link href="/resource/zeyu_blog/css/zeyu_blog.css" rel="stylesheet" type="text/css">
 	<link href="/resource/zeyu_blog/css/mobile.css" rel="stylesheet" type="text/css">
-    <style>/* Copyright 2014 Evernote Corporation. All rights reserved. */
+    <style>
     .en-markup-crop-options {
         top: 18px !important;
         left: 50% !important;
@@ -131,6 +131,3 @@ function resize()
 
 </body>
 </html>
-
-<!-- cached at 2015-11-16 17:43:43.953255 -->
-
