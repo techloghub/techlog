@@ -139,6 +139,7 @@ class ArticleController extends Controller
 			return array('code' => -1, 'msg' => '没有找到相应评论');
 		}
 		$comment->set_online($online);
+		$comment->set_updatetime('now()');
 		Repository::persist($comment);
 		return array('code' => 0, 'msg' => '成功');
 	}
