@@ -82,7 +82,7 @@
 		</div>
 	</div>
 	<?php if(isset($params['article_category_id']) && !in_array($params['article_category_id'], array(2, 5, 6))): ?>
-	<?php if($params['comment_count'] > 0): ?>
+	<?php if(count($params['comments']) > 0): ?>
 	<div class="container bs-docs-container" style="margin-bottom:80px;">
 		<div class="row">
 			<div id="comment" class="col-md-12" role="main">

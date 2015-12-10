@@ -12,6 +12,7 @@ class CommentModel
 	private $floor;
 	private $content;
 	private $ip;
+	private $updatetime;
 
 	public function __construct($params = array())
 	{
@@ -120,6 +121,15 @@ class CommentModel
 	public function set_ip($value)
 	{
 		$this->ip = $value;
+		return $this;
+	}
+	public function get_updatetime()
+	{
+		return $this->updatetime;
+	}
+	public function set_updatetime($value)
+	{
+		$this->updatetime = $value;
 		return $this;
 	}
 	public function set($params)
