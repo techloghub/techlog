@@ -164,18 +164,6 @@ class SqlRepository
 		return $ret;
 	} // }}}
 
-	public static function getAllUV()
-	{ // {{{
-		$sql = 'select sum(num) as total from'
-			.' (select date(time_str) as day, count(distinct remote_host) as num'
-			.' from stats group by day) as A';
-
-		$pdo = Repository::getInstance();
-		$stmt = $pdo->query($sql);
-		$ret = $stmt->fetch();
-		return isset($ret['total']) ? $ret['total'] : false;
-	} // }}}
-
 	public static function getCategoryNewArticle()
 	{ // {{{
 		$sql = 'select a.category_id, a.article_id, b.category, a.title, a.inserttime'
