@@ -21,7 +21,7 @@ class InfosController extends Controller
 			$pv[] = $pv_info['total'];
 
 		$all_pv = Repository::findCountFromStats();
-		$all_uv = SqlRepository::getAllUV();
+		$all_uv = RedisRepository::getAllUV();
 
 		$category_infos = SqlRepository::getCategoryInfos();
 

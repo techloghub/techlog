@@ -43,6 +43,7 @@ class Controller
 		);
 
 		Repository::persist($stats);
+		RedisRepository::setIpCache($remote_host);
 	}
 
 	public function display($func, $params)
