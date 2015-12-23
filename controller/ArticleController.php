@@ -162,14 +162,21 @@ class ArticleController extends Controller
 		$params['tags']		= SqlRepository::getTags($article_id);
 		$params['title']	= $article->get_title();
 		$params['indexs']	= json_decode($article->get_indexs());
-		$params['comments']	= ($article->get_comment_count() > 0 ?
-			SqlRepository::getComments($article_id, $this->is_root) : array());
 		$params['contents'] =
 			TechlogTools::pre_treat_article($article->get_draft());
 		$params['title_desc']	= $article->get_title_desc();
 		$params['article_id']	= $article->get_article_id();
 		$params['comment_count']	= intval($article->get_comment_count());
 		$params['article_category_id']	= $article->get_category_id();
+
+		$comments_params = array(
+			'eq' => array('article_id' => $article_id),
+			'order' => array('inserttime' => 'asc')
+		);
+		if (!$this->is_root) {
+			$comments_params['eq']['online'] = 1;
+		}
+		$params['comments'] = Repository::findFromComment($comments_params);
 
 		if (StringOpt::spider_string($params['contents'], '"page-header"',
 				'</div>') === null && !TechlogTools::isMobile())

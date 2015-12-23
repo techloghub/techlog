@@ -1,22 +1,6 @@
 <?php
 class SqlRepository
 {
-	public static function getComments($article_id, $is_root)
-	{ // {{{
-		$sql = 'select * from comment'
-			.' where article_id = :article_id';
-		if (!$is_root) {
-			$sql .= ' and online = 1';
-		}
-		$sql .= ' order by inserttime asc';
-
-		$pdo = Repository::getInstance();
-		$stmt = $pdo->prepare($sql);
-		$stmt->execute(array(':article_id' => $article_id));
-		$ret = $stmt->fetchAll(PDO::FETCH_CLASS, 'CommentModel');
-		return $ret;
-	} // }}}
-
 	public static function getTags($article_id)
 	{ // {{{
 		$sql = 'select C.* from'
