@@ -105,7 +105,7 @@ class DebinController extends Controller
 		$page = (isset($query_params[0]) and intval($query_params[0])) > 0 ?
 			intval($query_params[0]) : 1;
 
-		$count = Repository::findCountFromMood(array());
+		$count = Repository::findCountFromMood();
 		$moods = Repository::findFromMood(
 			array(
 				'order' => array('inserttime' => 'desc'),
