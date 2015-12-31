@@ -117,7 +117,7 @@ for ($i=1; $i<=$pageCount; $i++)
 		$ret = HttpCurl::get($acc_url);
 		$ret = $ret['body'];
 		$acc_infos = json_decode($ret, true);
-		if ($acc_infos != false && $acc_infos['found'] != false)
+		if ($acc_infos != false)
 		{
 			$acc_infos = $acc_infos['_source'];
 			if ($es_params['recType'] == 2)
@@ -135,7 +135,7 @@ for ($i=1; $i<=$pageCount; $i++)
 		$ret = HttpCurl::get($acc_url);
 		$ret = $ret['body'];
 		$acc_infos = json_decode($ret, true);
-		if ($acc_infos == false || $acc_infos['found'] == false)
+		if ($acc_infos == false)
 			continue;
 		$acc_infos = $acc_infos['_source'];
 		$acc_infos['money'] += $es_params['money'];

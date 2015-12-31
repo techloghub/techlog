@@ -155,12 +155,6 @@ class EarningsController extends Controller
 			$endMonth = date('Y-m',
 				time()-24*3600*intval(date('t', strtotime('-1 month'))));
 		}
-		if (strtotime($endMonth) >
-			time()-24*3600*intval(date('t', strtotime('-1 month'))))
-		{
-			$endMonth = date('Y-m',
-				time()-24*3600*intval(date('t', strtotime('-1 month'))));
-		}
 		if (strtotime($begMonth) < strtotime('2013-09'))
 		{
 			$begMonth = '2013-09';

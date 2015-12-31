@@ -49,8 +49,8 @@ class Controller
 	public function display($func, $params)
 	{
 		$params['background'] = $this->is_root ?
-			'url(images/183755241795a6aac850b8.jpg)'
-			: 'url(images/17183518883b16614c2fe8.jpg)';
+			'url(images/17183518883b16614c2fe8.jpg)'
+			: 'url(images/37fa8df7da45fd6c8a44a1664021a5df.jpg)';
 		if (TechlogTools::isMobile())
 		{
 			$params['background'] = '#F2F0F1';
