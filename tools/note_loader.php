@@ -22,12 +22,17 @@ if ($image == false)
 	LogOpt::set('exception', 'image not exists', 'image_id', $image_id);
 	return false;
 }
+
+$draft = '<div>'.PHP_EOL.'<!--'.PHP_EOL.'</div>'.PHP_EOL
+	.'<img id="'.$image_id.'"/>'.PHP_EOL
+	.'<div>'.PHP_EOL.'-->'.PHP_EOL.'</div>'.PHP_EOL;
 $article = new ArticleModel(
 	array(
 		'title' => $bookname,
 		'updatetime' => 'now()',
 		'inserttime' => 'now()',
-		'category_id' => 2
+		'category_id' => 2,
+		'draft' => $draft
 	)
 );
 $article_id = Repository::persist($article);
