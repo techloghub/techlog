@@ -311,6 +311,7 @@ class TechlogTools
 					return -2;
 				$image->set_md5(md5_file($blog_image));
 				$image->set_category($category);
+				$image->set_inserttime(date('Y-m-d H:i:s', time()));
 				$id = Repository::persist($image);
 			}
 			else
