@@ -102,6 +102,14 @@ class HttpCurl
         return $http_header;
     }
 
+	public static function set_proxy($proxy = null, $port = null)
+	{
+		if (empty(self::$handle))
+			self::curlInit();
+		curl_setopt(self::$handle, CURLOPT_PROXY, $proxy);
+		curl_setopt(self::$handle, CURLOPT_proxyPORT, $port);
+	}
+
 	public static function set_authorize($username = null, $password = null)
 	{
 		if (empty(self::$handle) || empty($username) || empty($password))
