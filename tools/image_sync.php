@@ -15,7 +15,7 @@ for ($page = 1; $page - 1 < intval($count/$limit); $page++) {
 			|| md5_file($basepath.$image->get_path()) != $image->get_md5()) {
 
 			$file = HttpCurl::get('http://techlog.cn/resource/'.$image->get_path());
-			file_put_contents($basepath.$image->get_path(), $file);
+			file_put_contents($basepath.$image->get_path(), $file['body']);
 			echo 'DOWNLOAD_IMAGE'."\t".$basepath.$image->get_path().PHP_EOL;
 		} else exit;
 	}
