@@ -117,7 +117,7 @@ class SqlRepository
 	{ // {{{
 		$sql = 'select booknote.* from booknote, article'
 			.' where booknote.index_article_id = article.article_id'
-			.' and booknote.note_id not in (2, 5, 9, 4)'
+			.' and booknote.note_id not in (2, 5, 9, 4, 8)'
 			.' order by article.access_count desc';
 
 		$pdo = Repository::getInstance();

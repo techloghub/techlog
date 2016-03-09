@@ -6,7 +6,7 @@ $options = getopt('b:i:d:');
 
 if (!isset($options['b']) || !isset($options['i']))
 {
-	echo 'usage: php note_loader.php -b bookname -i bookimageid [-d desc]'
+	echo 'usage: php note_loader.php -b bookname -i bookimageid(536*758) [-d desc]'
 		.PHP_EOL;
 	return; 
 }
