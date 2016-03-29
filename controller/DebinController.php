@@ -272,10 +272,8 @@ class DebinController extends Controller
 			$imgpath = StringOpt::spider_string($contents, 'img<![&&]>src="', '"');
 			if ($imgpath == null)
 			{
-				echo $contents;
 				$ret_infos['contents'] = strip_tags($contents);
-				$ret_infos['contents'] = mb_substr($ret_infos['contents'], 0, 800, 'utf-8');
-				exit;
+				$ret_infos['contents'] = mb_substr($ret_infos['contents'], 0, 600, 'utf-8');
 			}
 			else
 			{
