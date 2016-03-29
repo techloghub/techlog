@@ -132,7 +132,7 @@
 								<textarea class="form-control" rows="10" class="col-md-12" id="comment_content"></textarea>
 							</div>
 							<div class="input-group" style="float:right; margin-top:10px;margin-bottom:10px;">
-								<input type="hidden" style="display:none" name="article_id" id="article_id" value="<?php echo $params['article_id'] ?>"/>
+								<input type="hidden" style="display:none" name="article_id" id="article_id" value="<?php echo_ifset($params, 'article_id') ?>"/>
 								<input type="hidden" style="display:none" name="replyfloor" id="replyfloor" value=""/>
 								<button class="btn btn-primary btn-lg" type="submit" role="button" onclick="submitcomment()">提交评论</button>
 							</div>
