@@ -16,7 +16,7 @@
 				<?php } ?>
 			</ul>
 		</div>
-		<div class='span1'><button style="height: 40px" class="btn btn-default" onclick="window.open('http://techlog.cn/debin/category/6')">分 析</button></div>
+		<div class='span1'><button style="height: 40px" class="btn btn-default" onclick="window.open('/debin/category/6')">分 析</button></div>
 		<div id="line">
 			<canvas id="out_in_lines" width="980px" height="300px"></canvas>
 		</div>
