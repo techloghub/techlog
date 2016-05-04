@@ -6,6 +6,7 @@ class ImagesModel
 	private $path;
 	private $inserttime;
 	private $category;
+	private $version;
 
 	public function __construct($params = array())
 	{
@@ -60,6 +61,15 @@ class ImagesModel
 	public function set_category($value)
 	{
 		$this->category = $value;
+		return $this;
+	}
+	public function get_version()
+	{
+		return $this->version;
+	}
+	public function set_version($value)
+	{
+		$this->version = $value;
 		return $this;
 	}
 	public function set($params)

@@ -134,15 +134,17 @@ class TechlogTools
 				if ($id != null)
 				{
 					$image_id = intval(trim($id));
-					$path = Repository::findPathFromImages(
+					$image = Repository::findOneFromImages(
 						array('eq' => array('image_id' => $image_id))
 					);
-					if ($path != false)
+					$path = $image->get_path();
+					if ($image != false)
 					{
 						$line =
 							str_replace(
 								'id="'.$id.'"',
-								'src="'.$path.'?id='.$id.'"',
+								'src="'.$image->get_path().'?id='.$image_id
+									.'&v='.$image->get_version().'"',
 								$line
 							);
 					}
@@ -312,6 +314,7 @@ class TechlogTools
 				$image->set_md5(md5_file($blog_image));
 				$image->set_category($category);
 				$image->set_inserttime(date('Y-m-d H:i:s', time()));
+				$image->set_version($image->get_version() + 1);
 				$id = Repository::persist($image);
 			}
 			else
@@ -329,9 +332,10 @@ class TechlogTools
 				return -5;
 			$image = new ImagesModel(
 				array(
-					'md5' => md5_file($blog_image),
-					'path' => $path,
-					'category' => $category,
+					'md5'	=> md5_file($blog_image),
+					'path'	=> $path,
+					'version'	=> 1,
+					'category'	=> $category,
 					'inserttime' => 'now()'
 				)
 			);
