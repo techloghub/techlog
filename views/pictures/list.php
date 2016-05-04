@@ -63,7 +63,10 @@
 						<td width="30" valign="middle" align="center" valign="middle">
 							PATH
 						</td>
-						<td width="20%" valign="middle" align="center" valign="middle">
+						<td width="2" valign="middle" align="center" valign="middle">
+							V
+						</td>
+						<td width="15%" valign="middle" align="center" valign="middle">
 							INSERT_TIME
 						</td>
 					</tr>
@@ -76,6 +79,9 @@
 						</td>
 						<td valign="middle" style="padding-top:50px;"align="center" valign="middle">
 							<?php echo $image->get_path() ?>
+						</td>
+						<td valign="middle" style="padding-top:50px;"align="center" valign="middle">
+							<?php echo $image->get_version() ?>
 						</td>
 						<td valign="middle" style="padding-top:50px;"align="center" valign="middle">
 							<?php echo $image->get_inserttime() ?>
