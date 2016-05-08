@@ -33,7 +33,7 @@ while (1)
 	$image_path = StringOpt::spider_string(
 		$temp_contents,
 		'img<![&&]>src="',
-		'"',
+		'?<![||]>"',
 		$temp_contents
 	);
 	if ($image_path === null

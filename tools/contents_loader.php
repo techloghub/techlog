@@ -40,7 +40,7 @@ foreach ($draft_files as $draft)
 		$image_path = StringOpt::spider_string(
 			$contents,
 			'img<![&&]>src="',
-			'"',
+			'?<![||]>"',
 			$contents
 		);
 
