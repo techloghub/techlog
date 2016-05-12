@@ -130,6 +130,7 @@ class TechlogTools
 				$font = '';
 			else if (substr($line, 0, 4) == '<img')
 			{
+				$error = false;
 				$id = StringOpt::spider_string($line, 'id="', '"');
 				if ($id != null)
 				{
@@ -137,33 +138,34 @@ class TechlogTools
 					$image = Repository::findOneFromImages(
 						array('eq' => array('image_id' => $image_id))
 					);
-					$path = $image->get_path();
 					if ($image != false)
 					{
+						$path = $image->get_path().'?id='.$image_id
+							.'&v='.$image->get_version().'"';
 						$line =
 							str_replace(
 								'id="'.$id.'"',
-								'src="'.$image->get_path().'?id='.$image_id
-									.'&v='.$image->get_version().'"',
+								'src="'.$path,
 								$line
 							);
 					}
 					else
 					{
 						$line = '<strong>图片ID不存在</strong>';
+						$error = true;
 					}
 				}
 				else
 				{
 					$path = StringOpt::spider_string($line, 'src="', '"');
 				}
-				$image_info = GetImageSize(WEB_PATH.'/resource/'.$path);
-				$image_info = $image_info['3'];
-				$width = StringOpt::spider_string($image_info, 'width="', '"');
-				$width = intval(trim($width));
-				$contents .= '<p style="text-indent:0em;">'
-					.'<a target="_blank" alt="'.$width.'" href="'.$path.'">'
-					.$line.'</a></p><p>&nbsp;</p>';
+				if (!$error) {
+					$width = StringOpt::spider_string($image_info, 'width="', '"');
+					$width = intval(trim($width));
+					$contents .= '<p style="text-indent:0em;">'
+						.'<a target="_blank" alt="'.$width.'" href="'.$path.'">'
+						.$line.'</a></p><p>&nbsp;</p>';
+				}
 			}
 			else if (substr($line, 0, 5) == '<code')
 			{
