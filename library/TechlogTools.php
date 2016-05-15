@@ -140,12 +140,13 @@ class TechlogTools
 					);
 					if ($image != false)
 					{
-						$path = $image->get_path().'?id='.$image_id
+						$path = $image->get_path();
+						$src = $image->get_path().'?id='.$image_id
 							.'&v='.$image->get_version().'"';
 						$line =
 							str_replace(
 								'id="'.$id.'"',
-								'src="'.$path,
+								'src="'.$src,
 								$line
 							);
 					}
@@ -160,6 +161,7 @@ class TechlogTools
 					$path = StringOpt::spider_string($line, 'src="', '"');
 				}
 				if (!$error) {
+					$image_info = GetImageSize(WEB_PATH.'/resource/'.$path);
 					$width = StringOpt::spider_string($image_info, 'width="', '"');
 					$width = intval(trim($width));
 					$contents .= '<p style="text-indent:0em;">'
