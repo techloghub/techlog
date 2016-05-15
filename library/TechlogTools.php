@@ -162,8 +162,7 @@ class TechlogTools
 				}
 				if (!$error) {
 					$image_info = GetImageSize(WEB_PATH.'/resource/'.$path);
-					$width = StringOpt::spider_string($image_info, 'width="', '"');
-					$width = intval(trim($width));
+					$width = intval($image_info[0]);
 					$contents .= '<p style="text-indent:0em;">'
 						.'<a target="_blank" alt="'.$width.'" href="'.$path.'">'
 						.$line.'</a></p><p>&nbsp;</p>';
