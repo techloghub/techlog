@@ -142,7 +142,7 @@ class TechlogTools
 					{
 						$path = $image->get_path();
 						$src = $image->get_path().'?id='.$image_id
-							.'&v='.$image->get_version().'"';
+							.'&v='.$image->get_version();
 						$line =
 							str_replace(
 								'id="'.$id.'"',
