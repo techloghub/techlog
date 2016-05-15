@@ -146,7 +146,7 @@ class TechlogTools
 						$line =
 							str_replace(
 								'id="'.$id.'"',
-								'src="'.$src,
+								'src="'.$src.'"',
 								$line
 							);
 					}
