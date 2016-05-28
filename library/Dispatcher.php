@@ -8,10 +8,6 @@ class Dispatcher
 			'replace'	=> '/',
 		),
 		array(
-			'pattern'	=> '/^\/favicon.ico/',
-			'replace'	=> '/resource/images/favicon.ico',
-		),
-		array(
 			'pattern'	=> '/^.*article\.php\?id=(\d+)$/i',
 			'replace'	=> '/article/list/$1',
 		),
