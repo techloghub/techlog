@@ -12,10 +12,6 @@ class Dispatcher
 			'replace'	=> '/resource/images/favicon.ico',
 		),
 		array(
-			'pattern'	=> '/^.*\/images\/(.+)$/i',
-			'replace'	=> '/resource/images/$1',
-		),
-		array(
 			'pattern'	=> '/^.*article\.php\?id=(\d+)$/i',
 			'replace'	=> '/article/list/$1',
 		),
