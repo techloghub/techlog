@@ -173,9 +173,9 @@ class Repository
 			$insert_id = self::$pdo_instance->lastInsertId();
 			self::$pdo_instance->commit();
 		}
-		catch(PDOExecption $e)
+		catch(PDOException $e)
 		{
-			$dbh->rollback();
+			self::$pdo_instance->rollback();
 			return 'INSERT_ERROR: '.$e->getMessage();
 		}
 		return $insert_id;
@@ -219,7 +219,7 @@ class Repository
 			}
 			catch(PDOException $e)
 			{
-				$dbh->rollback();
+				self::$pdo_instance->rollback();
 				return 'UPDATE_ERROR: '.$e->getMessage();
 			}
 		}

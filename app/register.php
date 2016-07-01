@@ -41,12 +41,14 @@ $model_list = array(
 	'BooknoteModel',
 	'CategoryModel',
 	'EarningsModel',
+	'AccountModel',
 	'ArticleModel',
 	'CommentModel',
 	'ImagesModel',
 	'StatsModel',
 	'MoodModel',
 	'TagsModel',
+	'LedgersModel',
 );
 
 foreach ($library_list as $library)
