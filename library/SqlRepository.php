@@ -126,6 +126,20 @@ class SqlRepository
 		return $ret;
 	} // }}}
 
+	public static function getLedgersCategories()
+	{ // {{{
+		$sql = 'select category from ledgers group by category';
+
+		$pdo = Repository::getInstance();
+		$stmt = $pdo->query($sql);
+		$ret = $stmt->fetchAll();
+		$categories = array();
+		foreach ($ret as $data) {
+			$categories[] = $data['category'];
+		}
+		return $categories;
+	} // }}}
+
 	public static function getTagIdCount()
 	{ // {{{
 		$sql = 'select tag_id,count(*) as article_count from article_tag_relation'

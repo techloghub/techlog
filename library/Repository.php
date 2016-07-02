@@ -61,20 +61,43 @@ class Repository
 		self::dbConnect();
 	} // }}}
 
-	public static function findOneByField($field, $params)
+	public static function findByField($field, $params)
 	{ // {{{
 		self::dbConnect();
 		if (empty(self::$table))
 			return '{"code":-1, "errmsg":"table empty"}';
 		$query_params = array();
-		$sql = 'select '.$field.' from '.self::$table.' where 1'
+		if (substr($field, 0, 3) == 'sum') {
+			$field = 'sum('.substr($field, 4).')';
+		}
+		$sql = 'select ';
+		if (isset($params['group'][0]) && $field != $params['group'][0]) {
+			$sql .= $field.', '.$params['group'][0];
+		} else {
+			$sql .= $field;
+		}
+		$sql .= ' from '.self::$table.' where 1'
 			.self::getParams($params, $query_params);
 
 		$stmt = self::$pdo_instance->prepare($sql);
 		$table_class = ucfirst(StringOpt::unlinetocamel(self::$table).'Model');
 		$stmt->execute($query_params);
-		$ret = $stmt->fetch();
-		return isset($ret[$field]) ? $ret[$field] : false;
+		$ret = $stmt->fetchAll();
+		if (count($ret) == 1) {
+			$ret = $ret[0];
+			return isset($ret[$field]) ? $ret[$field] : false;
+		} else {
+			$fields = array();
+			foreach ($ret as $data)
+			{
+				if (isset($params['group'][0]) && $field != $params['group'][0]) {
+					$fields[$data[$params['group'][0]]] = $data[$field];
+				} else {
+					$fields[] = $data[$field];
+				}
+			}
+			return $fields;
+		}
 	} // }}}
 
 	public static function findBy($params)
@@ -248,7 +271,7 @@ class Repository
 			return self::$func($params[0]);
 		default:
 			$field = StringOpt::cameltounline(lcfirst($method_infos['sth']));
-			return self::findOneByField($field, $params[0]);
+			return self::findByField($field, $params[0]);
 		}
 	} // }}}
 
@@ -317,6 +340,10 @@ class Repository
 				$sql .= ' and '.$key.' >= :ge_'.$key;
 				$query_params['ge_'.$key] = $value;
 			}
+		}
+		if (isset($params['group']))
+		{
+			$sql .= ' group by '.implode(',', $params['group']);
 		}
 		if (isset($params['order']))
 		{
