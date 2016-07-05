@@ -239,7 +239,7 @@ class TechlogTools
 					.self::str_trans(substr($line, 4))
 					.'</h3></p>';
 			}
-			else if (substr($line, 0, 2) == '<a')
+			else if (substr($line, 0, 3) == '<a ')
 			{
 				$id = StringOpt::spider_string($line, 'id="', '"');
 				$title = Repository::findTitleFromArticle(
