@@ -50,6 +50,7 @@ $booknote = new BooknoteModel(
 		'image_id' => $image_id,
 		'updatetime' => 'now()',
 		'inserttime' => 'now()',
+		'online' => 0,
 		'descs' => $descs
 	)
 );

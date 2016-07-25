@@ -7,6 +7,7 @@ class BooknoteModel
 	private $descs;
 	private $inserttime;
 	private $updatetime;
+	private $online;
 
 	public function __construct($params = array())
 	{
@@ -70,6 +71,15 @@ class BooknoteModel
 	public function set_updatetime($value)
 	{
 		$this->updatetime = $value;
+		return $this;
+	}
+	public function get_online()
+	{
+		return $this->online;
+	}
+	public function set_online($value)
+	{
+		$this->online = $value;
 		return $this;
 	}
 	public function set($params)
