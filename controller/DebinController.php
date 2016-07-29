@@ -24,12 +24,13 @@ class DebinController extends Controller
 
 		$count = Repository::findCountFromArticle(
 			array(
-				'eq' => array('category_id' => $category_id)
+				'eq' => array('category_id' => $category_id, 'online' => 1)
 			)
 		);
 		$articles = Repository::findFromArticle(
 			array(
-				'eq' => array('category_id' => $category_id),
+				'eq' => array('category_id' => $category_id,
+					'online' => 1),
 				'order' => array('inserttime' => 'desc'),
 				'range' => array(($page-1)*$this->limit, $this->limit),
 			)

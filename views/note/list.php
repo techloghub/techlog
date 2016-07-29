@@ -58,6 +58,16 @@ function drw_earnings()
 			</div>
 		</div>
 		<?php } ?>
+		<div class="col-sm-6 col-md-4 ">
+			<div class="thumbnail">
+			<a href="/debin/category/2" target="_blank"><img class="lazy" src="images/1549b2e2052c5b41c79205ab16b31771.png" <?php if ($params['category_id'] != 1): ?>style="height:396px;"<?php endif ?> data-src="images/1549b2e2052c5b41c79205ab16b31771.png"></a>
+				<div class="caption">
+					<h3>
+						<a href="/debin/category/2">更多专题<br><small>more subject . . .</small></a>
+					</h3>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 <?php if ($params['category_id'] == 1): ?>

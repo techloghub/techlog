@@ -87,6 +87,7 @@ if (isset($options['d']))
 $infos['updatetime'] = 'now()';
 $infos['inserttime'] = isset($options['a']) ? $options['a'] : 'now()';
 $infos['comment_count'] = 0;
+$infos['online'] = 1;
 // 插入日志
 if (isset($options['i']))
 {
