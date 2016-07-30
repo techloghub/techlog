@@ -121,57 +121,59 @@ LogOpt::set ('info', '日志插入成功',
 	'title', $options['t']
 );
 unlink($draft_file);
-// 添加 article 并获取新加 article_id 后需要更新为 tags 表对应项
-$tags = explode(',', $options['g']);
-if ($tags == null)
-{
-	echo 'tags 参数有误'."\t".$tags.PHP_EOL;
-	return;
-}
-foreach ($tags as $tag)
-{
-	$tag = trim($tag);
-	if ($tag == '')
-		continue;
-	$tag_id =
-		Repository::findTagIdFromTags(array('eq' => array('tag_name' => $tag)));
-	if ($tag_id == false)
+if ($infos['category_id'] != 2) {
+	// 添加 article 并获取新加 article_id 后需要更新为 tags 表对应项
+	$tags = explode(',', $options['g']);
+	if ($tags == null)
 	{
-		$tag = new TagsModel(array('tag_name' => $tag, 'inserttime' => 'now()'));
-		$tag_id = Repository::persist($tag);
+		echo 'tags 参数有误'."\t".$tags.PHP_EOL;
+		return;
+	}
+	foreach ($tags as $tag)
+	{
+		$tag = trim($tag);
+		if ($tag == '')
+			continue;
+		$tag_id =
+			Repository::findTagIdFromTags(array('eq' => array('tag_name' => $tag)));
 		if ($tag_id == false)
 		{
-			LogOpt::set ('exception', 'tag 添加失败');
+			$tag = new TagsModel(array('tag_name' => $tag, 'inserttime' => 'now()'));
+			$tag_id = Repository::persist($tag);
+			if ($tag_id == false)
+			{
+				LogOpt::set ('exception', 'tag 添加失败');
+				continue;
+			}
+		}
+		$article_tag_relation = new ArticleTagRelationModel(
+			array(
+				'article_id' => $article_id,
+				'tag_id' => $tag_id,
+				'inserttime' => 'now()'
+			)
+		);
+		try
+		{
+			$relation_id = Repository::persist($article_tag_relation);
+		} catch (PDOException $e) {
+			LogOpt::set('exception', 'article_tag_relation 已存在',
+				'article_id', $article_id, 'tag_id', $tag_id
+			);
+			$pdo = Repository::getInstance();
+			$pdo->rollback();
 			continue;
 		}
-	}
-	$article_tag_relation = new ArticleTagRelationModel(
-		array(
-			'article_id' => $article_id,
-			'tag_id' => $tag_id,
-			'inserttime' => 'now()'
-		)
-	);
-	try
-	{
-		$relation_id = Repository::persist($article_tag_relation);
-	} catch (PDOException $e) {
-		LogOpt::set('exception', 'article_tag_relation 已存在',
-			'article_id', $article_id, 'tag_id', $tag_id
+		if ($relation_id == false)
+		{
+			LogOpt::set('exception', 'article_tag_relation 更新失败',
+				'article_id', $article_id, 'tag_id', $tag_id
+			);
+			continue;
+		}
+		LogOpt::set ('info', 'article_tag_relation 更新成功',
+			'relation_id', $relation_id
 		);
-		$pdo = Repository::getInstance();
-		$pdo->rollback();
-		continue;
 	}
-	if ($relation_id == false)
-	{
-		LogOpt::set('exception', 'article_tag_relation 更新失败',
-			'article_id', $article_id, 'tag_id', $tag_id
-		);
-		continue;
-	}
-	LogOpt::set ('info', 'article_tag_relation 更新成功',
-		'relation_id', $relation_id
-	);
 }
 ?>
