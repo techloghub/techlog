@@ -39,7 +39,8 @@ $article = new ArticleModel(
 			.'</div>'.PHP_EOL.'<h1>总收入\支出报表'.PHP_EOL
 			.'<h3>支出报表'.PHP_EOL.'<h3>收入报表'.PHP_EOL
 			.'<h1>财务分析',
-		'category_id' => 6
+		'category_id' => 6,
+		'online' => 1
 	)
 );
 $article_id = Repository::persist($article);
