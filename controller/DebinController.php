@@ -33,7 +33,7 @@ class DebinController extends Controller
 				'order' => array('inserttime' => 'desc'),
 				'range' => array(($page-1)*$this->limit, $this->limit),
 			);
-		if ($cateory_id == 2) {
+		if ($category_id == 2) {
 			$params['order'] = array('updatetime' => 'desc');
 		}
 		$articles = Repository::findFromArticle($params);
