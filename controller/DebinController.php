@@ -27,14 +27,16 @@ class DebinController extends Controller
 				'eq' => array('category_id' => $category_id, 'online' => 1)
 			)
 		);
-		$articles = Repository::findFromArticle(
-			array(
+		$params = array(
 				'eq' => array('category_id' => $category_id,
 					'online' => 1),
 				'order' => array('inserttime' => 'desc'),
 				'range' => array(($page-1)*$this->limit, $this->limit),
-			)
-		);
+			);
+		if ($cateory_id == 2) {
+			$params['order'] = array('updatetime' => 'desc');
+		}
+		$articles = Repository::findFromArticle($params);
 		$category = Repository::findCategoryFromCategory(
 			array(
 				'eq' => array('category_id' => $category_id),
