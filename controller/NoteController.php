@@ -16,7 +16,7 @@ class NoteController extends Controller
 					'eq' => array('article_id' => $note->get_index_article_id())
 				)
 			);
-			$infos['title'] = mb_substr($title, 0, 35);
+			$infos['title'] = mb_substr($title, 0, 28);
 			$infos['descs'] = mb_substr($note->get_descs(), 0, 35);
 			$booknotes[] = $infos;
 		}
