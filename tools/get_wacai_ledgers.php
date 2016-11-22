@@ -1,15 +1,15 @@
 <?php
 require_once (__DIR__.'/../app/register.php');
 
-$options = getopt('m:');
-if (!isset ($options['m']))
+$options = getopt('m:t:');
+if (!isset ($options['m']) || !isset($options['t']))
 {
-	echo 'usage: php get_wacai_datas.php -m month'
+	echo 'usage: php get_wacai_datas.php -m month -t token(key: wctk)'
 		.PHP_EOL;
 	exit;
 }
 
-HttpCurl::set_cookie(get_cookie());
+HttpCurl::set_cookie('wctk='.trim($options['t']));
 $url = 'https://www.wacai.com/biz/ledger_list.action?'
 	.'cond.date='.$options['m'].'-01&cond.date_end='.$options['m'].'-31'
 	.'&cond.reimbursePrefer=0&cond.withDaySum=false&pageInfo.pageIndex=';
@@ -96,9 +96,13 @@ for ($i=1; $i<=$pageCount; $i++)
 		$model->set_category($category[0]);
 		$model->set_subcategory((isset($category[1]) ? $category[1] : ''));
 		$id = Repository::persist($model);
-
-		echo 'INFO: BACKUP'."\t".$infos['id']."\t"
-			.json_encode($infos).PHP_EOL;
+		if (!is_numeric($id) || $id == 0) {
+			echo $id."\t".json_encode($infos).PHP_EOL;
+			continue;
+		} else {
+			echo 'INFO: BACKUP'."\t".$infos['id']."\t"
+				.json_encode($infos).PHP_EOL;
+		}
 
 		$account = Repository::findOneFromAccount(
 			array('eq' => array('esid' => $model->get_fromAcc()))
@@ -127,26 +131,5 @@ for ($i=1; $i<=$pageCount; $i++)
 		$id = Repository::persist($account);
 	}
 	sleep(3);
-}
-
-function get_cookie()
-{
-	#$url = 'https://www.wacai.com/user/user!login.action?cmd=null';
-	#$config = file_get_contents(APP_PATH.'/config.json');
-	#$config = json_decode($config, true);
-	#$config = $config['wacai'];
-	#$post_data = array(
-	#	'user.account' => $config['user'],
-	#	'user.pwd' => $config['pwd']
-	#);
-	#$ret = HttpCurl::post($url, $post_data);
-	#if ($ret['body'] == false)
-	#{
-	#	echo 'get_cookie ERROR: '.$ret['error'].PHP_EOL;
-	#	return false;
-	#}
-	#return (isset($ret['header']['set_cookie']) ?
-	#	$ret['header']['set_cookie'] : false);
-	return 'wctk=13f1b1021f9c43edaa4513c7fbc1889c';
 }
 ?>

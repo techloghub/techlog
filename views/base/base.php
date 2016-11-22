@@ -56,12 +56,12 @@ function echo_ifset($params, $key)
 							<a href="/debin/category/4">技术乱炖</a>
 							</li>
 							<li>
+							<a href="/debin/category/1">专题解读</a>
+							</li>
+							<li>
 							<a href="/debin/category/3">随笔轧志</a>
 							</li>
 							<?php if ($params['is_root']): ?>
-								<li>
-								<a href="/debin/category/1">专题解读</a>
-								</li>
 								<li>
 								<a href="/debin/category/5">龙泉日记</a>
 								</li>

@@ -81,7 +81,7 @@
 			<?php endif ?>
 		</div>
 	</div>
-	<?php if(isset($params['article_category_id']) && !in_array($params['article_category_id'], array(2, 5, 6))): ?>
+	<?php if(isset($params['article_category_id']) && !in_array($params['article_category_id'], array(5, 6))): ?>
 	<?php if(!empty($params['comments'])): ?>
 	<div class="container bs-docs-container" style="margin-bottom:80px;">
 		<div class="row">
