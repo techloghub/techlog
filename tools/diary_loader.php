@@ -60,6 +60,7 @@ $infos['title'] = date('Y-m-d H:i:s');
 if (isset($options['t']))
 	$infos['title'] = $options['t'].' -- '.date('Y-m-d');
 $infos['category_id'] = '5';
+$infos['online'] = '1';
 
 // 获取 index
 $indexs = json_encode(TechlogTools::get_index($contents));
