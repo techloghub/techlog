@@ -99,7 +99,8 @@ class TechlogTools
 			}
 			else if ($line == '<ol>' || $line == '<ul>')
 			{
-				$contents .= $line;
+				$contents .= substr($line, 0, 3)
+					.' class="article_'.substr($line, 1, 2).'">';
 				while (1)
 				{
 					$index++;
@@ -120,7 +121,7 @@ class TechlogTools
 								.$line
 								.'</span>';
 						}
-						$contents .= '<p><li>'.$line.'</li></p>';
+						$contents .= '<p><li class="article_li">'.$line.'</li></p>';
 					}
 				}
 			}
