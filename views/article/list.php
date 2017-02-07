@@ -43,10 +43,12 @@
 							</li>
 							<?php } ?>
 							<?php endif ?>
-							<?php if(isset($params['article_category_id']) && !in_array($params['article_category_id'], array(2, 5, 6))): ?>
+							<?php if(isset($params['article_category_id']) && !in_array($params['article_category_id'], array(5, 6))): ?>
+							<?php if($params['article_category_id'] != 2): ?>
 							<li>
 							<a href="#tags">标签</a>
 							</li>
+							<?php endif ?>
 							<?php if(!empty($params['comment_count']) && $params['comment_count'] > 0): ?>
 							<li>
 							<a href="#comment">评论 (<?php echo $params['comment_count'] ?>)</a>
