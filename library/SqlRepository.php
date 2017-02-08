@@ -144,7 +144,7 @@ class SqlRepository
 	{ // {{{
 		$sql = 'select tag_id,count(*) as article_count from article_tag_relation'
 			.' group by tag_id'
-			.' order by article_count desc, inserttime desc';
+			.' order by article_count desc, inserttime desc limit 90';
 
 		$pdo = Repository::getInstance();
 		$stmt = $pdo->query($sql);
