@@ -123,7 +123,7 @@ LogOpt::set ('info', '日志插入成功',
 unlink($draft_file);
 if ($infos['category_id'] != 2) {
 	// 添加 article 并获取新加 article_id 后需要更新为 tags 表对应项
-	$tags = explode(',', $options['g']);
+	$tags = explode('|', $options['g']);
 	if ($tags == null)
 	{
 		echo 'tags 参数有误'."\t".$tags.PHP_EOL;

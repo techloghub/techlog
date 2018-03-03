@@ -84,7 +84,7 @@
 				</div>
 				<div class=item-head>
 					<?php if (!isset($params['ismood']) or !$params['ismood']): ?>
-					<a href="/article/list/<?php echo $article_info['article_id'] ?>" class="a-incontent a-title cs-contentblock-hoverlink" target=_blank>
+					<a href="/article/list/<?php echo $article_info['article_id'] ?>" class="a-incontent a-title cs-contentblock-hoverlink">
 						<?php else: ?>
 						<div class="a-incontent a-title cs-contentblock-hoverlink" style='font-family:"PT Serif","Georgia","Helvetica Neue",Arial,sans-serif' >
 						<?php endif ?>

@@ -11,8 +11,10 @@ $i = 1;
 $count = 0;
 $max = 100;
 while (1) {
+	echo '~~~~~~~~~~~~~ BEGIN_TO_GET_WEB ~~~~~~~~~~~~~~~'.PHP_EOL;
 	$response = HttpCurl::get('https://www.yirendai.com/lender/finance/my/list/'
 		.$i.'?dateRange=&state=4');
+	echo '~~~~~~~~~~~~~ WEB_GET_SUCCESS ~~~~~~~~~~~~~~~'.PHP_EOL;
 	$body = $response['body'].PHP_EOL;
 	$pageNum = StringOpt::spider_string(
 		$body, '<div class="m-page m-page-min">', '<input');

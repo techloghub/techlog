@@ -242,7 +242,7 @@ class DebinController extends Controller
 		{
 			$tmp_infos = array(
 				'title'	=> $mood->get_contents(),
-				'contents'	=> $mood->get_inserttime(),
+				'contents'	=> $mood->get_mood_id(),
 			);
 			preg_match('/^(?<month>\d{4}-\d{2})-(?<date>\d{2})/is',
 				$mood->get_inserttime(), $arr);

@@ -54,7 +54,11 @@ for ($i=1; $i<=$pageCount; $i++)
 			$model->set_fromAcc($infos['srcAcc']);
 			$model->set_toAcc($infos['tgtAcc']);
 			$model->set_money($infos['transin']);
-			$infos['mflag'] = $infos['srcMflag'];
+			if (!empty($infos['srcMflag'])) {
+				$infos['mflag'] = $infos['srcMflag'];
+			} else {
+				$infos['mflag'] = '￥';
+			}
 		}
 		else if ($model->get_recType() == 4)
 		{

@@ -34,5 +34,15 @@ class RedisRepository {
 		self::connect();
 		return self::$redis->scard('ipset');
 	}
+
+	public static function getAuthcode() {
+		self::connect();
+		return self::$redis->get('authcode');
+	}
+
+	public static function setAuthcode($code) {
+		self::connect();
+		return self::$redis->set('authcode', $code);
+	}
 }
 ?>
