@@ -49,7 +49,7 @@ function drw_earnings()
 		<?php foreach ($params['infos'] as $info) { ?>
 		<div class="col-sm-6 col-md-4 ">
 			<div class="thumbnail">
-			<a href="<?php echo $info['idx_href'] ?>" target="_blank"><img class="lazy" src="<?php echo $info['image_path'] ?>" <?php if ($params['category_id'] != 1): ?>style="height:396px;"<?php endif ?> data-src="<?php echo $info['image_path'] ?>"></a>
+			<a href="<?php echo $info['idx_href'] ?>"><img class="lazy" src="<?php echo $info['image_path'] ?>" <?php if ($params['category_id'] != 1): ?>style="height:396px;"<?php endif ?> data-src="<?php echo $info['image_path'] ?>"></a>
 				<div class="caption">
 					<h3>
 						<a href="<?php echo $info['idx_href'] ?>"><?php echo $info['title'] ?><br><small><?php echo $info['descs'] ?></small></a>

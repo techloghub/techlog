@@ -1,23 +1,19 @@
 <?php
-class TechlogTools
-{
-	public static function pre_treat_article ($file)
-	{
+class TechlogTools {
+	public static function pre_treat_article ($file) {
 		$font = '';
 		$lines = explode(PHP_EOL, $file);
 		$contents = '';
 		$code_id = 'a';
 		$codes = array();
-		for ($index=0; $index<count($lines); ++$index)
-		{
+		$inh1 = false;
+		for ($index = 0; $index < count($lines); ++$index) {
 			$line = $lines[$index];
 			$line = trim($line);
-			if (empty($line))
+			if (empty($line)) {
 				$contents .= '<p>&nbsp;</p>';
-			else if ($line == '<div>')
-			{
-				while (1)
-				{
+			} else if ($line == '<div>') {
+				while (1) {
 					$index++;
 					if ($index >= count($lines))
 						break;
@@ -26,24 +22,18 @@ class TechlogTools
 						break;
 					$contents .= $line.PHP_EOL;
 				}
-			}
-			else if ($line == '<table>')
-			{
+			} else if ($line == '<table>') {
 				$contents .=
 					'<table class="stdtable" border="1" style="font-size:18;">';
-				while (1)
-				{
+				while (1) {
 					$index++;
 					if ($index >= count($lines))
 						break;
 					$line = trim($lines[$index]);
-					if ($line == '</table>')
-					{
+					if ($line == '</table>') {
 						$contents .= $line;
 						break;
-					}
-					else if (substr($line, 0, 9) == '<caption>')
-					{
+					} else if (substr($line, 0, 9) == '<caption>') {
 						$caption = substr($line, 9);
 						$contents .=
 							'<caption'
@@ -52,38 +42,29 @@ class TechlogTools
 							.' background-color:#D2E1F0; height:30px;\'>'
 							.$caption
 							.'</caption>';
-					}
-					else
-					{
+					} else {
 						$tds = explode("\t", $line);
-						if (substr($line, 0, 4) == '<tr>')
-						{
+						if (substr($line, 0, 4) == '<tr>') {
 							$tds[0] = substr($tds[0], 4);
 							$contents .= '<thead>'
 								.'<tr style="background-color:#C5C5C5;">';
-							if ($tds[0][0] == '[' && $tds[0][strlen($tds[0])-1] == ']')
-							{
+							if ($tds[0][0] == '[' && $tds[0][strlen($tds[0])-1] == ']') {
 								$widths = substr($tds[0], 1, strlen($tds[0])-2);
 								$widths = explode(":", $widths);
-								for ($i=1; $i<count($tds); ++$i)
-								{
+								for ($i=1; $i<count($tds); ++$i) {
 									if (isset($widths[$i-1]))
 										$contents .= '<td width="'.$widths[$i-1].'%"><strong>'
 											.$tds[$i].'</strong></td>';
 									else
 										$contents .= '<td><strong>'.$tds[$i].'</strong></td>';
 								}
-							}
-							else
-							{
+							} else {
 								$contents .= '<td><strong>'
 									.implode('</strong></td><td><strong>', $tds)
 									.'</strong></td>';
 							}
 							$contents .= '</tr></thead>';
-						}
-						else
-						{
+						} else {
 							$tmp_tds = array();
 							foreach ($tds as $td)
 							{
@@ -96,24 +77,19 @@ class TechlogTools
 						}
 					}
 				}
-			}
-			else if ($line == '<ol>' || $line == '<ul>')
-			{
+			} else if ($line == '<ol>' || $line == '<ul>') {
 				$contents .= substr($line, 0, 3)
 					.' class="article_'.substr($line, 1, 2).'">';
-				while (1)
-				{
+				while (1) {
 					$index++;
 					if ($index >= count($lines))
 						break;
 					$line = trim($lines[$index]);
-					if ($line == '</ol>' || $line == '</ul>')
-					{
+					if ($line == '</ol>' || $line == '</ul>') {
 						$contents .= $line;
 						break;
 					}
-					else
-					{
+					else {
 						$line = self::str_trans($line);
 						if ($font != '')
 						{
@@ -124,17 +100,14 @@ class TechlogTools
 						$contents .= '<p><li class="article_li">'.$line.'</li></p>';
 					}
 				}
-			}
-			else if (substr($line, 0, 5) == '<font')
+			} else if (substr($line, 0, 5) == '<font') {
 				$font = StringOpt::spider_string($line, '<font ', '>');
-			else if ($line == '</font>')
+			} else if ($line == '</font>') {
 				$font = '';
-			else if (substr($line, 0, 4) == '<img')
-			{
+			} else if (substr($line, 0, 4) == '<img') {
 				$error = false;
 				$id = StringOpt::spider_string($line, 'id="', '"');
-				if ($id != null)
-				{
+				if ($id != null) {
 					$image_id = intval(trim($id));
 					$image = Repository::findOneFromImages(
 						array('eq' => array('image_id' => $image_id))
@@ -151,14 +124,11 @@ class TechlogTools
 								$line
 							);
 					}
-					else
-					{
+					else {
 						$line = '<strong>图片ID不存在</strong>';
 						$error = true;
 					}
-				}
-				else
-				{
+				} else {
 					$path = StringOpt::spider_string($line, 'src="', '"');
 				}
 				if (!$error) {
@@ -227,21 +197,21 @@ class TechlogTools
 					.'</div><p>&nbsp;</p>';
 				$codes[] = array('id'=>'editor_'.$code_id++, 'mode'=>$mode);
 				continue;
-			}
-			else if (substr($line, 0, 4) === '<h1>')
-			{
+			} else if (substr($line, 0, 4) === '<h1>') {
+				if ($inh1) {
+					$contents .= '</div>';
+					$inh1 = false;
+				}
 				$contents .= '<div class="page-header"><h1 id="'.$code_id++.'">'
 					.self::str_trans(substr($line, 4))
 					.'</h1></div>';
-			}
-			else if (substr($line, 0, 4) === '<h3>')
-			{
+				$inh1 = true;
+				$contents .= '<div id="'.$code_id.'_contents">';
+			} else if (substr($line, 0, 4) === '<h3>') {
 				$contents .= '<p><h3>'
 					.self::str_trans(substr($line, 4))
 					.'</h3></p>';
-			}
-			else if (substr($line, 0, 3) == '<a ')
-			{
+			} else if (substr($line, 0, 3) == '<a ') {
 				$id = StringOpt::spider_string($line, 'id="', '"');
 				$title = Repository::findTitleFromArticle(
 					array('eq' => array('article_id' => $id))
@@ -250,9 +220,7 @@ class TechlogTools
 					$title = 'ERROR：加载失败';
 				$contents .= '<p><a target="_blank" href="/article/list/'.$id.'">'
 					.$title.'</a></p>';
-			}
-			else
-			{
+			} else {
 				$line = self::str_trans($line);
 				if ($font != '')
 				{
@@ -263,8 +231,7 @@ class TechlogTools
 				$contents .= '<p>'.$line.'</p>';
 			}
 		}
-		if (!empty($codes))
-		{
+		if (!empty($codes)) {
 			$js_arr = array();
 			foreach ($codes as $code)
 			{

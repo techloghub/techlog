@@ -40,6 +40,10 @@ class HttpCurl
 		curl_setopt(self::$handle, CURLOPT_NOBODY, FALSE);
 	}
 
+	public static function set_gzipencoding() {
+		curl_setopt(self::$handle, CURLOPT_ENCODING, 'gzip');
+	}
+
 	public static function __callStatic($name, $params)
 	{
 		$method = strtoupper($name);

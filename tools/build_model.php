@@ -4,13 +4,13 @@ require_once (__DIR__.'/../app/register.php');
 $options = getopt('t:');
 if (!isset($options['t']))
 {
-	echo 'usage: php create_model.php'
+	echo 'usage: php build_model.php'
 		.' -t table'.PHP_EOL;
 	exit;
 }
 $table = $options['t'];
 $table_class = ucfirst(StringOpt::unlinetocamel($table).'Model');
-$file = MODEL_PATH.'/'.$table_class.'.php';
+$file = MODEL_PATH.'/pokemon/'.$table_class.'.php';
 if (file_exists($file))
 {
 	echo '文件已存在，是否替换 [y/N]';
@@ -19,8 +19,7 @@ if (file_exists($file))
 		exit;
 }
 
-$rp = new Repository('db', true);
-$pdo = $rp->getInstance();
+$pdo = Repository::getInstance('pokemon_db', true);
 $sql = 'describe '.$table;
 $rs = $pdo->query($sql);
 $model = '<?php'.PHP_EOL.'class '.$table_class.PHP_EOL.'{'.PHP_EOL;

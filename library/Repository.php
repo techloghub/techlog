@@ -140,8 +140,10 @@ class Repository
 		return isset($ret['total']) ? $ret['total'] : false;
 	} // }}}
 
-	public static function getInstance()
+	public static function getInstance($dbfd = 'db', $debug = 'false')
 	{ // {{{
+		self::$dbfd = $dbfd;
+		self::$debug = $debug;
 		self::dbConnect();
 		return self::$pdo_instance;
 	} // }}}
