@@ -1,6 +1,4 @@
 <?php
-require_once (__DIR__.'/../app/register.php');
-
 class MarkdownTools {
 	public static function treat_articla($content) {
 		$lines = explode(PHP_EOL, $content);
