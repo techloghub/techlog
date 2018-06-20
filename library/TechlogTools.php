@@ -187,8 +187,6 @@ class TechlogTools {
 					$code_line+=2;
 				}
 
-				if ($code_line > 30)
-					$code_line = 30;
 				$contents .= '<div id="editor_'.$code_id.'"'
 					.' style="position: relative;'
 					.' width: 765px;'

@@ -56,7 +56,7 @@ class MarkdownTools {
 					if ($line == '</ol>' || $line == '</ul>') {
 						break;
 					}
-					$contents .= self::str_trans($i.'. '.$line).PHP_EOL;
+					$contents .= self::str_trans($i++.'. '.$line).PHP_EOL;
 				}
 			} else if ($line == '<ul>') {
 				while (1) {
@@ -94,7 +94,7 @@ class MarkdownTools {
 						$contents .= '```'.PHP_EOL;
 						break;
 					}
-					$contents .= self::str_trans($line).PHP_EOL;
+					$contents .= $line.PHP_EOL;
 				}
 			} else if (substr($line, 0, 4) === '<h1>') {
 				$contents .= self::str_trans('#'.substr($line, 4)).PHP_EOL;
@@ -107,6 +107,15 @@ class MarkdownTools {
 				);
 				$contents .= '['.self::str_trans($title).'](http://techlog.cn/article/list/'.$id.')'.PHP_EOL;
 			} else {
+				$char = '。、！？：；﹑•＂…‘’“”〝〞∕¦‖—　〈〉﹞﹝'
+					.'「」‹›〖〗】【»«』『〕〔》《﹐¸﹕︰﹔！¡？¿﹖﹌﹏'
+					.'﹋＇´ˊˋ―﹫︳︴¯＿￣﹢﹦﹤‐­˜﹟﹩﹠﹪﹡﹨﹍'
+					.'﹉﹎﹊ˇ︵︶︷︸︹︿﹀︺︽︾ˉ﹁﹂﹃﹄︻︼（）';
+				$pattern = '/[[:punct:]'.$char.']/';
+				$lastchar = $line[strlen($line) - 1];
+				if (preg_match($pattern, $lastchar) == 0) {
+					$line = $line.'。';
+				}
 				$contents .= self::str_trans($line).PHP_EOL;
 			}
 		}
@@ -114,7 +123,11 @@ class MarkdownTools {
 	}
 
 	private static function str_trans($str) {
-		$str = str_replace('<', '\<', $str);
+		$str = str_replace('&', '&amp;', $str);
+		$str = str_replace('"', '&quot;', $str);
+		$str = str_replace('<', '&lt;', $str);
+		$str = str_replace('>', '&gt;', $str);
+		$str = str_replace(' ', '&nbsp;', $str);
 		return $str;
 	}
 }

@@ -13,6 +13,8 @@ if ($article == false) {
 	echo 'exception: cannot find the article'.PHP_EOL;
 	return;
 }
-$filename = DRAFT_PATH.'/markdown'.$options['i'].'.txt';
+$command = 'rm -rf '.DRAFT_PATH.'/markdown && mkdir '.DRAFT_PATH.'/markdown';
+exec($command);
+$filename = DRAFT_PATH.'/markdown/markdown'.$options['i'].'.txt';
 $markdown = MarkdownTools::treat_articla($article->get_draft());
 file_put_contents($filename, $markdown);
