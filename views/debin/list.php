@@ -229,6 +229,11 @@
 								<strong>邮箱：zeyu203@qq.com</strong>
 							</h2>
 							</li>
+							<li>
+							<h2 style="line-height:30px">
+								<img style="height: 160px;" src="images/cfd629d728d56f538daef39634136a01.jpg"/>
+							</h2>
+							</li>
 						</ul>
 					</div>
 				</div>

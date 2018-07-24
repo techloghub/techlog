@@ -3,6 +3,8 @@ class MarkdownTools {
 	public static function treat_articla($content) {
 		$lines = explode(PHP_EOL, $content);
 		$contents = '';
+		$h1_no = 0;
+		$h3_no = 0;
 		for ($index = 0; $index < count($lines); ++$index) {
 			$line = $lines[$index];
 			$line = trim($line);
@@ -16,7 +18,7 @@ class MarkdownTools {
 					if ($index >= count($lines))
 						break;
 					$line = $lines[$index];
-					if ($line == '</div>')
+					if (trim($line) === '</div>')
 						break;
 					$contents .= self::str_trans($line).PHP_EOL.PHP_EOL;
 				}
@@ -30,19 +32,30 @@ class MarkdownTools {
 						break;
 					} else if (substr($line, 0, 9) == '<caption>') {
 						$caption = substr($line, 9);
-						$contents .= '####'.self::str_trans($caption).PHP_EOL;
+						$contents .= '####'.self::str_trans($caption, true).PHP_EOL;
 					} else {
 						$tds = explode("\t", $line);
 						if (substr($line, 0, 4) == '<tr>') {
-							$tds = array_shift($tds);
+							$tds[0] = substr($tds[0], 4);
+							if ($tds[0][0] == '[' && $tds[0][strlen($tds[0])-1] == ']') {
+								$tmptds = array();
+								for ($i = 1; $i < count($tds); ++$i) {
+									$tmptds[$i - 1] = $tds[$i];
+								}
+								$tds = $tmptds;
+							}
 						}
-						$contents .= self::str_trans('|'.implode('|', $tds).'|').PHP_EOL;
+						$table_tds = array();
+						foreach ($tds as $td) {
+							$table_tds[] = self::str_trans($td, true);
+						}
+						$contents .= '|'.implode('|', $table_tds).'|'.PHP_EOL;
 						if (substr($line, 0, 4) == '<tr>') {
 							$contents .= '|';
 							for ($i = 0; $i < count($tds); ++$i) {
 								$contents .= '--|';
 							}
-							$contents.PHP_EOL;
+							$contents .= PHP_EOL;
 						}
 					}
 				}
@@ -97,9 +110,12 @@ class MarkdownTools {
 					$contents .= $line.PHP_EOL;
 				}
 			} else if (substr($line, 0, 4) === '<h1>') {
-				$contents .= self::str_trans('#'.substr($line, 4)).PHP_EOL;
+				$h1_no++;
+				$h3_no = 0;
+				$contents .= self::str_trans('#'.$h1_no.". ".substr($line, 4)).PHP_EOL;
 			} else if (substr($line, 0, 4) === '<h3>') {
-				$contents .= self::str_trans('##'.substr($line, 4)).PHP_EOL;
+				$h3_no++;
+				$contents .= self::str_trans('##'.$h1_no.".".$h3_no.". ".substr($line, 4)).PHP_EOL;
 			} else if (substr($line, 0, 3) == '<a ') {
 				$id = StringOpt::spider_string($line, 'id="', '"');
 				$title = Repository::findTitleFromArticle(
@@ -107,12 +123,11 @@ class MarkdownTools {
 				);
 				$contents .= '['.self::str_trans($title).'](http://techlog.cn/article/list/'.$id.')'.PHP_EOL;
 			} else {
-				$char = '。、！？：；﹑•＂…‘’“”〝〞∕¦‖—　〈〉﹞﹝'
-					.'「」‹›〖〗】【»«』『〕〔》《﹐¸﹕︰﹔！¡？¿﹖﹌﹏'
-					.'﹋＇´ˊˋ―﹫︳︴¯＿￣﹢﹦﹤‐­˜﹟﹩﹠﹪﹡﹨﹍'
-					.'﹉﹎﹊ˇ︵︶︷︸︹︿﹀︺︽︾ˉ﹁﹂﹃﹄︻︼（）';
-				$pattern = '/[[:punct:]'.$char.']/';
-				$lastchar = $line[strlen($line) - 1];
+				$pattern = '/[[:punct:]]/';
+				$lastchar = mb_substr($line, -1, 1, 'UTF-8');
+				if (strlen($lastchar) > 1) {
+					$pattern = '/(：)|(？)|(（)|(）)|(，)|(。)|(、)|(！)|(；)|(·)/';
+				}
 				if (preg_match($pattern, $lastchar) == 0) {
 					$line = $line.'。';
 				}
@@ -122,12 +137,16 @@ class MarkdownTools {
 		return $contents;
 	}
 
-	private static function str_trans($str) {
+	private static function str_trans($str, $intable = false) {
 		$str = str_replace('&', '&amp;', $str);
 		$str = str_replace('"', '&quot;', $str);
 		$str = str_replace('<', '&lt;', $str);
 		$str = str_replace('>', '&gt;', $str);
 		$str = str_replace(' ', '&nbsp;', $str);
+		$str = str_replace('$', '\$', $str);
+		if ($intable) {
+			$str = str_replace('|', '&#124;', $str);
+		}
 		return $str;
 	}
 }
