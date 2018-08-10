@@ -22,7 +22,7 @@ function echo_ifset($params, $key)
 		<link href="/resource/bootstrap/css/github.min.css" rel="stylesheet" type="text/css">
 		<link href="/resource/jquery/css/jquery.alerts.css" rel="stylesheet" type="text/css">
 		<link href="/resource/jquery/css/jquery.ui.css" rel="stylesheet" type="text/css">
-		<link href="/resource/zeyu_blog/css/zeyu_blog.css?v=1" rel="stylesheet" type="text/css">
+		<link href="/resource/zeyu_blog/css/zeyu_blog.css?v=2" rel="stylesheet" type="text/css">
 		<link rel="shortcut icon" href="/images/icon.png">
 		<?php if (!isset($params['is_root']))
 			$params['is_root'] = false;
@@ -64,6 +64,9 @@ function echo_ifset($params, $key)
 							<?php if ($params['is_root']): ?>
 								<li>
 								<a href="/debin/category/5">龙泉日记</a>
+								</li>
+								<li>
+								<a href="/debin/category/7">文档归档</a>
 								</li>
 								<li>
 								<a href="/debin/mood">心情小说</a>

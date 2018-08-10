@@ -23,21 +23,21 @@ class EarningsController extends Controller
 
 		list($begMonth, $endMonth) = $this->getBegEndMonth($_REQUEST);
 		$categories = Repository::findCategoryFromLedgers(array('group' => array('category')));
-		$avg = $this->getAvg($begMonth, $endMonth, false);
+		$avg = $this->getAvg($begMonth, $endMonth, true);
 		if ($avg === false)
 		{
 			header("Location: /index/notfound");
 			return;
 		}
 		list($labels, $expends, $incomes) =
-			$this->getInOutDatas($begMonth, $endMonth, false);
+			$this->getInOutDatas($begMonth, $endMonth, true);
 		if ($labels === false)
 		{
 			header("Location: /index/notfound");
 			return;
 		}
 		list($inCategories, $outCategories) =
-			$this->getCategoryDatas($begMonth, $endMonth, false);
+			$this->getCategoryDatas($begMonth, $endMonth, true);
 		if ($inCategories === false)
 		{
 			header("Location: /index/notfound");
@@ -69,9 +69,9 @@ class EarningsController extends Controller
 		{
 			return array('code' => -1, 'msg' => 'PARAMS ERROR');
 		}
-		$avg = $this->getAvg($begMonth, $endMonth, false);
+		$avg = $this->getAvg($begMonth, $endMonth, true);
 		list($inCategories, $outCategories) =
-			$this->getCategoryDatas($begMonth, $endMonth, false);
+			$this->getCategoryDatas($begMonth, $endMonth, true);
 		return array(
 			'code' => 0,
 			'beg_month' => $begMonth,
@@ -89,7 +89,7 @@ class EarningsController extends Controller
 		list($begMonth, $endMonth) = $this->getBegEndMonth($_REQUEST);
 		list($labels, $expends, $incomes) =
 			$this->getInOutDatas(
-				$begMonth, $endMonth, false, $_REQUEST['category']);
+				$begMonth, $endMonth, true, $_REQUEST['category']);
 		return array(
 			'code' => 0,
 			'labels' => $labels,

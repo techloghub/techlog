@@ -135,7 +135,7 @@ class TechlogTools {
 					$image_info = GetImageSize(WEB_PATH.'/resource/'.$path);
 					$width = intval($image_info[0]);
 					$contents .= '<p style="text-indent:0em;">'
-						.'<a target="_blank" alt="'.$width.'" href="'.$path.'">'
+						.'<a target="_blank" alt="'.$path.'" href="'.$path.'">'
 						.$line.'</a></p><p>&nbsp;</p>';
 				}
 			}
@@ -204,7 +204,7 @@ class TechlogTools {
 					.self::str_trans(substr($line, 4))
 					.'</h1></div>';
 				$inh1 = true;
-				$contents .= '<div id="'.$code_id.'_contents">';
+				$contents .= '<div id="'.$code_id.'_contents" class="blog_content">';
 			} else if (substr($line, 0, 4) === '<h3>') {
 				$contents .= '<p><h3>'
 					.self::str_trans(substr($line, 4))
