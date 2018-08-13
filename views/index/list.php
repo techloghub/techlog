@@ -21,7 +21,7 @@
 	<p>
 		<a class="btn btn-lg btn-primary" href="/article/list/10182614" role="button" style='font-family:"Hiragino Sans GB", "Microsoft YaHei","WenQuanYi Micro Hei"'>博客簡介</a>
 		<?php if ($params['is_root']): ?>
-		<a class="btn btn-lg btn-primary" href="http://admin.techlog.cn/techlog_manager/tasklist/list" role="button" style='font-family:"Hiragino Sans GB", "Microsoft YaHei","WenQuanYi Micro Hei"'>任务管理</a>
+		<a class="btn btn-lg btn-primary" href="http://admin.techlog.cn/techlog_manager/tasklist/list" role="button" style='font-family:"Hiragino Sans GB", "Microsoft YaHei","WenQuanYi Micro Hei"' target="_blank">任务管理</a>
 		<?php endif ?>
 	</p>
 </div>
