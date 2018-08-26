@@ -7,7 +7,7 @@ foreach ($draft_files as $draft)
 {
 	if ($draft[0] == '.')
 		continue;
-	$article_id = StringOpt::spider_string($draft, 'draft', '.tpl');
+	$article_id = StringOpt::spider_string($draft, 'draft', '.<![||]><![+INF]>');
 	if (empty($article_id))
 		continue;
 	$title = Repository::findTitleFromArticle(
@@ -24,7 +24,7 @@ foreach ($draft_files as $draft)
 	if (trim($sure[0]) != 'Y' && trim($sure[0]) != 'y')
 		continue;
 
-	$draft_file = DRAFT_PATH.'/draft'.$article_id.'.tpl';
+	$draft_file = DRAFT_PATH.'/'.$draft;
 
 	$infos = array();
 	$infos['draft'] = file_get_contents ($draft_file);

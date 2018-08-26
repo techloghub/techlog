@@ -32,10 +32,24 @@ class ArticleController extends Controller
 
 		$draft_id = (isset($query_params[0]) && intval($query_params[0]) > 0)
 			? intval($query_params[0]) : '';
-		$contents = file_exists(DRAFT_PATH.'/draft'.$draft_id.'.tpl')
-			? TechlogTools::pre_treat_article(
-				file_get_contents(DRAFT_PATH.'/draft'.$draft_id.'.tpl')
-			) : '';
+		$draft_array = scandir(DRAFT_PATH);
+		$draft_result = array();
+		foreach ($draft_array as $draft_name) {
+			$match_count = preg_match('/^draft'.$draft_id.'(\..*|$)/', $draft_name, $result);
+			if ($match_count > 0) {
+				$draft_result[] = $draft_name;
+			}
+		}
+
+		if (count($draft_result) > 1) {
+			$contents = TechlogTools::pre_treat_article(
+				'<h1>Error：不止一个可选的 draft 文件');
+		} else {
+			$contents = (!empty($draft_result) && file_exists(DRAFT_PATH.'/'.$draft_result[0]))
+				? TechlogTools::pre_treat_article(
+					file_get_contents(DRAFT_PATH.'/'.$draft_result[0])
+				) : '';
+		}
 
 		if (StringOpt::spider_string(
 			$contents, '"page-header"', '</div>') === null)
