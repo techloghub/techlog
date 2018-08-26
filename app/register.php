@@ -26,7 +26,6 @@ $library_list = array(
 
 $controller_list = array(
 	'ArticleController',
-	'BackController',
 	'IndexController',
 	'DebinController',
 	'MsgchkController',
