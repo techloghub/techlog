@@ -1,5 +1,6 @@
 <?php
 define('APP_PATH', __DIR__);
+define('CONF_PATH', __DIR__.'/conf');
 define('WEB_PATH', __DIR__.'/../web');
 define('LIB_PATH', __DIR__.'/../library');
 define('VIEW_PATH', __DIR__.'/../views');

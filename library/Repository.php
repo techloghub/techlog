@@ -17,7 +17,7 @@ class Repository
 			self::$debug = false;
 		$mode = self::$debug ? PDO::ERRMODE_EXCEPTION : PDO::ERRMODE_SILENT;
 
-		$config = file_get_contents(APP_PATH.'/config.json');
+		$config = file_get_contents(CONF_PATH.'/config.json');
 		$config = json_decode($config, true);
 		if (empty($config))
 		{

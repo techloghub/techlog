@@ -5,7 +5,7 @@ class Controller
 
 	public function __construct()
 	{
-		$config = file_get_contents(APP_PATH.'/config.json');
+		$config = file_get_contents(CONF_PATH.'/config.json');
 		$config = json_decode($config, true);
 
 		if (isset($_COOKIE["LoginInfo"])

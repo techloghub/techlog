@@ -1,6 +1,6 @@
 draft/
 wise/
 metronic_v3.6.1
-app/config.json
+app/conf/config.json
 .*.swp
 app/log/

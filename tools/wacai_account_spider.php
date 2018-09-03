@@ -109,7 +109,7 @@ for ($i=1; $i<=$pageCount; $i++)
 function get_cookie()
 {
 	$url = 'https://www.wacai.com/user/user!login.action?cmd=null';
-	$config = file_get_contents(APP_PATH.'/config.json');
+	$config = file_get_contents(CONF_PATH.'/config.json');
 	$config = json_decode($config, true);
 	$config = $config['wacai'];
 	$post_data = array(

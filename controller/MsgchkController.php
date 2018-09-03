@@ -2,7 +2,7 @@
 class MsgchkController {
 	public function loginActionAjax()
 	{
-		$config = file_get_contents(APP_PATH.'/config.json');
+		$config = file_get_contents(CONF_PATH.'/config.json');
 		$config = json_decode($config, true);
 		$authcode = RedisRepository::getAuthcode();
 
