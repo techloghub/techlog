@@ -4,3 +4,4 @@ metronic_v3.6.1
 app/conf/config.json
 .*.swp
 app/log/
+.idea
