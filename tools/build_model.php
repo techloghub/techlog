@@ -10,7 +10,7 @@ if (!isset($options['t']))
 }
 $table = $options['t'];
 $table_class = ucfirst(StringOpt::unlinetocamel($table).'Model');
-$file = MODEL_PATH.'/pokemon/'.$table_class.'.php';
+$file = MODEL_PATH.'/'.$table_class.'.php';
 if (file_exists($file))
 {
 	echo '文件已存在，是否替换 [y/N]';

@@ -10,12 +10,12 @@ class MsgchkController {
 
 		$result = array('code'=>1, 'msg'=>'用户不存在');
 		if (isset($input['username'])
-			&& isset($input['password'])
+			#&& isset($input['password'])
 			&& isset($input['authcode'])
 			&& !empty($authcode)
 			&& $input['username'] == $config['admin']['user']
 			&& $input['authcode'] == $authcode
-			&& md5($input['password']) == $config['admin']['pwd']
+			#&& md5($input['password']) == $config['admin']['pwd']
 		) {
 			$result['code'] = 0;
 			$result['msg'] = '登录成功';
