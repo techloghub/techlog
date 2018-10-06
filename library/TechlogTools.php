@@ -141,9 +141,12 @@ class TechlogTools {
 			}
 			else if (substr($line, 0, 5) == '<code')
 			{
-				$mode = StringOpt::spider_string($line, 'mode="', '"');
-				if (empty($mode))
+				$this_mode = StringOpt::spider_string($line, 'mode="', '"');
+				if (empty($mode) && empty($this_mode)) {
 					$mode = 'c_cpp';
+				} else if (empty($mode)) {
+					$mode = $this_mode;
+				}
 				$code = '';
 				$code_line = 0;
 				$is_php = false;
