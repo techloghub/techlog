@@ -1,5 +1,5 @@
 <?php
-class MoodModel
+class MoodModel extends AbstractModel
 {
 	private $mood_id;
 	private $contents;

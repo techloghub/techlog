@@ -1,5 +1,5 @@
 <?php
-class StatsModel
+class StatsModel extends AbstractModel
 {
 	private $stats_id;
 	private $time_str;

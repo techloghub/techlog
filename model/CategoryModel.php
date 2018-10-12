@@ -1,5 +1,5 @@
 <?php
-class CategoryModel
+class CategoryModel extends AbstractModel
 {
 	private $category_id;
 	private $category;

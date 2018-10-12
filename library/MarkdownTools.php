@@ -89,7 +89,6 @@ class MarkdownTools {
 				if (empty($mode))
 					$mode = 'cpp';
 				$contents .= '```'.$mode.PHP_EOL;
-				$code_line = 0;
 				$is_php = false;
 				if ($mode === 'php' && $lines[$index+1] != '<?php') {
 					$contents.= '\<?php'.PHP_EOL;
@@ -150,4 +149,3 @@ class MarkdownTools {
 		return $str;
 	}
 }
-?>

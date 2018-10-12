@@ -1,5 +1,8 @@
 <?php
 class RedisRepository {
+    /**
+     * @var Redis
+     */
 	private static $redis;
 
 	private static function connect() {
@@ -45,4 +48,3 @@ class RedisRepository {
 		return self::$redis->set('authcode', $code);
 	}
 }
-?>

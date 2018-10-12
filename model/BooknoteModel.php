@@ -1,5 +1,5 @@
 <?php
-class BooknoteModel
+class BooknoteModel extends AbstractModel
 {
 	private $note_id;
 	private $image_id;

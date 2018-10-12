@@ -1,5 +1,5 @@
 <?php
-class ArticleTagRelationModel
+class ArticleTagRelationModel extends AbstractModel
 {
 	private $id;
 	private $article_id;

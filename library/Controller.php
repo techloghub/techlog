@@ -75,4 +75,3 @@ class Controller
 			require(VIEW_PATH.'/'.$file);
 	}
 }
-?>

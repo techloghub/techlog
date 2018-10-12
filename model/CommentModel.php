@@ -1,5 +1,5 @@
 <?php
-class CommentModel
+class CommentModel extends AbstractModel
 {
 	private $comment_id;
 	private $inserttime;

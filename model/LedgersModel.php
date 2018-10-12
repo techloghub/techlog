@@ -1,5 +1,5 @@
 <?php
-class LedgersModel
+class LedgersModel extends AbstractModel
 {
 	private $id;
 	private $esid;

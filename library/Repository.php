@@ -1,4 +1,6 @@
 <?php
+/** @noinspection SqlNoDataSourceInspection */
+/** @noinspection SqlDialectInspection */
 
 /**
  * @method static ArticleModel findOneFromArticle(array $params)
@@ -8,13 +10,21 @@
  * @method static ArticleModel[] findFromArticle(array $params)
  * @method static string findCategoryFromCategory(array $array)
  * @method static string[] findTagNameFromTags(array $array)
- * @method static int findCountFromMood()
+ * @method static int findCountFromMood($array = array())
  * @method static MoodModel[] findFromMood(array $array)
+ * @method static ImagesModel findOneFromImages(array $array)
+ * @method static string findTitleFromArticle(array $array)
+ * @method static int findCountFromImages(array $query_params)
+ * @method static ImagesModel[] findFromImages(array $query_params)
+ * @method static  findPathFromImages(array $array)
  */
 class Repository
 {
 	private static $dbfd;
 	private static $debug;
+    /**
+     * @var PDO
+     */
 	private static $pdo_instance;
 	private static $table;
 
@@ -92,7 +102,6 @@ class Repository
 			.self::getParams($params, $query_params);
 
 		$stmt = self::$pdo_instance->prepare($sql);
-		$table_class = ucfirst(StringOpt::unlinetocamel(self::$table).'Model');
 		$stmt->execute($query_params);
 		$ret = $stmt->fetchAll();
 		if (count($ret) == 1) {
@@ -152,6 +161,11 @@ class Repository
 		return isset($ret['total']) ? $ret['total'] : false;
 	} // }}}
 
+    /**
+     * @param string $dbfd
+     * @param string $debug
+     * @return PDO
+     */
 	public static function getInstance($dbfd = 'db', $debug = 'false')
 	{ // {{{
 		self::$dbfd = $dbfd;
@@ -160,7 +174,7 @@ class Repository
 		return self::$pdo_instance;
 	} // }}}
 
-	public static function persist($model)
+	public static function persist(AbstractModel $model)
 	{ // {{{
 		self::dbConnect();
 		$class = get_class($model);
@@ -176,7 +190,7 @@ class Repository
 		return $model->is_set_pri() ? self::update($model) : self::insert($model);
 	} // }}}
 
-	private static function insert($model)
+	private static function insert(AbstractModel $model)
 	{ // {{{
 		$fields = $model->get_model_fields();
 		$keys = $params_keys = $query_params = array();
@@ -218,7 +232,7 @@ class Repository
 		return $insert_id;
 	} // }}}
 
-	private static function update ($model)
+	private static function update (AbstractModel $model)
 	{ // {{{
 		$pri_key = $model->get_pri_key();
 		$fields = $model->get_model_fields();
@@ -372,4 +386,3 @@ class Repository
 		return $sql;
 	} // }}}
 }
-?>

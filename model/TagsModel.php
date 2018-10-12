@@ -1,5 +1,5 @@
 <?php
-class TagsModel
+class TagsModel extends AbstractModel
 {
 	private $tag_id;
 	private $tag_name;

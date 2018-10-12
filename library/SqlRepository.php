@@ -1,4 +1,8 @@
 <?php
+/** @noinspection SqlDialectInspection */
+/** @noinspection SqlResolve */
+/** @noinspection SqlNoDataSourceInspection */
+
 class SqlRepository
 {
 	public static function getTags($article_id)
@@ -80,8 +84,6 @@ class SqlRepository
 
 	public static function getArticleMoodCountByRequest($request)
 	{ // {{{
-		$start = $request['start'];
-		$limit = $request['limit'];
 		$is_mood = $request['ismood'];
 		$is_root = $request['isroot'];
 		$where_str = self::getWhere($request, $is_mood, $is_root);
@@ -114,6 +116,9 @@ class SqlRepository
 		return $ret;
 	} // }}}
 
+    /**
+     * @return BooknoteModel[]
+     */
 	public static function getBooknotes()
 	{ // {{{
 		$sql = 'select booknote.* from booknote, article'
@@ -276,9 +281,13 @@ class SqlRepository
 				$key = trim($key);
 				if (empty($key))
 					continue;
-				$search_ret = $sphinx->query($key, $request['opt_type']);
+                try {
+                    $search_ret = $sphinx->query($key, $request['opt_type']);
+                } catch (ErrorException $e) {
+                    $search_ret = null;
+                }
 
-				if (isset($search_ret['matches']))
+                if (isset($search_ret['matches']))
 				{
 					if (empty($article_ids))
 						$article_ids = array_keys($search_ret['matches']);
@@ -307,6 +316,9 @@ class SqlRepository
 		return $where_str;
 	} // }}}
 
+    /**
+     * @return SphinxClient
+     */
 	private static function getSphinx()
 	{ // {{{
 		$sphinx = new SphinxClient();

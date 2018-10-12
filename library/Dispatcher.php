@@ -1,7 +1,6 @@
 <?php
 class Dispatcher
 {
-	private $loader = null;
 	public static $rewriteRule = array(
 		array(
 			'pattern'	=> '/^\/html\/?(index\.php)?$/i',
@@ -31,9 +30,6 @@ class Dispatcher
 
 	private function __construct()
 	{
-		global $controller_list;
-		global $model_list;
-
 		define('URI', isset($_SERVER['REQUEST_URI']) ?
 			$_SERVER['REQUEST_URI'] : '');
 		define('REDIRECT', isset($_SERVER['REDIRECT_URL']) ?
@@ -143,4 +139,3 @@ class Dispatcher
 		return array($uri_infos['class'], $uri_infos['func'], $uri_infos['params']);
 	}
 }
-?>

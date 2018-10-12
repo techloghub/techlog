@@ -1350,7 +1350,7 @@ class SphinxClient
         if (empty($this->reqs)) {
             $this->error = 'no queries defined, issue addQuery() first';
 
-            return false;
+            return array();
         }
 
         // mbstring workaround
@@ -1359,7 +1359,7 @@ class SphinxClient
         if (!($fp = $this->connect())) {
             $this->mbPop();
 
-            return false;
+            return array();
         }
 
         // send query, get response
@@ -1374,7 +1374,7 @@ class SphinxClient
         if (!($this->send($fp, $req, $len + 8)) || !($response = $this->getResponse($fp, self::VER_COMMAND_SEARCH))) {
             $this->mbPop();
 
-            return false;
+            return array();
         }
 
         // query sent ok; we can reset reqs now

@@ -1,5 +1,5 @@
 <?php
-class EarningsModel
+class EarningsModel extends AbstractModel
 {
 	private $month;
 	private $expend;

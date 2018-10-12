@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * @method static array get($url, $json_encode)
+ */
 class HttpCurl
 {
 	private static $handle = null;
@@ -111,7 +115,7 @@ class HttpCurl
 		if (empty(self::$handle))
 			self::curlInit();
 		curl_setopt(self::$handle, CURLOPT_PROXY, $proxy);
-		curl_setopt(self::$handle, CURLOPT_proxyPORT, $port);
+		curl_setopt(self::$handle, CURLOPT_PROXYPORT, $port);
 	}
 
 	public static function set_authorize($username = null, $password = null)
@@ -122,8 +126,8 @@ class HttpCurl
 		}
 		else
         {
-            curl_setopt($handle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-            curl_setopt($handle, CURLOPT_USERPWD, "{$username}:{$password}");
+            curl_setopt(self::$handle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            curl_setopt(self::$handle, CURLOPT_USERPWD, "{$username}:{$password}");
         }
 	}
 
@@ -138,10 +142,10 @@ class HttpCurl
 	{
 		if (empty(self::$handle))
 			self::curlInit();
-		if (empty($cookie) || is_string($cookie))
-			$set_cookie = $cookie;
-		else if (is_array($cookie))
-		{
+        $set_cookie = null;
+		if (empty($cookie) || is_string($cookie)) {
+            $set_cookie = $cookie;
+        } else if (is_array($cookie)) {
 			$cookie_arr = array();
 			foreach ($cookie as $key => $value)
 				$cookie_arr[] = $key.'='.$value;
@@ -150,4 +154,3 @@ class HttpCurl
 		curl_setopt(self::$handle, CURLOPT_COOKIE, $set_cookie);
 	}
 }
-?>

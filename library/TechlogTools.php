@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection CssInvalidPropertyValue */
+
 class TechlogTools {
 	public static function pre_treat_article ($file) {
 		$font = '';
@@ -24,7 +25,7 @@ class TechlogTools {
 				}
 			} else if ($line == '<table>') {
 				$contents .=
-					'<table class="stdtable" border="1" style="font-size:18;">';
+					'<table class="stdtable" border="1" style="font-size:18px;">';
 				while (1) {
 					$index++;
 					if ($index >= count($lines))

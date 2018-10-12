@@ -1,5 +1,5 @@
 <?php
-class ArticleModel
+class ArticleModel extends AbstractModel
 {
 	private $article_id;
 	private $title;

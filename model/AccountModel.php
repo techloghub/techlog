@@ -1,5 +1,5 @@
 <?php
-class AccountModel
+class AccountModel extends AbstractModel
 {
 	private $id;
 	private $name;

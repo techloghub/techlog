@@ -87,4 +87,3 @@ class StringOpt
 		return $string;
 	}
 }
-?>

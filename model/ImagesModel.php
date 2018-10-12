@@ -1,5 +1,5 @@
 <?php
-class ImagesModel
+class ImagesModel extends AbstractModel
 {
 	private $image_id;
 	private $md5;
