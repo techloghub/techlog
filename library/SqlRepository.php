@@ -63,6 +63,7 @@ class SqlRepository
 
 	public static function getTagsByArticleId($article_id)
 	{ // {{{
+        $pdo = Repository::getInstance();
 		$sql = 'select C.* from'
 			.' article as A,'
 			.' article_tag_relation as B,'
@@ -211,7 +212,6 @@ class SqlRepository
 		$where_str = '';
 		$dates = array();
 		$tag_ids = array();
-		$ret_params = array();
 		$tags = explode(',', $request['tags']);
 
 		if (!empty($tags))
@@ -238,11 +238,12 @@ class SqlRepository
 			if (!$ismood
 				&& (!$is_root
 					|| ($request['opt_type'] != 'all'
-						&& $request['opt_type'] != 'title')))
-				$where_str .= ' and category_id < 5';
-			// 禁止非 root 查询 mood
-			else if (!$is_root)
-				$where_str .= ' and 0';
+						&& $request['opt_type'] != 'title'))) {
+                $where_str .= ' and category_id < 5';
+            } else if (!$is_root) {
+                // 禁止非 root 查询 mood
+                $where_str .= ' and 0';
+            }
 
 			if (!empty($tag_ids) && !$ismood)
 			{

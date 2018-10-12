@@ -170,7 +170,7 @@ class ArticleController extends Controller
 		if ($article == false)
 		{
 			header("Location: /index/notfound");
-			return;
+			return null;
 		}
 
 		$params['tags']		= SqlRepository::getTags($article_id);

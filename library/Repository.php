@@ -1,4 +1,16 @@
 <?php
+
+/**
+ * @method static ArticleModel findOneFromArticle(array $params)
+ * @method static CommentModel findOneFromComment(array $params)
+ * @method static CommentModel[] findFromComment(array $comments_params)
+ * @method static int findCountFromArticle(array $array)
+ * @method static ArticleModel[] findFromArticle(array $params)
+ * @method static string findCategoryFromCategory(array $array)
+ * @method static string[] findTagNameFromTags(array $array)
+ * @method static int findCountFromMood()
+ * @method static MoodModel[] findFromMood(array $array)
+ */
 class Repository
 {
 	private static $dbfd;
