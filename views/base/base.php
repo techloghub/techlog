@@ -50,7 +50,11 @@ function echo_ifset($params, $key)
 							<a href="/">龙潭斋</a>
 							</li>
 							<li>
-							<a href="/note">技术专题</a>
+							<?php if ($params['is_root']): ?>
+								<a href="/debin/category/2">技术专题</a>
+							<?php else: ?>
+								<a href="/note">技术专题</a>
+							<?php endif ?>
 							</li>
 							<li>
 							<a href="/debin/category/4">技术乱炖</a>
