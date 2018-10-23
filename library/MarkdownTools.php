@@ -85,9 +85,12 @@ class MarkdownTools {
 			} else if (substr($line, 0, 4) == '<img') {
 				$contents .= PHP_EOL.PHP_EOL.'#此处有图片'.PHP_EOL.PHP_EOL;
 			} else if (substr($line, 0, 5) == '<code') {
-				$mode = StringOpt::spider_string($line, 'mode="', '"');
-				if (empty($mode))
+				$this_mode = StringOpt::spider_string($line, 'mode="', '"');
+				if (!empty($this_mode)) {
+					$mode = $this_mode;
+				} if (empty($mode)) {
 					$mode = 'cpp';
+				}
 				$contents .= '```'.$mode.PHP_EOL;
 				$is_php = false;
 				if ($mode === 'php' && $lines[$index+1] != '<?php') {
