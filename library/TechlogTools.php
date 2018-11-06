@@ -23,7 +23,11 @@ class TechlogTools {
 						break;
 					$contents .= $line.PHP_EOL;
 				}
-			} else if ($line == '<table>') {
+			} else if (substr($line, 0, 6) == '<table') {
+				$split = StringOpt::spider_string($line, 'split="', '"');
+				if (empty($split) || $split == '\t') {
+					$split = "\t";
+				}
 				$contents .=
 					'<table class="stdtable" border="1" style="font-size:18px;">';
 				while (1) {
@@ -44,7 +48,7 @@ class TechlogTools {
 							.$caption
 							.'</caption>';
 					} else {
-						$tds = explode("\t", $line);
+						$tds = explode($split, $line);
 						if (substr($line, 0, 4) == '<tr>') {
 							$tds[0] = substr($tds[0], 4);
 							$contents .= '<thead>'

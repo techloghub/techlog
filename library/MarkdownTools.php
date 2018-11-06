@@ -22,7 +22,11 @@ class MarkdownTools {
 						break;
 					$contents .= self::str_trans($line).PHP_EOL.PHP_EOL;
 				}
-			} else if ($line == '<table>') {
+			} else if (substr($line, 0, 6) == '<table') {
+				$split = self::str_trans(StringOpt::spider_string($line, 'split="', '"'));
+				if (empty($split) || $split == '\t') {
+					$split = "\t";
+				}
 				while (1) {
 					$index++;
 					if ($index >= count($lines))
@@ -34,7 +38,7 @@ class MarkdownTools {
 						$caption = substr($line, 9);
 						$contents .= '####'.self::str_trans($caption, true).PHP_EOL;
 					} else {
-						$tds = explode("\t", $line);
+						$tds = explode($split, $line);
 						if (substr($line, 0, 4) == '<tr>') {
 							$tds[0] = substr($tds[0], 4);
 							if ($tds[0][0] == '[' && $tds[0][strlen($tds[0])-1] == ']') {
@@ -140,6 +144,9 @@ class MarkdownTools {
 	}
 
 	private static function str_trans($str, $intable = false) {
+		if (empty($str)) {
+			return null;
+		}
 		$str = str_replace('&', '&amp;', $str);
 		$str = str_replace('"', '&quot;', $str);
 		$str = str_replace('<', '&lt;', $str);
