@@ -149,7 +149,7 @@ class TechlogTools {
 				$this_mode = StringOpt::spider_string($line, 'mode="', '"');
 				if (empty($mode) && empty($this_mode)) {
 					$mode = 'c_cpp';
-				} else if (empty($mode)) {
+				} else if (!empty($this_mode)) {
 					$mode = $this_mode;
 				}
 				$code = '';
@@ -201,7 +201,7 @@ class TechlogTools {
 					.' height: '.$code_line.'px">'
 					.trim($code)
 					.'</div><p>&nbsp;</p>';
-				$codes[] = array('id'=>'editor_'.$code_id++, 'mode'=>$mode);
+				$codes[] = array('id'=>'editor_'.$code_id++, 'mode' => $mode);
 				continue;
 			} else if (substr($line, 0, 4) === '<h1>') {
 				if ($inh1) {
