@@ -12,7 +12,7 @@ class MarkdownTools {
 				$contents .= PHP_EOL;
 			} else if ($line == '<div>') {
 				$contents .= PHP_EOL.PHP_EOL
-					."#以下内容需要手动处理：".PHP_EOL;
+					."# 以下内容需要手动处理：".PHP_EOL;
 				while (1) {
 					$index++;
 					if ($index >= count($lines))
@@ -23,7 +23,7 @@ class MarkdownTools {
 					$contents .= self::str_trans($line).PHP_EOL.PHP_EOL;
 				}
 			} else if (substr($line, 0, 6) == '<table') {
-				$split = self::str_trans(StringOpt::spider_string($line, 'split="', '"'));
+				$split = StringOpt::spider_string($line, 'split="', '"');
 				if (empty($split) || $split == '\t') {
 					$split = "\t";
 				}
@@ -36,7 +36,7 @@ class MarkdownTools {
 						break;
 					} else if (substr($line, 0, 9) == '<caption>') {
 						$caption = substr($line, 9);
-						$contents .= '####'.self::str_trans($caption, true).PHP_EOL;
+						$contents .= '#### '.self::str_trans($caption, true).PHP_EOL;
 					} else {
 						$tds = explode($split, $line);
 						if (substr($line, 0, 4) == '<tr>') {
@@ -73,7 +73,7 @@ class MarkdownTools {
 					if ($line == '</ol>' || $line == '</ul>') {
 						break;
 					}
-					$contents .= self::str_trans($i++.'. '.$line).PHP_EOL;
+					$contents .= $i++.'. '.self::str_trans($line).PHP_EOL;
 				}
 			} else if ($line == '<ul>') {
 				while (1) {
@@ -87,7 +87,7 @@ class MarkdownTools {
 					$contents .= '- '.self::str_trans($line).PHP_EOL;
 				}
 			} else if (substr($line, 0, 4) == '<img') {
-				$contents .= PHP_EOL.PHP_EOL.'#此处有图片'.PHP_EOL.PHP_EOL;
+				$contents .= PHP_EOL.PHP_EOL.'# 此处有图片'.PHP_EOL.PHP_EOL;
 			} else if (substr($line, 0, 5) == '<code') {
 				$this_mode = StringOpt::spider_string($line, 'mode="', '"');
 				if (!empty($this_mode)) {
@@ -118,10 +118,10 @@ class MarkdownTools {
 			} else if (substr($line, 0, 4) === '<h1>') {
 				$h1_no++;
 				$h3_no = 0;
-				$contents .= self::str_trans('#'.$h1_no.". ".substr($line, 4)).PHP_EOL;
+				$contents .= '# '.$h1_no.". ".self::str_trans(substr($line, 4)).PHP_EOL;
 			} else if (substr($line, 0, 4) === '<h3>') {
 				$h3_no++;
-				$contents .= self::str_trans('##'.$h1_no.".".$h3_no.". ".substr($line, 4)).PHP_EOL;
+				$contents .= '## '.$h1_no.".".$h3_no.". ".self::str_trans(substr($line, 4)).PHP_EOL;
 			} else if (substr($line, 0, 3) == '<a ') {
 				$id = StringOpt::spider_string($line, 'id="', '"');
 				$title = Repository::findTitleFromArticle(
