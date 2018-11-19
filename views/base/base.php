@@ -98,11 +98,9 @@ function echo_ifset($params, $key)
 								<li>
 								<a href="/search">检索</a>
 								</li>
-								<li>
-								<a href="javascript:void(0)" data-toggle="modal" data-target="#login_modal">登录</a>
-								</li>
 							<?php endif ?>
 						</ul>
+						<a id="loginmodel" href="javascript:void(0)" style="visibility: hidden;" data-toggle="modal" data-target="#login_modal">登录</a>
 					</nav>
 				</div>
 			</header>
@@ -111,3 +109,24 @@ function echo_ifset($params, $key)
 	<body style="background: <?php echo $params['background'] ?> fixed no-repeat; background-size: cover;">
 	<link href='/resource/bootstrap/css/nav.css'  rel="stylesheet">
 	<?php require(VIEW_PATH.'/base/modal.php'); ?>
+	<script language="JavaScript" type="text/javascript">
+		function hotkey(event) {
+			if (event.ctrlKey == true && event.shiftKey == true && event.altKey == false) {
+				if (event.keyCode == 49) {
+					window.location.href='/';
+				} else if (event.keyCode == 50) {
+					window.location.href='/debin/category/2';
+				} else if (event.keyCode == 51) {
+					window.location.href='/debin/category/3';
+				} else if (event.keyCode == 52) {
+					window.location.href='/debin/category/4';
+				} else if (event.keyCode == 192) {
+					$('#loginmodel').click();
+				}
+			}
+		}
+		if (document.addEventListener)
+			 document.addEventListener("keyup", hotkey, true);
+		else
+			 document.attachEvent("onkeyup", hotkey);
+	</script>
