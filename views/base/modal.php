@@ -12,7 +12,7 @@
 					<input type="text" class="form-control" name="username" id="username" style="width:300px;"/>&nbsp;&nbsp;
 				</div>
 				<div class="input-group" style="margin:0px 10px 0px 100px">
-					<span class="input-group-addon" style="width:10px;">验证码</span>
+					<span class="input-group-addon" style="width:10px;">密&nbsp;&nbsp;&nbsp;码</span>
 					<input type="password" class="form-control" name="authcode" id="authcode" style="width:300px;"/>
 				</div>
 			</div>
