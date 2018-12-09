@@ -105,6 +105,28 @@ class TechlogTools {
 						$contents .= '<p><li class="article_li">'.$line.'</li></p>';
 					}
 				}
+			} else if ($line == '<block>') {
+				$contents .= '<blockquote class="article_block">';
+				while (1) {
+					$index++;
+					if ($index >= count($lines))
+						break;
+					$line = trim($lines[$index]);
+					if ($line == '</block>') {
+						$contents .= '</blockquote>';
+						break;
+					}
+					else {
+						$line = self::str_trans($line);
+						if ($font != '')
+						{
+							$line = '<span style="font-family:'.$font.';">'
+								.$line
+								.'</span>';
+						}
+						$contents .= '<p>'.$line.'</p>';
+					}
+				}
 			} else if (substr($line, 0, 5) == '<font') {
 				$font = StringOpt::spider_string($line, '<font ', '>');
 			} else if ($line == '</font>') {
