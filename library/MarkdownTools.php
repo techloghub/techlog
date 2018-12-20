@@ -86,6 +86,13 @@ class MarkdownTools {
 					}
 					$contents .= '- '.self::str_trans($line).PHP_EOL;
 				}
+			} else if ($line == '<block>') {
+				while (1) {
+					$contents .= '> '.self::str_trans($line).PHP_EOL;
+					if ($line == '</block>') {
+						break;
+					}
+				}
 			} else if (substr($line, 0, 4) == '<img') {
 				$contents .= PHP_EOL.PHP_EOL.'# 此处有图片'.PHP_EOL.PHP_EOL;
 			} else if (substr($line, 0, 5) == '<code') {
