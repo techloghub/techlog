@@ -5,6 +5,7 @@ class MarkdownTools {
 		$contents = '';
 		$h1_no = 0;
 		$h3_no = 0;
+		$imgnu = 0;
 		for ($index = 0; $index < count($lines); ++$index) {
 			$line = $lines[$index];
 			$line = trim($line);
@@ -88,13 +89,18 @@ class MarkdownTools {
 				}
 			} else if ($line == '<block>') {
 				while (1) {
-					$contents .= '> '.self::str_trans($line).PHP_EOL;
+					$index++;
+					if ($index >= count($lines))
+						break;
+					$line = trim($lines[$index]);
 					if ($line == '</block>') {
 						break;
 					}
+					$contents .= '> '.self::str_trans($line).PHP_EOL;
 				}
 			} else if (substr($line, 0, 4) == '<img') {
-				$contents .= PHP_EOL.PHP_EOL.'# 此处有图片'.PHP_EOL.PHP_EOL;
+				$imgnu++;
+				$contents .= PHP_EOL.PHP_EOL.'# 此处有图片 '.$imgnu.PHP_EOL.PHP_EOL;
 			} else if (substr($line, 0, 5) == '<code') {
 				$this_mode = StringOpt::spider_string($line, 'mode="', '"');
 				if (!empty($this_mode)) {
