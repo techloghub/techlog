@@ -111,7 +111,7 @@ class TechlogTools {
 					$index++;
 					if ($index >= count($lines))
 						break;
-					$line = trim($lines[$index]);
+					$line = $lines[$index];
 					if ($line == '</block>') {
 						$contents .= '</blockquote>';
 						break;
