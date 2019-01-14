@@ -134,6 +134,10 @@ class TechlogTools {
 			} else if (substr($line, 0, 4) == '<img') {
 				$error = false;
 				$id = StringOpt::spider_string($line, 'id="', '"');
+				if ($id === 'rqcode') {
+					$id = '3378171';
+					$line = '<img id="3378171"/>';
+				}
 				if ($id != null) {
 					$image_id = intval(trim($id));
 					$image = Repository::findOneFromImages(
