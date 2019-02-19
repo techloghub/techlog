@@ -105,14 +105,14 @@ class TechlogTools {
 						$contents .= '<p><li class="article_li">'.$line.'</li></p>';
 					}
 				}
-			} else if ($line == '<block>') {
+			} else if ($line == '<block>' || $line == '<bl>') {
 				$contents .= '<blockquote class="article_block">';
 				while (1) {
 					$index++;
 					if ($index >= count($lines))
 						break;
 					$line = $lines[$index];
-					if ($line == '</block>') {
+					if ($line == '</block>' || $line == '</bl>') {
 						$contents .= '</blockquote>';
 						break;
 					}
