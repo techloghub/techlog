@@ -87,13 +87,13 @@ class MarkdownTools {
 					}
 					$contents .= '- '.self::str_trans($line).PHP_EOL;
 				}
-			} else if ($line == '<block>') {
+			} else if ($line == '<block>' || $line == '<bl>') {
 				while (1) {
 					$index++;
 					if ($index >= count($lines))
 						break;
 					$line = trim($lines[$index]);
-					if ($line == '</block>') {
+					if ($line == '</block>' || $line == '</bl>') {
 						break;
 					}
 					$contents .= '> '.self::str_trans($line).PHP_EOL;

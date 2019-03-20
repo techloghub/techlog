@@ -17,7 +17,7 @@ function echo_ifset($params, $key)
 		<link href="/resource/bootstrap/css/docs.css" rel="stylesheet" type="text/css">
 		<link href="/resource/bootstrap/css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
 		<link href="/resource/bootstrap/css/bootstrap-theme.css" rel="stylesheet" type="text/css">
-		<link href="/resource/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+		<link href="/resource/bootstrap/css/bootstrap.min.css?v=0.0.1" rel="stylesheet" type="text/css">
 		<link href="/resource/bootstrap/css/prettify.css" rel="stylesheet" type="text/css">
 		<link href="/resource/bootstrap/css/github.min.css" rel="stylesheet" type="text/css">
 		<link href="/resource/jquery/css/jquery.alerts.css" rel="stylesheet" type="text/css">
