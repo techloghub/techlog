@@ -5,6 +5,7 @@ class MarkdownTools {
 		$contents = '';
 		$h1_no = 0;
 		$h3_no = 0;
+		$h5_no = 0;
 		$imgnu = 0;
 		for ($index = 0; $index < count($lines); ++$index) {
 			$line = $lines[$index];
@@ -134,7 +135,11 @@ class MarkdownTools {
 				$contents .= '# '.$h1_no.". ".self::str_trans(substr($line, 4)).PHP_EOL;
 			} else if (substr($line, 0, 4) === '<h3>') {
 				$h3_no++;
+                $h5_no = 0;
 				$contents .= '## '.$h1_no.".".$h3_no.". ".self::str_trans(substr($line, 4)).PHP_EOL;
+			} else if (substr($line, 0, 4) === '<h5>') {
+				$h5_no++;
+				$contents .= '### '.$h1_no.".".$h3_no.".".$h5_no.". ".self::str_trans(substr($line, 4)).PHP_EOL;
 			} else if (substr($line, 0, 3) == '<a ') {
 				$id = StringOpt::spider_string($line, 'id="', '"');
 				$title = Repository::findTitleFromArticle(

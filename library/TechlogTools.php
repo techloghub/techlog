@@ -243,6 +243,10 @@ class TechlogTools {
 				$contents .= '<p><h3>'
 					.self::str_trans(substr($line, 4))
 					.'</h3></p>';
+			} else if (substr($line, 0, 4) === '<h5>') {
+				$contents .= '<p><h5 class="techlog_third_title">'
+					.self::str_trans(substr($line, 4))
+					.'</h5></p>';
 			} else if (substr($line, 0, 3) == '<a ') {
 				$id = StringOpt::spider_string($line, 'id="', '"');
 				$title = Repository::findTitleFromArticle(
