@@ -10,18 +10,18 @@ function echo_ifset($params, $key)
 		<meta name="renderer" content="webkit"/>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-		<script type="text/javascript" src="/resource/jquery/js/jquery-1.7.min.js"></script>
+        <script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 		<script type="text/javascript" src="/resource/jquery/js/jquery.alerts.js"></script>
-		<script type="text/javascript" src="/resource/bootstrap/js/bootstrap.min.js"></script>
-		<script src="/resource/ace-master/build/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+        <script src="https://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+        <script src="https://cdn.bootcss.com/ace/1.4.4/ace.js"></script>
 		<link href="/resource/bootstrap/css/docs.css" rel="stylesheet" type="text/css">
-		<link href="/resource/bootstrap/css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
-		<link href="/resource/bootstrap/css/bootstrap-theme.css" rel="stylesheet" type="text/css">
+        <link href="https://cdn.bootcss.com/twitter-bootstrap/2.3.2/css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="https://cdn.bootcss.com/twitter-bootstrap/3.4.1/css/bootstrap-theme.css" rel="stylesheet">
 		<link href="/resource/bootstrap/css/bootstrap.min.css?v=0.0.1" rel="stylesheet" type="text/css">
 		<link href="/resource/bootstrap/css/prettify.css" rel="stylesheet" type="text/css">
 		<link href="/resource/bootstrap/css/github.min.css" rel="stylesheet" type="text/css">
 		<link href="/resource/jquery/css/jquery.alerts.css" rel="stylesheet" type="text/css">
-		<link href="/resource/jquery/css/jquery.ui.css" rel="stylesheet" type="text/css">
+        <link href="https://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.css" rel="stylesheet">
 		<link href="/resource/zeyu_blog/css/zeyu_blog.css?v=1.0.2" rel="stylesheet" type="text/css">
 		<link rel="shortcut icon" href="/images/icon.png">
 		<?php if (!isset($params['is_root']))

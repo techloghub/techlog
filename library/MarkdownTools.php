@@ -171,6 +171,7 @@ class MarkdownTools {
 		$str = str_replace('>', '&gt;', $str);
 		$str = str_replace(' ', '&nbsp;', $str);
 		$str = str_replace('$', '\$', $str);
+		$str = str_replace('_', '\_', $str);
 		if ($intable) {
 			$str = str_replace('|', '&#124;', $str);
 		}

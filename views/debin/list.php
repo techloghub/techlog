@@ -195,7 +195,7 @@
 						<ul>
 							<li>
 							<h2 style="line-height:30px">
-								<a href="http://ae6623.cn/list/index.html" target="_blank">58 同城高级全栈工程师落雨作品展示</a>
+								<a href="https://ae6623.cn/list/index.html" target="_blank">58 同城高级全栈工程师落雨作品展示</a>
 							</h2>
 							</li>
 						</ul>
@@ -241,26 +241,26 @@
 				<?php endif ?>
 			</div>
 			</section>
-			<script src="http://hi.bdimg.com/static/qbase/js/mod/mod_foot.js?v=382c615f.js">
+			<script src="https://hi.bdimg.com/static/qbase/js/mod/mod_foot.js?v=382c615f.js">
 			</script>
 			<script>qext.stat.ns('m_20120425_20001');</script>
 			</script>
 			<!--[if (lt IE 8.0)]>
-			<link rel=stylesheet type=text/css href="http://hi.bdimg.com/static/qmessage/css/qmessage_mod_msg_bubble.css?v=a727011c.css">
+			<link rel=stylesheet type=text/css href="https://hi.bdimg.com/static/qmessage/css/qmessage_mod_msg_bubble.css?v=a727011c.css">
 			<![endif]-->
 			<!--[if (!IE)|(gte IE 8.0)]>
 			<!-->
-			<link rel=stylesheet type=text/css href="http://hi.bdimg.com/static/qmessage/css/qmessage_mod_msg_bubble_datauri.css?v=6ddd3ba9.css">
+			<link rel=stylesheet type=text/css href="https://hi.bdimg.com/static/qmessage/css/qmessage_mod_msg_bubble_datauri.css?v=6ddd3ba9.css">
 			<!--<![endif]-->
 			</script>
-			<link href="http://hi.bdimg.com/static/qbase/css/yoyo/yoyo.css?v=4dd11df1.css" type=text/css rel=stylesheet>
+			<link href="https://hi.bdimg.com/static/qbase/css/yoyo/yoyo.css?v=4dd11df1.css" type=text/css rel=stylesheet>
 			</script>
 			<script>wpo.tti=new Date*1;</script>
-			<script src="http://hi.baidu.com/cm/static/js/allsite.js?v=75674092.js?v=201401041944">
+			<script src="https://hi.baidu.com/cm/static/js/allsite.js?v=75674092.js?v=201401041944">
 			</script>
-			<script src="http://hi.bdimg.com/static/qbase/js/mod/mod_bubble.js?v=a9273ef3.js">
+			<script src="https://hi.bdimg.com/static/qbase/js/mod/mod_bubble.js?v=a9273ef3.js">
 			</script>
-			<script>document.write(unescape("%3Cscript src='http://hm.baidu.com/h.js%3F8c869b543955d43e496c2efee5b55823' type='text/javascript'%3E%3C/script%3E"));qext.stat.ns('m_20120713_qing_pv');</script>
+			<script>document.write(unescape("%3Cscript src='https://hm.baidu.com/h.js%3F8c869b543955d43e496c2efee5b55823' type='text/javascript'%3E%3C/script%3E"));qext.stat.ns('m_20120713_qing_pv');</script>
 		</div>
 <form action="/debin/search" method="post" name="params_form" id="params_form">
 	<input type="hidden" id='page' name='page' value="<?php echo_ifset($params, 'page') ?>"/>
