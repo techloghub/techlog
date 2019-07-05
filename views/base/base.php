@@ -11,6 +11,8 @@ function echo_ifset($params, $key)
 		<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+        <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="https://code.jquery.com/jquery-migrate-1.2.1.js"></script>
 		<script type="text/javascript" src="/resource/jquery/js/jquery.alerts.js"></script>
         <script src="https://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
         <script src="https://cdn.bootcss.com/ace/1.4.4/ace.js"></script>
