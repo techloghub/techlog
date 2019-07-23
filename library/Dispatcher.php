@@ -66,7 +66,11 @@ class Dispatcher
 			$obj = new $class();
 			if (method_exists($obj, $func))
 			{
-				$obj->$func($params);
+				$ret = $obj->$func($params);
+                if (!empty($ret)) {
+                    $ret = (is_string($ret) ? $ret : json_encode($ret));
+                    echo $ret;
+                }
 				$obj_exsists = true;
 			}
 			else if (method_exists($obj, $func.'Ajax'))
