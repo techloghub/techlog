@@ -8,10 +8,11 @@ define('DRAFT_PATH', __DIR__.'/../draft');
 define('MODEL_PATH', __DIR__.'/../model');
 define('RESOURCE_PATH', __DIR__.'/../resource');
 define('CONTROLLER_PATH', __DIR__.'/../controller');
+define('VENDOR_PATH', __DIR__.'/../vendor');
 
 ini_set('date.timezone','Asia/Shanghai');
 
-foreach (array(LIB_PATH, CONTROLLER_PATH, MODEL_PATH) as $dir) {
+foreach (array(LIB_PATH, CONTROLLER_PATH, MODEL_PATH, VENDOR_PATH) as $dir) {
     if (!file_exists($dir)) {
         continue;
     }
