@@ -23,14 +23,17 @@ foreach ($comments as $comment) {
             $name = $base_comment->get_nickname();
         }
         $subject = '有人回复了您在 [techlog.cn] 上的评论';
+        $content = '<p>'.$name.' 您好：</p><p>'.$comment->get_nickname()
+            .' 回复了您在文章 《'.$article->get_title().'》 中的评论</p>'
+            .'<p><a href="https://techlog.cn/article/list/'.$article->get_article_id().'">【点击查看详情】</a></p>';
     } else {
         $subject = '[techlog.cn] 新增了评论';
+        $content = '<p>'.$name.' 您好：</p><p>'.$comment->get_nickname()
+            .' 评论了您的文章 《'.$article->get_title().'》 </p>'
+            .'<p><a href="https://techlog.cn/article/list/'.$article->get_article_id().'">【点击查看详情】</a></p>';
     }
 
     $article = Repository::findOneFromArticle(array('eq' => array('article_id' => $comment->get_article_id())));
-    $content = '<p>'.$name.' 您好：</p><p>'.$comment->get_nickname()
-        .' 回复了您在文章 《'.$article->get_title().'》 中的评论</p>'
-        .'<p><a href="https://techlog.cn/article/list/'.$article->get_article_id().'">【点击查看详情】</a></p>';
     file_get_contents('https://techlog.cn/mail/list'
         .'?html=1&subject='.$subject.'&content='.$content.'&to='.implode(',', $tolist));
     $comment->set_reminded(1);
