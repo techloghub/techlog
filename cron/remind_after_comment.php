@@ -13,6 +13,7 @@ foreach ($comments as $comment) {
     }
 
     $name = '博主';
+    $article = Repository::findOneFromArticle(array('eq' => array('article_id' => $comment->get_article_id())));
     if ($comment->get_reply() != 0) {
         $base_comment = Repository::findOneFromComment(
             array('eq' => array('article_id' => $comment->get_article_id(), 'floor' => $comment->get_reply())));
@@ -34,8 +35,6 @@ foreach ($comments as $comment) {
             .' 评论了您的文章 《'.$article->get_title().'》 </p>'
             .'<p><a href="https://techlog.cn/article/list/'.$article->get_article_id().'">【点击查看详情】</a></p>';
     }
-
-    $article = Repository::findOneFromArticle(array('eq' => array('article_id' => $comment->get_article_id())));
     file_get_contents('https://techlog.cn/mail/list'
         .'?html=1&subject='.$subject.'&content='.$content.'&to='.implode(',', $tolist));
     $comment->set_reminded(1);
