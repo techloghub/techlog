@@ -7,6 +7,7 @@ class CommentModel extends AbstractModel
 	private $email;
 	private $qq;
 	private $reply;
+	private $reminded;
 	private $online;
 	private $nickname;
 	private $floor;
@@ -67,6 +68,15 @@ class CommentModel extends AbstractModel
 	public function set_qq($value)
 	{
 		$this->qq = $value;
+		return $this;
+	}
+	public function get_reminded()
+	{
+		return $this->reminded;
+	}
+	public function set_reminded($value)
+	{
+		$this->reminded = $value;
 		return $this;
 	}
 	public function get_reply()

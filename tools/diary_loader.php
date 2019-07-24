@@ -41,6 +41,8 @@ if ($indexs != null)
 
 $infos['updatetime'] = 'now()';
 $infos['inserttime'] = 'now()';
+$infos['comment_count'] = 0;
+$infos['access_count'] = 0;
 $article = new ArticleModel($infos);
 $article_id = Repository::persist($article);
 if ($article_id == false)

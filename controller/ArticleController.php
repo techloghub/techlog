@@ -112,15 +112,19 @@ class ArticleController extends Controller
 			return $result;
 		}
 		$infos = $input;
-		$infos['ip'] = $_SERVER["REMOTE_ADDR"];
+        if (empty($infos['qq'])) {
+            $infos['qq'] = 0;
+        }
+        $infos['ip'] = $_SERVER["REMOTE_ADDR"];
 		$infos['online'] = 1;
+		$infos['reminded'] = 0;
 		$infos['floor'] = $article->get_comment_count() + 1;
 		$infos['inserttime'] = date('Y-m-d H:i:s', time());
 		$infos['updatetime'] = date('Y-m-d H:i:s', time());
 		if ($input['reply'])
 			$infos['reply'] = $input['replyfloor'];
 		$comment = new CommentModel($infos);
-		Repository::persist($comment);
+		$comment_id = Repository::persist($comment);
 		$article->set_comment_count($article->get_comment_count() + 1);
 		Repository::persist($article);
 
