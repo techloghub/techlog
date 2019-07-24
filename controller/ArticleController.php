@@ -160,8 +160,6 @@ class ArticleController extends Controller
 
 	private function getArticle($article_id)
 	{
-		$params = array();
-
 		$params = array('eq' => array('article_id' => $article_id));
 		if (!$this->is_root)
 			$params['lt'] = array('category_id' => 5);
