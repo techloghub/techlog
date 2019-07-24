@@ -19,7 +19,7 @@ if (file_exists($file))
 		exit;
 }
 
-$pdo = Repository::getInstance('pokemon_db', true);
+$pdo = Repository::getInstance('db', true);
 $sql = 'describe '.$table;
 $rs = $pdo->query($sql);
 $model = '<?php'.PHP_EOL.'class '.$table_class.PHP_EOL.'{'.PHP_EOL;
