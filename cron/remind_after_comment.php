@@ -33,4 +33,6 @@ foreach ($comments as $comment) {
         .'<p><a href="https://techlog.cn/article/list/'.$article->get_article_id().'">【点击查看详情】</a></p>';
     file_get_contents('https://techlog.cn/mail/list'
         .'?html=1&subject='.$subject.'&content='.$content.'&to='.implode(',', $tolist));
+    $comment->set_reminded(1);
+    Repository::persist($comment);
 }
