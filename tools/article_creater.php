@@ -100,7 +100,6 @@ if (isset($options['d']))
 	$infos['title_desc'] = $options['d'];
 $infos['updatetime'] = 'now()';
 $infos['inserttime'] = isset($options['a']) ? $options['a'] : 'now()';
-$infos['comment_count'] = 0;
 $infos['online'] = 1;
 // 插入日志
 if (isset($options['i']))
@@ -122,6 +121,8 @@ if (isset($options['i']))
 }
 else
 {
+    $infos['comment_count'] = 0;
+    $infos['access_count'] = 0;
 	$article = new ArticleModel($infos);
 }
 $article_id = Repository::persist($article);
