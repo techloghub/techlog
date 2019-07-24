@@ -4,6 +4,7 @@
 
 /**
  * @method static ArticleModel findOneFromArticle(array $params)
+ * @method static CalendarAlertModel[] findFromCalendarAlert(array $params)
  * @method static CommentModel findOneFromComment(array $params)
  * @method static CommentModel[] findFromComment(array $comments_params)
  * @method static int findCountFromArticle(array $array)
@@ -16,7 +17,7 @@
  * @method static string findTitleFromArticle(array $array)
  * @method static int findCountFromImages(array $query_params)
  * @method static ImagesModel[] findFromImages(array $query_params)
- * @method static  findPathFromImages(array $array)
+ * @method static findPathFromImages(array $array)
  */
 class Repository
 {
