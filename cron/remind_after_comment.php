@@ -53,5 +53,6 @@ foreach ($calendars as $calendar) {
         file_get_contents('https://techlog.cn/mail/list'
             .'?html=1&subject='.$subject.'&content='.$content.'&to=zeyu203@qq.com');
     }
-    file_get_contents('https://admin.techlog.cn/app_dev.php/api/calendar/setalerttime?calendar_id='.$calendar->get_id());
+    file_get_contents('https://admin.techlog.cn/app_dev.php/api/calendar/setalerttime?'
+        .'calendar_id='.$calendar->get_id());
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @method static array get($url, $json_encode)
+ * @method static array get($url, $json_encode=null)
  */
 class HttpCurl
 {
