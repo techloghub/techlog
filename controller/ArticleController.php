@@ -124,7 +124,7 @@ class ArticleController extends Controller
 		if ($input['reply'])
 			$infos['reply'] = $input['replyfloor'];
 		$comment = new CommentModel($infos);
-		$comment_id = Repository::persist($comment);
+		Repository::persist($comment);
 		$article->set_comment_count($article->get_comment_count() + 1);
 		Repository::persist($article);
 
