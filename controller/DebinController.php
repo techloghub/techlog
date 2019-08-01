@@ -235,6 +235,10 @@ class DebinController extends Controller
 		return $hot_articles;
 	}
 
+	/**
+	 * @param MoodModel[] $moods
+	 * @return array
+	 */
 	public function getMoodInfos($moods)
 	{
 		$ret_infos = array();
@@ -253,6 +257,11 @@ class DebinController extends Controller
 		return $ret_infos;
 	}
 
+	/**
+	 * @param ArticleModel[] $articles
+	 * @param bool $is_moode
+	 * @return array
+	 */
 	private function getArticleInfos($articles, $is_moode = false)
 	{
 		if (empty($articles))
