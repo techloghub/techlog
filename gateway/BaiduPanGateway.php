@@ -6,7 +6,8 @@ class BaiduPanGateway
      * https://pan.baidu.com/union/document/upload#%E9%A2%84%E4%B8%8A%E4%BC%A0
      */
     public function precreate($localpath, $remotepath) {
-        $url = 'https://pan.baidu.com/rest/2.0/xpan/file?method=precreate';
+        $access_token = RedisRepository::getBaiduAccessToken();
+        $url = 'https://pan.baidu.com/rest/2.0/xpan/file?method=precreate&access_token='.$access_token;
 
         $size = filesize($localpath);
         $fp = fopen($localpath, 'rb');
