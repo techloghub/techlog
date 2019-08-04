@@ -9,10 +9,12 @@ define('MODEL_PATH', __DIR__.'/../model');
 define('RESOURCE_PATH', __DIR__.'/../resource');
 define('CONTROLLER_PATH', __DIR__.'/../controller');
 define('VENDOR_PATH', __DIR__.'/../vendor');
+define('GAREWAY_PATH', __DIR__.'/../gateway');
+define('SERVICE_PATH', __DIR__.'/../service');
 
 ini_set('date.timezone','Asia/Shanghai');
 
-foreach (array(LIB_PATH, CONTROLLER_PATH, MODEL_PATH, VENDOR_PATH) as $dir) {
+foreach (array(LIB_PATH, CONTROLLER_PATH, MODEL_PATH, VENDOR_PATH, GAREWAY_PATH, SERVICE_PATH) as $dir) {
     if (!file_exists($dir)) {
         continue;
     }
