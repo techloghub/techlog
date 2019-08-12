@@ -22,21 +22,19 @@ class DebinController extends Controller
 		$category_id = intval($query_params[0]);
 		$page = isset($query_params[1]) ? intval($query_params[1]) : 1;
 
-		$count = Repository::findCountFromArticle(
-			array(
-				'eq' => array('category_id' => $category_id, 'online' => 1)
-			)
-		);
-		$params = array(
-				'eq' => array('category_id' => $category_id,
-					'online' => 1),
-				'order' => array('inserttime' => 'desc'),
-				'range' => array(($page-1)*$this->limit, $this->limit),
-			);
+		$dbparams = array('eq' => array('category_id' => $category_id));
+        if (!$this->is_root) {
+            $dbparams['eq']['online'] = 1;
+        }
+
+		$count = Repository::findCountFromArticle($dbparams);
+        $dbparams['order'] = array('inserttime' => 'desc');
+        $dbparams['range'] = array(($page-1)*$this->limit, $this->limit);
+
 		if ($category_id == 2) {
-			$params['order'] = array('updatetime' => 'desc');
+			$dbparams['order'] = array('updatetime' => 'desc');
 		}
-		$articles = Repository::findFromArticle($params);
+		$articles = Repository::findFromArticle($dbparams);
 		$category = Repository::findCategoryFromCategory(
 			array(
 				'eq' => array('category_id' => $category_id),
