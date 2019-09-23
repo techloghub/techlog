@@ -55,9 +55,14 @@ class SqlRepository
 	public static function getRandTags()
 	{ // {{{
 		$pdo = Repository::getInstance();
+        $sql = 'select floor(max(tag_id) * rand()) as id from tags';
+		$stmt = $pdo->prepare($sql);
+		$stmt->execute();
+		$ret = $stmt->fetch();
+
 		$sql = 'select * from `tags`'
-			.' where tag_id >= (select floor(max(tag_id) * rand()) from tags)'
-			.' order by tag_id limit 20';
+			.' where tag_id >= '.$ret['id']
+			.' limit 20';
 
 		$stmt = $pdo->prepare($sql);
 		$stmt->execute();
