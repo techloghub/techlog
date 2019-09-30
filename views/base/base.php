@@ -24,7 +24,7 @@ function echo_ifset($params, $key)
 		<link href="/resource/bootstrap/css/github.min.css" rel="stylesheet" type="text/css">
 		<link href="/resource/jquery/css/jquery.alerts.css" rel="stylesheet" type="text/css">
         <link href="https://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.css" rel="stylesheet">
-		<link href="/resource/zeyu_blog/css/zeyu_blog.css?v=1.0.2" rel="stylesheet" type="text/css">
+		<link href="/resource/zeyu_blog/css/zeyu_blog.css?v=1.0.3" rel="stylesheet" type="text/css">
 		<link rel="shortcut icon" href="/images/icon.png">
 		<?php if (!isset($params['is_root']))
 			$params['is_root'] = false;
