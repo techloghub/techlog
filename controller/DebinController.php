@@ -25,6 +25,7 @@ class DebinController extends Controller
 		$dbparams = array('eq' => array('category_id' => $category_id));
         if (!$this->is_root) {
             $dbparams['eq']['online'] = 1;
+            $dbparams['le'] = array('inserttime' => 'now()');
         }
 
 		$count = Repository::findCountFromArticle($dbparams);

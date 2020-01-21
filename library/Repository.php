@@ -311,16 +311,24 @@ class Repository
 		{
 			foreach ($params['eq'] as $key=>$value)
 			{
-				$sql .= ' and '.$key.' = :eq_'.$key;
-				$query_params['eq_'.$key] = $value;
+                if ($value == 'now()') {
+                    $sql .= ' and '.$key.' = now()';
+                } else {
+                    $sql .= ' and '.$key.' = :eq_'.$key;
+                    $query_params['eq_'.$key] = $value;
+                }
 			}
 		}
 		if (isset($params['ne']))
 		{
 			foreach ($params['ne'] as $key=>$value)
 			{
-				$sql .= ' and '.$key.' != :ne_'.$key;
-				$query_params['ne_'.$key] = $value;
+                if ($value == 'now()') {
+                    $sql .= ' and '.$key.' != now()';
+                } else {
+                    $sql .= ' and '.$key.' != :ne_'.$key;
+                    $query_params['ne_'.$key] = $value;
+                }
 			}
 		}
 		if (isset($params['in']))
@@ -342,32 +350,48 @@ class Repository
 		{
 			foreach ($params['lt'] as $key=>$value)
 			{
-				$sql .= ' and '.$key.' < :lt_'.$key;
-				$query_params['lt_'.$key] = $value;
+                if ($value == 'now()') {
+                    $sql .= ' and '.$key.' < now()';
+                } else {
+                    $sql .= ' and '.$key.' < :lt_'.$key;
+                    $query_params['lt_'.$key] = $value;
+                }
 			}
 		}
 		if (isset($params['gt']))
 		{
 			foreach ($params['gt'] as $key=>$value)
 			{
-				$sql .= ' and '.$key.' > :gt_'.$key;
-				$query_params['gt_'.$key] = $value;
+                if ($value == 'now()') {
+                    $sql .= ' and '.$key.' > now()';
+                } else {
+                    $sql .= ' and '.$key.' > :gt_'.$key;
+                    $query_params['gt_'.$key] = $value;
+                }
 			}
 		}
 		if (isset($params['le']))
 		{
 			foreach ($params['le'] as $key=>$value)
 			{
-				$sql .= ' and '.$key.' <= :le_'.$key;
-				$query_params['le_'.$key] = $value;
+                if ($value == 'now()') {
+                    $sql .= ' and '.$key.' <= now()';
+                } else {
+                    $sql .= ' and '.$key.' <= :le_'.$key;
+                    $query_params['le_'.$key] = $value;
+                }
 			}
 		}
 		if (isset($params['ge']))
 		{
 			foreach ($params['ge'] as $key=>$value)
 			{
-				$sql .= ' and '.$key.' >= :ge_'.$key;
-				$query_params['ge_'.$key] = $value;
+                if ($value == 'now()') {
+                    $sql .= ' and '.$key.' >= now()';
+                } else {
+                    $sql .= ' and '.$key.' >= :ge_'.$key;
+                    $query_params['ge_'.$key] = $value;
+                }
 			}
 		}
 		if (isset($params['group']))
