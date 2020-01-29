@@ -178,6 +178,9 @@ class TechlogTools {
 				} else if (!empty($this_mode)) {
 					$mode = $this_mode;
 				}
+                if ($this_mode == 'asm') {
+                    $mode = 'assembly_x86';
+                }
 				$code = '';
 				$code_line = 0;
 				$is_php = false;
