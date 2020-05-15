@@ -1,6 +1,6 @@
 <?php
 class MarkdownTools {
-	public static function treat_articla($content) {
+	public static function treat_article($content) {
 		$lines = explode(PHP_EOL, $content);
 		$contents = '';
 		$h1_no = 0;
@@ -160,6 +160,14 @@ class MarkdownTools {
 		}
 		return $contents;
 	}
+
+    public static function turn_markdown_to_techlog($content) {
+		$lines = explode(PHP_EOL, $content);
+        $result = '';
+        foreach ($lines as $line) {
+        }
+        return $result;
+    }
 
 	private static function str_trans($str, $intable = false) {
 		if (empty($str)) {

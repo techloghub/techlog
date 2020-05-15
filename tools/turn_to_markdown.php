@@ -25,6 +25,6 @@ if ($draft === null) {
 }
 $command = 'rm -rf '.DRAFT_PATH.'/markdown && mkdir '.DRAFT_PATH.'/markdown';
 exec($command);
-$filename = DRAFT_PATH.'/markdown/markdown'.$options['i'].'.txt';
-$markdown = MarkdownTools::treat_articla($draft);
+$filename = DRAFT_PATH.'/markdown/markdown'.$options['i'].'.md';
+$markdown = MarkdownTools::treat_article($draft);
 file_put_contents($filename, $markdown);
