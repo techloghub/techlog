@@ -165,6 +165,9 @@ class MarkdownTools {
 		$lines = explode(PHP_EOL, $content);
         $result = '';
         foreach ($lines as $line) {
+            if (substr($line, 0, 2) == '# ') {
+                $result += '<h1>'.substr($line, 2).PHP_EOL;
+            }
         }
         return $result;
     }

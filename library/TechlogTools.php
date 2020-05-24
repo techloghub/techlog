@@ -83,6 +83,8 @@ class TechlogTools {
 					}
 				}
 			} else if ($line == '<ol>' || $line == '<ul>') {
+                $olnum = 1;
+                begin_olul:
 				$contents .= substr($line, 0, 3)
 					.' class="article_'.substr($line, 1, 2).'">';
 				while (1) {
@@ -90,11 +92,17 @@ class TechlogTools {
 					if ($index >= count($lines))
 						break;
 					$line = trim($lines[$index]);
+                    if ($line == '<ol>' || $line == '<ul>') {
+                        $olnum++;
+                        goto begin_olul;
+                    }
 					if ($line == '</ol>' || $line == '</ul>') {
 						$contents .= $line;
-						break;
-					}
-					else {
+                        $olnum--;
+                        if ($olnum == 0) {
+                            break;
+                        }
+					} else {
 						$line = self::str_trans($line);
 						if ($font != '')
 						{
@@ -283,16 +291,37 @@ class TechlogTools {
 		return $contents;
 	}
 
-	private static function str_trans($str, $nbsp = true)
-	{
-		$str = str_replace('&', '&amp;', $str);
-		$str = str_replace('"', '&quot;', $str);
-		$str = str_replace('<', '&lt;', $str);
-		$str = str_replace('>', '&gt;', $str);
-		if ($nbsp)
-			$str = str_replace(' ', '&nbsp;', $str);
-		return $str;
-	}
+    public static function str_trans($str, $nbsp = true)
+    {
+        $marks = array(
+            "<c>" => "<code>",
+            "</c>" => "</code>",
+            "<mark>" => "<mark>",
+            "</mark>" => "</mark>",
+            "<s>" => "<s>",
+            "</s>" => "</s>",
+            "&" => "&amp;",
+            "\"" => "&quot;",
+            "<" => "&lt;",
+            ">" => "&gt;",
+        );
+        if ($nbsp) {
+            $marks[' '] = '&nbsp;';
+        }
+        for ($i = 0; $i < strlen($str); $i++) {
+            foreach ($marks as $key => $value) {
+                if ($str[$i] == $key[0]) {
+                    if (substr($str, $i, strlen($key)) == $key) {
+                        $str = substr($str, 0, $i).$value.substr($str, $i+strlen($key));
+                        $i += strlen($value) - 1;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $str;
+    }
 
 	/**
 	 * return:
