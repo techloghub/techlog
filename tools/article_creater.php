@@ -14,8 +14,7 @@ $draft_id = isset($options['i']) ? $options['i'] : '';
 $draft_array = scandir(DRAFT_PATH);
 $draft_result = array();
 foreach ($draft_array as $draft_name) {
-	$match_count = preg_match('/^draft'.$draft_id.'(\..*|$)/', $draft_name, $result);
-	if ($match_count > 0) {
+	if (preg_match('/^draft'.$draft_id.'(\..*$|$)/', $draft_name, $result) > 0) {
 		$draft_result[] = $draft_name;
 	}
 }
@@ -35,6 +34,12 @@ $draft_file = DRAFT_PATH.'/'.$draft_result[0];
 $infos = array();
 // 获取 contents
 $infos['draft'] = file_get_contents($draft_file);
+
+$draft_name_infos = explode('.', $draft_result[0]);
+if (sizeof($draft_name_infos) > 0 && $draft_name_infos[-1] == 'md') {
+	$infos['draft'] = MarkdownTools::turn_markdown_to_techlog($infos['draft']);
+}
+$contents = TechlogTools::pre_treat_article($contents);
 $temp_contents = TechlogTools::pre_treat_article($infos['draft']);
 // 获取 index
 $indexs = json_encode(TechlogTools::get_index($temp_contents));

@@ -44,11 +44,15 @@ class ArticleController extends Controller
 		if (count($draft_result) > 1) {
 			$contents = TechlogTools::pre_treat_article(
 				'<h1>Error：不止一个可选的 draft 文件');
+		} else if (!empty($draft_result) && file_exists(DRAFT_PATH.'/'.$draft_result[0])) {
+			$draft_name_infos = explode('.', $draft_result[0]);
+			$contents = file_get_contents(DRAFT_PATH.'/'.$draft_result[0]);
+			if (sizeof($draft_name_infos) > 0 && $draft_name_infos[-1] == 'md') {
+				$contents = MarkdownTools::turn_markdown_to_techlog($contents);
+			}
+	 		$contents = TechlogTools::pre_treat_article($contents);
 		} else {
-			$contents = (!empty($draft_result) && file_exists(DRAFT_PATH.'/'.$draft_result[0]))
-				? TechlogTools::pre_treat_article(
-					file_get_contents(DRAFT_PATH.'/'.$draft_result[0])
-				) : '';
+			$contents = '';
 		}
 
 		if (StringOpt::spider_string(
