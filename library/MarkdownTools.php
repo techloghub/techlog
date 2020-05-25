@@ -176,16 +176,38 @@ class MarkdownTools {
 		if (empty($str)) {
 			return null;
 		}
-		$str = str_replace('&', '&amp;', $str);
-		$str = str_replace('"', '&quot;', $str);
-		$str = str_replace('<', '&lt;', $str);
-		$str = str_replace('>', '&gt;', $str);
-		$str = str_replace(' ', '&nbsp;', $str);
-		$str = str_replace('$', '\$', $str);
-		$str = str_replace('_', '\_', $str);
+		$marks = array(
+			'<c>' => '`',
+			'</c>' => '`',
+			'<s>' => '~~',
+			'</s>' => '~~',
+			'<mark>' => '==',
+			'</mark>' => '==',
+			'&' => '&amp;',
+			'"' => '&quot;',
+			'<' => '&lt;',
+			'>' => '&gt;',
+			' ' => '&nbsp;',
+			'$' => '\$',
+			'_' => '\_',
+		);
+
 		if ($intable) {
-			$str = str_replace('|', '&#124;', $str);
+			$marks['|'] = '&#124;';
 		}
+		for ($i = 0; $i < strlen($str); $i++) {
+			foreach ($marks as $key => $value) {
+				if ($str[$i] == $key[0]) {
+					if (substr($str, $i, strlen($key)) == $key) {
+						$str = substr($str, 0, $i).$value.substr($str, $i+strlen($key));
+						$i += strlen($value) - 1;
+						break;
+					}
+				}
+			}
+		}
+
+		return $str;
 		return $str;
 	}
 }
