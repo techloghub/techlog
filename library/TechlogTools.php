@@ -445,6 +445,7 @@ class TechlogTools {
 		}
 		return $index;
 	}
+
 	public static function isMobile()
 	{
 		// 如果有HTTP_X_WAP_PROFILE则一定是移动设备

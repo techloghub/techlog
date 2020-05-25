@@ -50,6 +50,11 @@ class ArticleController extends Controller
 			if (sizeof($draft_name_infos) > 0 && $draft_name_infos[sizeof($draft_name_infos) - 1] == 'md') {
 				$contents = MarkdownTools::turn_markdown_to_techlog($contents);
 			}
+			if (strpos($contents, '微信公众号') === false) {
+				$contents .= PHP_EOL.'<h1>微信公众号'.PHP_EOL
+					.'欢迎关注微信公众号，以技术为主，涉及历史、人文等多领域的学习与感悟，'
+					.'每周三到七篇推文，只有全部原创，只有干货没有鸡汤'.PHP_EOL.'<img id="rqcode"/>';
+			}
 	 		$contents = TechlogTools::pre_treat_article($contents);
 		} else {
 			$contents = '';
@@ -170,13 +175,20 @@ class ArticleController extends Controller
 	{
 		$params = array('eq' => array('article_id' => $article_id));
 		if (!$this->is_root)
-			$params['lt'] = array('category_id' => 5);
+			$params['ne'] = array('category_id' => 5);
 		$article = Repository::findOneFromArticle($params);
 
 		if ($article == false)
 		{
 			header("Location: /index/notfound");
 			return null;
+		}
+
+		$contents = $article->get_draft();
+		if (strpos($article->get_draft(), '微信公众号') === false) {
+			$contents .= PHP_EOL.'<h1>微信公众号'.PHP_EOL
+				.'欢迎关注微信公众号，以技术为主，涉及历史、人文等多领域的学习与感悟，'
+				.'每周三到七篇推文，只有全部原创，只有干货没有鸡汤'.PHP_EOL.'<img id="rqcode"/>';
 		}
 
 		$params['tags']		= SqlRepository::getTags($article_id);
