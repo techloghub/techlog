@@ -47,7 +47,7 @@ class ArticleController extends Controller
 		} else if (!empty($draft_result) && file_exists(DRAFT_PATH.'/'.$draft_result[0])) {
 			$draft_name_infos = explode('.', $draft_result[0]);
 			$contents = file_get_contents(DRAFT_PATH.'/'.$draft_result[0]);
-			if (sizeof($draft_name_infos) > 0 && $draft_name_infos[-1] == 'md') {
+			if (sizeof($draft_name_infos) > 0 && $draft_name_infos[sizeof($draft_name_infos) - 1] == 'md') {
 				$contents = MarkdownTools::turn_markdown_to_techlog($contents);
 			}
 	 		$contents = TechlogTools::pre_treat_article($contents);

@@ -36,7 +36,7 @@ $infos = array();
 $infos['draft'] = file_get_contents($draft_file);
 
 $draft_name_infos = explode('.', $draft_result[0]);
-if (sizeof($draft_name_infos) > 0 && $draft_name_infos[-1] == 'md') {
+if (sizeof($draft_name_infos) > 0 && $draft_name_infos[sizeof($draft_name_infos) - 1] == 'md') {
 	$infos['draft'] = MarkdownTools::turn_markdown_to_techlog($infos['draft']);
 }
 $contents = TechlogTools::pre_treat_article($contents);
