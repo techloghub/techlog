@@ -170,6 +170,7 @@ class MarkdownTools {
         $ulols = array();
         $olinfos = array();
         foreach ($lines as $line) {
+            $line = str_replace("    ", "\t", $line);
             if (substr($line, 0, 2) == '# ') {
                 $result .= '<h1>'.self::md_trans(substr($line, 2)).PHP_EOL;
             } else if (substr($line, 0, 3) == '## ') {
@@ -178,7 +179,7 @@ class MarkdownTools {
                 $result .= '<h5>'.self::md_trans(substr($line, 4)).PHP_EOL;
             } else if (preg_match($ulpattern, trim($line), $olinfos) > 0) {
                 for ($i = 0; $i < $ulnum; ++$i) {
-                    if ($i == strlen($line) || ($line[$i] != "\t" && $i != 0)) {
+                    if ($i > strlen($line) || ($i != 0 && $line[$i-1] != "\t")) {
                         while ($ulnum > $i || $olnum > $i) {
                             $mark = array_pop($ulols);
                             if ($mark == 'ul') {
@@ -208,7 +209,7 @@ class MarkdownTools {
                 $result .= self::md_trans(trim($olinfos['text'])).PHP_EOL;
             } else if (preg_match($olpattern, trim($line), $olinfos) > 0) {
                 for ($i = 0; $i < $olnum; ++$i) {
-                    if ($i == strlen($line) || ($line[$i] != "\t" && $i != 0)) {
+                    if ($i > strlen($line) || ($i != 0 && $line[$i-1] != "\t")) {
                         while ($ulnum > $i || $olnum > $i) {
                             $mark = array_pop($ulols);
                             if ($mark == 'ul') {
