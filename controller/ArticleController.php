@@ -194,8 +194,7 @@ class ArticleController extends Controller
 		$params['tags']		= SqlRepository::getTags($article_id);
 		$params['title']	= $article->get_title();
 		$params['indexs']	= json_decode($article->get_indexs());
-		$params['contents'] =
-			TechlogTools::pre_treat_article($article->get_draft());
+		$params['contents'] = TechlogTools::pre_treat_article($contents);
 		$params['title_desc']	= $article->get_title_desc();
 		$params['article_id']	= $article->get_article_id();
 		$params['comment_count']	= intval($article->get_comment_count());
