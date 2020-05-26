@@ -110,7 +110,11 @@ class TechlogTools {
 								.$line
 								.'</span>';
 						}
-						$contents .= '<p><li class="article_li">'.$line.'</li></p>';
+						$infostr = '';
+						if (substr($line, 0, 3) == '<li') {
+							$infostr = StringOpt::spider_string($line, '<li', '>', $line);
+						}
+						$contents .= '<p><li class="article_li"'.$infostr.'>'.$line.'</li></p>';
 					}
 				}
 			} else if ($line == '<block>' || $line == '<bl>') {
