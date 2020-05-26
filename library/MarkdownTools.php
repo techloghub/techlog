@@ -193,12 +193,17 @@ class MarkdownTools {
                         break;
                     }
                 }
-                $mark = array_pop($ulols);
-                if ($mark == 'ol') {
-                    $result .= '</ol>' . PHP_EOL;
-                    $olnum--;
-                } else {
-                    $ulols[] = 'ul';
+                while (true) {
+                    $mark = array_pop($ulols);
+                    if ($mark == 'ol') {
+                        $result .= '</ol>' . PHP_EOL;
+                        $olnum--;
+                    } else {
+                        if ($mark != null) {
+                            $ulols[] = $mark;
+                        }
+                        break;
+                    }
                 }
                 while ($i == $ulnum && ($i == 0 || $line[$i-1] == "\t")) {
                     $result .= '<ul>'.PHP_EOL;
@@ -223,12 +228,17 @@ class MarkdownTools {
                         break;
                     }
                 }
-                $mark = array_pop($ulols);
-                if ($mark == 'ul') {
-                    $result .= '</ul>' . PHP_EOL;
-                    $ulnum--;
-                } else {
-                    $ulols[] = 'ol';
+                while(true) {
+                    $mark = array_pop($ulols);
+                    if ($mark == 'ul') {
+                        $result .= '</ul>' . PHP_EOL;
+                        $ulnum--;
+                    } else {
+                        if ($mark != null) {
+                            $ulols[] = 'ol';
+                        }
+                        break;
+                    }
                 }
                 while ($i >= $olnum && ($i == 0 || $line[$i-1] == "\t")) {
                     $result .= '<ol>'.PHP_EOL;
