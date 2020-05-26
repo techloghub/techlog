@@ -103,7 +103,6 @@ class TechlogTools {
                             break;
                         }
 					} else {
-						$line = self::str_trans($line);
 						if ($font != '')
 						{
 							$line = '<span style="font-family:'.$font.';">'
@@ -114,7 +113,7 @@ class TechlogTools {
 						if (substr($line, 0, 3) == '<li') {
 							$infostr = StringOpt::spider_string($line, '<li', '>', $line);
 						}
-						$contents .= '<p><li class="article_li"'.$infostr.'>'.$line.'</li></p>';
+						$contents .= '<p><li class="article_li"'.$infostr.'>'.self::str_trans($line).'</li></p>';
 					}
 				}
 			} else if ($line == '<block>' || $line == '<bl>') {
