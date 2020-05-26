@@ -185,7 +185,9 @@ class MarkdownTools {
                     $result .= '<h3>'.self::md_trans(substr($line, 3)).PHP_EOL;
                 } else if (substr($line, 0, 4) == '### ') {
                     $result .= '<h5>'.self::md_trans(substr($line, 4)).PHP_EOL;
-                }
+                } else {
+					$result .= self::md_trans($line).PHP_EOL;
+				}
             }
         }
         $result .= self::close_olul($ulols, $lastolulnum);
@@ -211,7 +213,7 @@ class MarkdownTools {
             }
         } else if ($i < $lastolulnum) {
             // Reduced indentation
-            while ($i <= $lastolulnum && !empty($ulols)) {
+            while ($i < $lastolulnum && !empty($ulols)) {
                 // close last label
                 $mark = array_pop($ulols);
                 $result .= $mark == '<ol>' ? '</ol>' : '</ul>';
@@ -236,7 +238,7 @@ class MarkdownTools {
                 $result .= '<li value="'.intval($olinfos['num']).'">';
             }
         }
-        $result .= md_trans(trim($olinfos['text'])).PHP_EOL;
+        $result .= self::md_trans(trim($olinfos['text'])).PHP_EOL;
         $lastolulnum = $temp_lastnum;
         return $result;
     }
@@ -253,6 +255,7 @@ class MarkdownTools {
     }
 
     private static function md_trans($str) {
+		$str = trim($str);
         $marks = array(
             '`' => array('<c>', '</c>', false),
             '==' => array('<mark>', '</mark>', false),
