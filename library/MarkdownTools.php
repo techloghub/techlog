@@ -193,7 +193,7 @@ class MarkdownTools {
                         break;
                     }
                 }
-                while (true && !($i >= $olnum && $line[$i-1] == "\t")) {
+                while (true) {
                     $mark = array_pop($ulols);
                     if ($mark == 'ol') {
                         $result .= '</ol>' . PHP_EOL;
@@ -228,7 +228,7 @@ class MarkdownTools {
                         break;
                     }
                 }
-                while(true && !($i >= $olnum && $line[$i-1] == "\t")) {
+                while(true) {
                     $mark = array_pop($ulols);
                     if ($mark == 'ul') {
                         $result .= '</ul>' . PHP_EOL;
