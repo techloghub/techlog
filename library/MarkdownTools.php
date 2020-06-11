@@ -127,7 +127,7 @@ class MarkdownTools {
 						$contents .= '```'.PHP_EOL;
 						break;
 					}
-					$contents .= $line.PHP_EOL;
+					$contents .= $line.'  '.PHP_EOL;
 				}
 			} else if (substr($line, 0, 4) === '<h1>') {
 				$h1_no++;
