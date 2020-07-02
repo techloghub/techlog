@@ -34,10 +34,10 @@ foreach ($draft_files as $draft)
 	}
 
 	if (strpos($infos['draft'], '微信公众号') === false) {
-	$infos['draft'] .= PHP_EOL.'<h1>微信公众号'.PHP_EOL
-		.'欢迎关注微信公众号，以技术为主，涉及历史、人文等多领域的学习与感悟，'
-		.'每周三到七篇推文，只有全部原创，只有干货没有鸡汤'.PHP_EOL.'<img id="rqcode"/>';
-}
+		$infos['draft'] .= PHP_EOL.'<h1>微信公众号'.PHP_EOL
+			.'欢迎关注微信公众号，以技术为主，涉及历史、人文等多领域的学习与感悟，'
+			.'每周三到七篇推文，只有全部原创，只有干货没有鸡汤'.PHP_EOL.'<img id="rqcode"/>';
+	}
 	$contents = TechlogTools::pre_treat_article ($infos['draft']);
 	$indexs = json_encode(TechlogTools::get_index($contents));
 	if ($indexs != null)

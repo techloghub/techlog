@@ -1,12 +1,12 @@
 <?php
 require_once (__DIR__.'/../app/register.php');
 LogOpt::init('article_creater', true);
-$options = getopt('i:t:g:c:d:a:');
+$options = getopt('i:t:g:c:d:a:b:');
 if (!isset($options['t']) || !isset($options['g']) || !isset($options['c']))
 {
 	echo 'usage: php article_creater.php'
 		.' [-a inserttime] [-i article_id] -t title'
-		.' [-d title_desc] -g tags -c category'.PHP_EOL;
+		.' [-d title_desc] [-b booknote_id] -g tags -c category'.PHP_EOL;
 	return;
 }
 
@@ -44,6 +44,11 @@ if (strpos($infos['draft'], '微信公众号') === false) {
 	$infos['draft'] .= PHP_EOL.'<h1>微信公众号'.PHP_EOL
 		.'欢迎关注微信公众号，以技术为主，涉及历史、人文等多领域的学习与感悟，'
 		.'每周三到七篇推文，只有全部原创，只有干货没有鸡汤'.PHP_EOL.'<img id="rqcode"/>';
+}
+
+if (!empty($options['b'])) {
+	$infos['draft'] .= PHP_EOL.'<h1>附录 -- 系列目录'.PHP_EOL
+		.'<a id="'.$options['b'].'"/>';
 }
 
 $temp_contents = TechlogTools::pre_treat_article($infos['draft']);
@@ -142,10 +147,25 @@ if ($article_id == false)
 	LogOpt::set ('exception', '日志插入失败');
 	return;
 }
+
 LogOpt::set ('info', '日志插入成功',
 	'article_id', $article_id,
 	'title', $options['t']
 );
+
+if (!empty($options['b']) && intval($options['b']) > 0) {
+	echo 'hello'.PHP_EOL;
+	$booknote = Repository::findOneFromArticle(
+		array('eq' => array('article_id' => $options['b'])));
+	$booknote->set_draft($booknote->get_draft().PHP_EOL.'<a id="'.$article_id.'"/>');
+	$booknote->set_updatetime('now()');
+	Repository::persist($booknote);
+	LogOpt::set ('info', '专题更新成功',
+		'article_id', $options['b'],
+		'title', $booknote->get_title() 
+	);
+}
+
 unlink($draft_file);
 if ($infos['category_id'] != 2) {
 	// 添加 article 并获取新加 article_id 后需要更新为 tags 表对应项
