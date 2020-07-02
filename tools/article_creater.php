@@ -158,7 +158,7 @@ if (!empty($options['b']) && intval($options['b']) > 0) {
 		array('eq' => array('article_id' => $options['b'])));
 	$draft = $booknote->get_draft();
 	$draft_arr = explode('<h1>微信公众号', $draft);
-	$draft = trim($draft_arr[0]).PHP_EOL.'<a id="'.$article_id.'"/>';
+	$draft = trim($draft_arr[0]).PHP_EOL.'<a id="'.$article_id.'" title="'.$options['t'].'"/>';
 	if (sizeof($darft_arr) == 2) {
 		$draft .= PHP_EOL.PHP_EOL.'<h1>微信公众号'.PHP_EOL.$darft_arr[1];
 	}
