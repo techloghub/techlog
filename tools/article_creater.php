@@ -154,16 +154,18 @@ LogOpt::set ('info', '日志插入成功',
 );
 
 if (!empty($options['b']) && intval($options['b']) > 0) {
-	echo 'hello'.PHP_EOL;
 	$booknote = Repository::findOneFromArticle(
 		array('eq' => array('article_id' => $options['b'])));
-	$booknote->set_draft($booknote->get_draft().PHP_EOL.'<a id="'.$article_id.'"/>');
+	$draft = $booknote->get_draft();
+	$draft_arr = explode('<h1>微信公众号', $draft);
+	$draft = trim($draft_arr[0]).PHP_EOL.'<a id="'.$article_id.'"/>';
+	if (sizeof($darft_arr) == 2) {
+		$draft .= PHP_EOL.PHP_EOL.'<h1>微信公众号'.PHP_EOL.$darft_arr[1];
+	}
+	$booknote->set_draft($draft);
 	$booknote->set_updatetime('now()');
 	Repository::persist($booknote);
-	LogOpt::set ('info', '专题更新成功',
-		'article_id', $options['b'],
-		'title', $booknote->get_title() 
-	);
+	LogOpt::set ('info', '专题更新成功', 'article_id', $options['b'], 'title', $booknote->get_title());
 }
 
 unlink($draft_file);
