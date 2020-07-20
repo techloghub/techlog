@@ -107,8 +107,10 @@ class MarkdownTools {
 				if (!empty($this_mode)) {
 					$mode = $this_mode;
 				} if (empty($mode)) {
-					$mode = 'cpp';
+					$mode = 'c_cpp';
 				}
+
+				$mode = self::techmode_to_md($mode);
 				$contents .= '```'.$mode.PHP_EOL;
 				$is_php = false;
 				if ($mode === 'php' && $lines[$index+1] != '<?php') {
@@ -171,14 +173,25 @@ class MarkdownTools {
         $lastolulnum = -1;
         $ulols = array();
         $olinfos = array();
-        foreach ($lines as $line) {
-            $line = str_replace("    ", "\t", $line);
+        for ($i = 0; $i < sizeof($lines); ++$i) {
+            $line = str_replace("    ", "\t", $lines[$i]);
 
             if (preg_match($ulpattern, trim($line), $olinfos) > 0) {
                 $result .= self::treat_olul($line, '<ul>', $lastolulnum, $olinfos, $ulols);
             } else if (preg_match($olpattern, trim($line), $olinfos) > 0) {
                 $result .= self::treat_olul($line, '<ol>', $lastolulnum, $olinfos, $ulols);
-            } else {
+			} else if (substr($line, 0, 3) == '```') {
+				$result .= '<code mode="'.self::mdmode_to_techlog(trim($line)).'">'.PHP_EOL;
+				while (trim($lines[$i]) != '```') {
+					$i++;
+					$line = str_replace("    ", "\t", $lines[$i]);
+					$result .= $line.PHP_EOL;
+				}
+				$result .= '</code>'.PHP_EOL;
+			} else if (substr($line, 0, 2) == '> ') {
+				$result .= '<bl>'.PHP_EOL;
+				$result .= '</bl>'.PHP_EOL;
+			} else {
                 $result .= self::close_olul($ulols, $lastolulnum);
 
                 if (substr($line, 0, 2) == '# ') {
@@ -282,6 +295,24 @@ class MarkdownTools {
         }
         return $str;
     }
+
+	private static function mdmode_to_techlog($str) {
+		$marks = array(
+			'cpp' => 'c_cpp',
+			'bash' => 'sh',
+			'x86asm' => 'asm'
+		);
+		return isset($marks['```'.$str]) ? $marks['```'.$str] : trim('`', $str);
+	}
+
+	private static function techmode_to_md($str) {
+		$marks = array(
+			'c_cpp' => 'cpp',
+			'sh' => 'bash',
+			'asm' => 'x86asm'
+		);
+		return isset($marks[$str]) ? $marks[$str] : $str;
+	}
 
 	private static function str_trans($str, $intable = false) {
 		if (empty($str)) {
