@@ -190,7 +190,13 @@ class MarkdownTools {
 				$result .= '</code>'.PHP_EOL;
 			} else if (substr($line, 0, 2) == '> ') {
 				$result .= '<bl>'.PHP_EOL;
+				while (substr($line, 0, 2) == '> ') {
+					$result .= ltrim($line, '> ').PHP_EOL;
+					$i++;
+					$line = str_replace("    ", "\t", $lines[$i]);
+				}
 				$result .= '</bl>'.PHP_EOL;
+				$i--;
 			} else {
                 $result .= self::close_olul($ulols, $lastolulnum);
 
@@ -302,7 +308,7 @@ class MarkdownTools {
 			'bash' => 'sh',
 			'x86asm' => 'asm'
 		);
-		return isset($marks['```'.$str]) ? $marks['```'.$str] : trim('`', $str);
+		return isset($marks['```'.$str]) ? $marks['```'.$str] : ltrim('`', $str);
 	}
 
 	private static function techmode_to_md($str) {
