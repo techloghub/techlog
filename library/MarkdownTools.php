@@ -186,7 +186,7 @@ class MarkdownTools {
                 $result .= self::treat_olul($line, '<ol>', $lastolulnum, $olinfos, $ulols);
 			} else if (substr($line, 0, 3) == '```') {
 				$result .= '<code mode="'.self::mdmode_to_techlog(trim($line)).'">'.PHP_EOL;
-				while (trim($lines[$i]) != '```') {
+				while (trim($lines[$i+1]) != '```') {
 					$i++;
 					$line = str_replace("    ", "\t", $lines[$i]);
 					$result .= $line.PHP_EOL;
