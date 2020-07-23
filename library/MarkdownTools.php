@@ -66,7 +66,7 @@ class MarkdownTools {
 					}
 				}
 			} else if ($line == '<ol>') {
-				$i = 1;
+				$idx = 1;
 				while (1) {
 					$index++;
 					if ($index >= count($lines))
@@ -75,7 +75,7 @@ class MarkdownTools {
 					if ($line == '</ol>' || $line == '</ul>') {
 						break;
 					}
-					$contents .= $i++.'. '.self::str_trans($line).PHP_EOL;
+					$contents .= $idx++.'. '.self::str_trans($line).PHP_EOL;
 				}
 			} else if ($line == '<ul>') {
 				while (1) {
@@ -192,6 +192,7 @@ class MarkdownTools {
 					$result .= $line.PHP_EOL;
 				}
 				$result .= '</code>'.PHP_EOL;
+				$i++;
 			} else if ($line[0] == '|') {
 				$result .= '<table split="|">'.PHP_EOL;
 				$hastr = false;
