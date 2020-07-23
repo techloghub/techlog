@@ -176,6 +176,10 @@ class MarkdownTools {
         for ($i = 0; $i < sizeof($lines); ++$i) {
             $line = str_replace("    ", "\t", $lines[$i]);
 
+			if (empty(trim($line))) {
+				$result .= PHP_EOL;
+				continue;
+			}
             if (preg_match($ulpattern, trim($line), $olinfos) > 0) {
                 $result .= self::treat_olul($line, '<ul>', $lastolulnum, $olinfos, $ulols);
             } else if (preg_match($olpattern, trim($line), $olinfos) > 0) {
@@ -188,6 +192,24 @@ class MarkdownTools {
 					$result .= $line.PHP_EOL;
 				}
 				$result .= '</code>'.PHP_EOL;
+			} else if ($line[0] == '|') {
+				$result .= '<table split="|">'.PHP_EOL;
+				$hastr = false;
+				while (!empty($lines[$i]) && $lines[$i][0] == '|') {
+					$line = trim($lines[$i]);
+					$line = trim($line, '|');
+					if (substr($line, 0, 2) == '--') {
+						$i++;
+						continue;
+					}
+					if (!$hastr) {
+						$result .= '<tr>';
+						$hastr = true;
+					}
+					$result .= $line.PHP_EOL;
+					$i++;
+				}
+				$result .= '</table>'.PHP_EOL;
 			} else if (substr($line, 0, 2) == '> ') {
 				$result .= '<bl>'.PHP_EOL;
 				while (substr($line, 0, 2) == '> ') {
