@@ -327,11 +327,11 @@ class MarkdownTools {
 
 	private static function mdmode_to_techlog($str) {
 		$marks = array(
-			'cpp' => 'c_cpp',
-			'bash' => 'sh',
-			'x86asm' => 'asm'
+			'```cpp' => 'c_cpp',
+			'```bash' => 'sh',
+			'```x86asm' => 'asm'
 		);
-		return isset($marks['```'.$str]) ? $marks['```'.$str] : ltrim('`', $str);
+		return isset($marks[$str]) ? $marks[$str] : ltrim('`', $str);
 	}
 
 	private static function techmode_to_md($str) {
