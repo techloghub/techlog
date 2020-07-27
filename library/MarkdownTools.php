@@ -176,10 +176,6 @@ class MarkdownTools {
         for ($i = 0; $i < sizeof($lines); ++$i) {
             $line = str_replace("    ", "\t", $lines[$i]);
 
-			if (empty(trim($line))) {
-				$result .= PHP_EOL;
-				continue;
-			}
             if (preg_match($ulpattern, trim($line), $olinfos) > 0) {
                 $result .= self::treat_olul($line, '<ul>', $lastolulnum, $olinfos, $ulols);
             } else if (preg_match($olpattern, trim($line), $olinfos) > 0) {
@@ -241,28 +237,28 @@ class MarkdownTools {
     private static function treat_olul($line, $isul, &$lastolulnum, $olinfos, &$ulols) {
         $result = '';
         // find first index which is not tab
-        for ($i = 0; $i < strlen($line); ++$i) {
-            if ($line[$i] != "\t") {
+        for ($oli = 0; $oli < strlen($line); ++$oli) {
+            if ($line[$oli] != "\t") {
                 break;
             }
         }
-        $temp_lastnum = $i;
+        $temp_lastnum = $oli;
         $need_label = false;
-        if ($i > $lastolulnum) {
+        if ($oli > $lastolulnum) {
             // Increased indentation
-            while ($i > $lastolulnum) {
+            while ($oli > $lastolulnum) {
                 $result .= $isul.PHP_EOL;
                 $ulols[] = $isul;
-                $i--;
+                $oli--;
             }
-        } else if ($i < $lastolulnum) {
+        } else if ($oli < $lastolulnum) {
             // Reduced indentation
-            while ($i < $lastolulnum && !empty($ulols)) {
+            while ($oli < $lastolulnum && !empty($ulols)) {
                 // close last label
                 $mark = array_pop($ulols);
                 $result .= $mark == '<ol>' ? '</ol>' : '</ul>';
                 $result .= PHP_EOL;
-                $i++;
+                $oli++;
             }
             if (empty($ulols) || $ulols[sizeof($ulols) - 1] != $isul) {
                 $need_label = true;
