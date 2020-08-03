@@ -5,3 +5,4 @@ app/conf/config.json
 .*.swp
 app/log/
 .idea
+web/resource
