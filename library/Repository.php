@@ -311,7 +311,7 @@ class Repository
 		{
 			foreach ($params['eq'] as $key=>$value)
 			{
-                if ($value == 'now()') {
+                if ($value === 'now()') {
                     $sql .= ' and '.$key.' = now()';
                 } else {
                     $sql .= ' and '.$key.' = :eq_'.$key;
@@ -323,7 +323,7 @@ class Repository
 		{
 			foreach ($params['ne'] as $key=>$value)
 			{
-                if ($value == 'now()') {
+                if ($value === 'now()') {
                     $sql .= ' and '.$key.' != now()';
                 } else {
                     $sql .= ' and '.$key.' != :ne_'.$key;
@@ -350,7 +350,7 @@ class Repository
 		{
 			foreach ($params['lt'] as $key=>$value)
 			{
-                if ($value == 'now()') {
+                if ($value === 'now()') {
                     $sql .= ' and '.$key.' < now()';
                 } else {
                     $sql .= ' and '.$key.' < :lt_'.$key;
@@ -362,7 +362,7 @@ class Repository
 		{
 			foreach ($params['gt'] as $key=>$value)
 			{
-                if ($value == 'now()') {
+                if ($value === 'now()') {
                     $sql .= ' and '.$key.' > now()';
                 } else {
                     $sql .= ' and '.$key.' > :gt_'.$key;
@@ -374,7 +374,7 @@ class Repository
 		{
 			foreach ($params['le'] as $key=>$value)
 			{
-                if ($value == 'now()') {
+                if ($value === 'now()') {
                     $sql .= ' and '.$key.' <= now()';
                 } else {
                     $sql .= ' and '.$key.' <= :le_'.$key;
@@ -386,7 +386,7 @@ class Repository
 		{
 			foreach ($params['ge'] as $key=>$value)
 			{
-                if ($value == 'now()') {
+                if ($value === 'now()') {
                     $sql .= ' and '.$key.' >= now()';
                 } else {
                     $sql .= ' and '.$key.' >= :ge_'.$key;
