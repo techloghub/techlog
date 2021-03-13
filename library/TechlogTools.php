@@ -337,7 +337,7 @@ class TechlogTools {
 	 */
 	public static function picture_insert($name, $category, $id=null)
 	{
-		$file = trim('/home/zeyu/Documents/images/'.$name);
+		$file = trim('/home/zeyu/Documents/techlog_images/images/'.$name);
 		if (!file_exists($file))
 			return -1;
 		if (!empty($id))
@@ -383,13 +383,7 @@ class TechlogTools {
 			);
 			$id = Repository::persist($image);
 		}
-		if (!is_dir('/home/zeyu/Documents/images'))
-		{
-			$ret = mkdir('/home/zeyu/Documents/images');
-			if (!$ret)
-				return -3;
-		}
-		rename($file, '/home/zeyu/Documents/'.$path);
+		rename($file, '/home/zeyu/Documents/techlog_images/'.$path);
 		return $id;
 	}
 

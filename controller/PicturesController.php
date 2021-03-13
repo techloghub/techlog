@@ -77,9 +77,9 @@ class PicturesController extends Controller
 		$request['insert_id'] = intval($request['insert_id']) >= 0
 			? intval($request['insert_id']) : null;
 		$request['name'] = trim($_FILES["file"]["name"]);
-		$file = '/home/zeyu/Documents/images/'.$request['name'];
+		$file = '/home/zeyu/Documents/techlog_images/images/'.$request['name'];
 		$ret = copy($_FILES["file"]["tmp_name"], $file);
-		if ($ret == false)
+		if ($ret === false)
 		{
 			$this->display('IndexController::notfoundAction', array(
 					'msg'	=> '临时文件不存在',
