@@ -189,7 +189,7 @@ class MarkdownTools {
 				}
 				$result .= '</code>'.PHP_EOL;
 				$i++;
-			} else if ($line[0] == '|') {
+			} else if (!empty($line) && $line[0] == '|') {
 				$result .= '<table split="|">'.PHP_EOL;
 				$hastr = false;
 				while (!empty($lines[$i]) && $lines[$i][0] == '|') {
@@ -207,7 +207,7 @@ class MarkdownTools {
 					$i++;
 				}
 				$result .= '</table>'.PHP_EOL;
-			} else if (substr($line, 0, 2) == '> ') {
+			} else if (!empty($line) && substr($line, 0, 2) == '> ') {
 				$result .= '<bl>'.PHP_EOL;
 				while (substr($line, 0, 2) == '> ') {
 					$result .= ltrim($line, '> ').PHP_EOL;
