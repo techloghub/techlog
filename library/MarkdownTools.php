@@ -209,7 +209,7 @@ class MarkdownTools {
 				$result .= '</table>'.PHP_EOL;
 			} else if (!empty($line) && substr($line, 0, 2) == '> ') {
 				$result .= '<bl>'.PHP_EOL;
-				while (substr($line, 0, 2) == '> ') {
+				while (!empty($line) && $line[0] === '>') {
 					$result .= ltrim($line, '> ').PHP_EOL;
 					$i++;
 					$line = str_replace("    ", "\t", $lines[$i]);
