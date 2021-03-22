@@ -159,8 +159,8 @@ if (!empty($options['b']) && intval($options['b']) > 0) {
 	$draft = $booknote->get_draft();
 	$draft_arr = explode('<h1>微信公众号', $draft);
 	$draft = trim($draft_arr[0]).PHP_EOL.'<a id="'.$article_id.'" title="'.$options['t'].'"/>';
-	if (sizeof($darft_arr) == 2) {
-		$draft .= PHP_EOL.PHP_EOL.'<h1>微信公众号'.PHP_EOL.$darft_arr[1];
+	if (sizeof($draft_arr) == 2) {
+		$draft .= PHP_EOL.PHP_EOL.'<h1>微信公众号'.PHP_EOL.$draft_arr[1];
 	}
 	$booknote->set_draft($draft);
 	$booknote->set_updatetime('now()');
