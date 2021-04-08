@@ -40,13 +40,13 @@ class SearchController extends Controller
 			$info['article'] = Repository::findCountFromArticle(
 				array(
 					'ge' => array('inserttime' => $date.'-01 00:00:00"'),
-					'le' => array('inserttime' => $date.'-31 00:00:00"'),
+					'le' => array('inserttime' => $date.'-'.$date_num[$m%12].' 00:00:00"'),
 				)
 			);
 			$info['mood'] = Repository::findCountFromMood(
 				array(
 					'ge' => array('inserttime' => $date.'-01 00:00:00"'),
-					'le' => array('inserttime' => $date.'-31 00:00:00"'),
+					'le' => array('inserttime' => $date.'-'.$date_num[$m%12].' 00:00:00"'),
 				)
 			);
 
