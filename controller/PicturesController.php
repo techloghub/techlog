@@ -77,7 +77,10 @@ class PicturesController extends Controller
 		$request['insert_id'] = intval($request['insert_id']) >= 0
 			? intval($request['insert_id']) : null;
 		$request['name'] = trim($_FILES["file"]["name"]);
-		$file = '/home/zeyu/Documents/techlog_images/images/'.$request['name'];
+		$config = file_get_contents(CONF_PATH.'/config.json');
+		$config = json_decode($config, true);
+		$image_dir = $config['techlog']['image_dir'];
+		$file = $image_dir.'/images/'.$request['name'];
 		$ret = copy($_FILES["file"]["tmp_name"], $file);
 		if ($ret === false)
 		{

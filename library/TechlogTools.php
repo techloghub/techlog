@@ -174,8 +174,6 @@ class TechlogTools {
 					$path = StringOpt::spider_string($line, 'src="', '"');
 				}
 				if (!$error) {
-					$image_info = GetImageSize(WEB_PATH.'/resource/'.$path);
-					$width = intval($image_info[0]);
 					$contents .= '<p style="text-indent:0em;">'
 						.'<a target="_blank" alt="'.$path.'" href="'.$path.'">'
 						.$line.'</a></p><p>&nbsp;</p>';
@@ -331,13 +329,16 @@ class TechlogTools {
 	 * 		0 : success
 	 * 		-1: source file not exist
 	 * 		-2: exchange error
-	 * 		-3: mkdir /home/zeyu/Documents/images error
+	 * 		-3: mkdir error
 	 * 		-4: id not exist
 	 * 		-5: insert file error
 	 */
 	public static function picture_insert($name, $category, $id=null)
 	{
-		$file = trim('/home/zeyu/Documents/techlog_images/images/'.$name);
+		$config = file_get_contents(CONF_PATH.'/config.json');
+		$config = json_decode($config, true);
+		$image_dir = $config['techlog']['image_dir'];
+		$file = trim($image_dir.'/images/'.$name);
 		if (!file_exists($file))
 			return -1;
 		if (!empty($id))
@@ -383,32 +384,32 @@ class TechlogTools {
 			);
 			$id = Repository::persist($image);
 		}
-		rename($file, '/home/zeyu/Documents/techlog_images/'.$path);
+		rename($file, $image_dir.'/'.$path);
 		return $id;
 	}
 
-	public static function load_image ($path, $category='')
-	{
-		$file_path = self::getfilepath($path);
-		if (!file_exists($file_path))
-		{
-			echo $file_path.PHP_EOL;
-			return false;
-		}
-		$pos = strpos($file_path, '/html/');
-		if ($pos === false)
-			return false;
-		$image = new ImagesModel(
-			array(
-				'md5' => md5_file($file_path),
-				'path' => substr($file_path, $pos+strlen('/html/')),
-				'category' => $category,
-				'inserttime' => 'now()'
-			)
-		);
-		$id = Repository::persist($image);
-		return $id;
-	}
+	# public static function load_image ($path, $category='')
+	# {
+	# 	$file_path = self::getfilepath($path);
+	# 	if (!file_exists($file_path))
+	# 	{
+	# 		echo $file_path.PHP_EOL;
+	# 		return false;
+	# 	}
+	# 	$pos = strpos($file_path, '/html/');
+	# 	if ($pos === false)
+	# 		return false;
+	# 	$image = new ImagesModel(
+	# 		array(
+	# 			'md5' => md5_file($file_path),
+	# 			'path' => substr($file_path, $pos+strlen('/html/')),
+	# 			'category' => $category,
+	# 			'inserttime' => 'now()'
+	# 		)
+	# 	);
+	# 	$id = Repository::persist($image);
+	# 	return $id;
+	# }
 
 	public static function get_index ($html_str)
 	{
