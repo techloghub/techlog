@@ -48,7 +48,7 @@ else
 			$sure = fgets(STDIN);
 			if (trim($sure[0]) == 'Y' || trim($sure[0]) == 'y')
 			{
-				$mood = new MoodModel(array( 'contents' => $contents));
+				$mood = new MoodModel(array('contents' => $contents, 'inserttime' => 'now()'));
 				$mood_id = Repository::persist($mood);
 				if ($mood_id === false)
 				{
