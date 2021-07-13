@@ -6,7 +6,7 @@ $options = getopt('i:c:d:');
 if (isset($options['c']) && trim($options['c']) != '')
 {
 	$infos = array();
-	$infos['inserttime'] = isset($options['i']) ? $options['i'] : 'now()';
+	$infos['inserttime'] = !empty($options['i']) ? $options['i'] : 'now()';
 	$infos['contents'] = $options['c'];
 	if (isset($options['d']) && trim($options['d']) != '')
 	{
@@ -26,7 +26,7 @@ if (isset($options['c']) && trim($options['c']) != '')
 	if ($mood_id === false)
 	{
 		LogOpt::set('exception', 'mood add error');
-		continue;
+		return;
 	}
 	LogOpt::set('info', 'mood add success', 'mood_id', $mood_id);
 }

@@ -2,6 +2,7 @@
 require_once (__DIR__.'/../app/register.php');
 LogOpt::init('contents_loader', true);
 
+$options = getopt('t:');
 $draft_files = scandir(DRAFT_PATH);
 foreach ($draft_files as $draft)
 {
@@ -12,10 +13,12 @@ foreach ($draft_files as $draft)
 		continue;
 	$title = Repository::findTitleFromArticle(
 		array('eq' => array('article_id' => $article_id)));
-	if ($title == false)
-	{
+	if ($title == false) {
 		LogOpt::set('exception', '草稿原文不存在', 'article_id', $article_id);
 		continue;
+	}
+	if (!empty($options['t'])) {
+		$title = $options['t'].'（'.$title.'）';
 	}
 	echo '是否加载该草稿到日志原文？《'.$title.'》'
 		.'(arctile_id:'.$article_id.') [y/N]';
@@ -44,6 +47,9 @@ foreach ($draft_files as $draft)
 		$infos['indexs'] = $indexs;
 
 	$infos['updatetime'] = 'now()';
+	if (!empty($options['t'])) {
+		$infos['title'] = $options['t'];
+	}
 	$image_ids = array();
 	while (1)
 	{
