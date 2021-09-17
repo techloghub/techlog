@@ -2,14 +2,12 @@
 class PicturesController extends Controller
 {
 	protected $limit = 10;
-	public function listAction($query_params)
-	{
-		if (!$this->is_root)
-		{
+	public function listAction($query_params) {
+		if (!$this->is_root) {
 			header("Location: /index/notfound");
 			return;
 		}
-		$params_key = array(
+		$params_key = array (
 			'md5',
 			'page',
 			'path',
@@ -122,7 +120,7 @@ class PicturesController extends Controller
 			)
 		);
 	}
-	private function getParams ($input, $keys)
+	private function getParams($input, $keys)
 	{
 		$params = array();
 		foreach ($keys as $key)
