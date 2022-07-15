@@ -1,7 +1,6 @@
 <?php
 class DebinController extends Controller
 {
-	private $sphinx;
 	protected $limit;
 
 	public function __construct()
@@ -261,7 +260,7 @@ class DebinController extends Controller
 	 * @param bool $is_moode
 	 * @return array
 	 */
-	private function getArticleInfos($articles, $is_moode = false)
+	private function getArticleInfos($articles)
 	{
 		if (empty($articles))
 			return array();
@@ -276,18 +275,16 @@ class DebinController extends Controller
 			$ret_infos['date'] = $arr['date'];
 
 			$tags = SqlRepository::getTags($article->get_article_id());
-			if (is_array($tags))
-				$ret_infos['tags'] = array_slice( $tags, 0, 4);
+			if (is_array($tags)) {
+				$ret_infos['tags'] = array_slice($tags, 0, 4);
+			}
 
 			$contents = TechlogTools::pre_treat_article($article->get_draft());
 			$imgpath = StringOpt::spider_string($contents, 'img<![&&]>src="', '"');
-			if ($imgpath == null)
-			{
+			if ($imgpath == null) {
 				$ret_infos['contents'] = strip_tags($contents);
 				$ret_infos['contents'] = mb_substr($ret_infos['contents'], 0, 600, 'utf-8');
-			}
-			else
-			{
+			} else {
 				$ret_infos['contents'] =
 					'<p><a href="/article/list/'.$article->get_article_id().'" target="_blank">'
 					.'<img class="img-thumbnail" alt="200x200" style="height: 200px;"'

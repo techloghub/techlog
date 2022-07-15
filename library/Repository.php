@@ -319,6 +319,14 @@ class Repository
                 }
 			}
 		}
+		if (isset($params['like']))
+		{
+			foreach ($params['eq'] as $key=>$value)
+			{
+				$sql .= ' and '.$key.' like	:like_'.$key;
+				$query_params['like_'.$key] = $value;
+			}
+		}
 		if (isset($params['ne']))
 		{
 			foreach ($params['ne'] as $key=>$value)

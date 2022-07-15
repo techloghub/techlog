@@ -218,11 +218,11 @@ class SqlRepository
 
 	private static function getWhere($request, $ismood = false, $is_root = false)
 	{ // {{{
-		$sphinx = self::getSphinx();
 		$where_str = '';
 		$dates = array();
 		$tag_ids = array();
 		$tags = explode(',', $request['tags']);
+		$date_num = array(31, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30);
 
 		if (!empty($tags))
 		{
@@ -245,10 +245,7 @@ class SqlRepository
 				}
 			}
 			// 查询 article 并且非 root 或者查询内容（非全部内容）限制分类
-			if (!$ismood
-				&& (!$is_root
-					|| ($request['opt_type'] != 'all'
-						&& $request['opt_type'] != 'title'))) {
+			if (!$ismood && (!$is_root || ($request['opt_type'] != 'all' && $request['opt_type'] != 'title'))) {
                 $where_str .= ' and category_id < 5';
             } else if (!$is_root) {
                 // 禁止非 root 查询 mood
@@ -269,70 +266,29 @@ class SqlRepository
 				$where_arr = array();
 				foreach ($dates as $date)
 				{
+					$temp_arr = explode("-", $date); 
+					$month = intval($temp_arr[1]);
+					$enddate = $date_num[$month];
 					$where_arr[] .=
 						'inserttime >= "'.$date.'-01 00:00:00"'
-						.' and inserttime <= "'.$date.'-31 23:59:59"';
+						.' and inserttime <= "'.$date.'-'.$enddate.' 23:59:59"';
 				}
 				$where_str .= ' and ('.implode(' or ', $where_arr).')';
 			}
 		}
 
-		if (!empty($request['search']))
+		if (!empty($request['search']) && $is_root)
 		{
-			$article_ids = array();
-			$searchs = explode(' ', $request['search']);
-			foreach ($searchs as $key)
-			{
-				$key = trim($key);
-				if (empty($key))
-					continue;
-                try {
-                    $search_ret = $sphinx->query($key, $request['opt_type']);
-                } catch (ErrorException $e) {
-                    $search_ret = null;
-                }
-
-                if (isset($search_ret['matches']))
-				{
-					if (empty($article_ids))
-						$article_ids = array_keys($search_ret['matches']);
-					else
-					{
-						$article_ids =
-							array_intersect(
-								$article_ids,
-								array_keys($search_ret['matches'])
-							);
-					}
-				}
-			}
-			if (!empty($article_ids) && (!$ismood || $is_root))
-			{
-				if (!$ismood)
-					$where_str .= ' and article_id in ('.implode(',', $article_ids).')';
-				else if ($is_root)
-					$where_str .= ' and mood_id in ('.implode(',', $article_ids).')';
-			}
-			else
-			{
-				$where_str = ' and 0';
+			if ($ismood) {
+				$where_str .= ' and contents like "%'.$request['search'].'%"';
+			} else if ($request['opt_type'] != 'title') {
+				$where_str .= ' and draft like "%'.$request['search'].'%"';
+			} else {
+				$where_str .= ' and title like "%'.$request['search'].'%"';
 			}
 		}
 		return $where_str;
 	} // }}}
 
-    /**
-     * @return SphinxClient
-     */
-	private static function getSphinx()
-	{ // {{{
-		$sphinx = new SphinxClient();
-		$sphinx->setServer("localhost", 9312);
-		$sphinx->setMatchMode(SphinxClient::SPH_MATCH_PHRASE);
-		$sphinx->setLimits(0, 1000);
-		$sphinx->setMaxQueryTime(30);
-
-		return $sphinx;
-	} // }}}
 }
 ?>
