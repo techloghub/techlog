@@ -43,9 +43,7 @@ class Dispatcher
 		{
 			ini_set('display_errors', 1);
 			error_reporting(E_ALL);
-		}
-		else
-		{
+		} else {
 			ini_set('display_errors', 0);
 		}
 
