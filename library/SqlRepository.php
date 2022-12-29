@@ -222,7 +222,7 @@ class SqlRepository
 		$dates = array();
 		$tag_ids = array();
 		$tags = explode(',', $request['tags']);
-		$date_num = array(31, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30);
+		$date_num = array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
 
 		if (!empty($tags))
 		{
@@ -268,7 +268,7 @@ class SqlRepository
 				{
 					$temp_arr = explode("-", $date); 
 					$month = intval($temp_arr[1]);
-					$enddate = $date_num[$month];
+					$enddate = $date_num[$month - 1];
 					$where_arr[] .=
 						'inserttime >= "'.$date.'-01 00:00:00"'
 						.' and inserttime <= "'.$date.'-'.$enddate.' 23:59:59"';
