@@ -187,22 +187,6 @@
 							<li>
 							<center>
 								<h1 style="font-size: 18px; color: rgb(63, 28, 143); margin: 20px;">
-									<strong>推荐外链</strong>
-								</h1>
-							</center>
-							</li>
-						</ul>
-						<ul>
-							<li>
-							<h2 style="line-height:30px">
-								<a href="https://ae6623.cn/list/index.html" target="_blank">58 同城高级全栈工程师落雨作品展示</a>
-							</h2>
-							</li>
-						</ul>
-						<ul class=friendlyLinks-linkListContainer>
-							<li>
-							<center>
-								<h1 style="font-size: 18px; color: rgb(63, 28, 143); margin: 20px;">
 									<strong>关于博主</strong>
 								</h1>
 							</center>
