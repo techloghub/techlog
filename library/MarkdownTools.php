@@ -35,10 +35,11 @@ class MarkdownTools {
 						break;
 					$line = trim($lines[$index]);
 					if ($line == '</table>') {
+						$contents .= PHP_EOL;
 						break;
 					} else if (substr($line, 0, 9) == '<caption>') {
 						$caption = substr($line, 9);
-						$contents .= '#### '.self::str_trans($caption, true).PHP_EOL;
+						$contents .= '#### '.self::str_trans($caption, true).PHP_EOL.PHP_EOL;
 					} else {
 						$tds = explode($split, $line);
 						if (substr($line, 0, 4) == '<tr>') {
@@ -73,6 +74,7 @@ class MarkdownTools {
 						break;
 					$line = trim($lines[$index]);
 					if ($line == '</ol>' || $line == '</ul>') {
+						$contents .= PHP_EOL;
 						break;
 					}
 					$contents .= $idx++.'. '.self::str_trans($line).PHP_EOL;
@@ -84,6 +86,7 @@ class MarkdownTools {
 						break;
 					$line = trim($lines[$index]);
 					if ($line == '</ol>' || $line == '</ul>') {
+						$contents .= PHP_EOL;
 						break;
 					}
 					$contents .= '- '.self::str_trans($line).PHP_EOL;
@@ -136,14 +139,14 @@ class MarkdownTools {
 			} else if (substr($line, 0, 4) === '<h1>') {
 				$h1_no++;
 				$h3_no = 0;
-				$contents .= '# '.$h1_no.". ".self::str_trans(substr($line, 4)).PHP_EOL;
+				$contents .= '# '.$h1_no.". ".self::str_trans(substr($line, 4)).PHP_EOL.PHP_EOL;
 			} else if (substr($line, 0, 4) === '<h3>') {
 				$h3_no++;
                 $h5_no = 0;
-				$contents .= '## '.$h1_no.".".$h3_no.". ".self::str_trans(substr($line, 4)).PHP_EOL;
+				$contents .= '## '.$h1_no.".".$h3_no.". ".self::str_trans(substr($line, 4)).PHP_EOL.PHP_EOL;
 			} else if (substr($line, 0, 4) === '<h5>') {
 				$h5_no++;
-				$contents .= '### '.$h1_no.".".$h3_no.".".$h5_no.". ".self::str_trans(substr($line, 4)).PHP_EOL;
+				$contents .= '### '.$h1_no.".".$h3_no.".".$h5_no.". ".self::str_trans(substr($line, 4)).PHP_EOL.PHP_EOL;
 			} else if (substr($line, 0, 3) == '<a ') {
 				$id = StringOpt::spider_string($line, 'id="', '"');
 				$title = Repository::findTitleFromArticle(
@@ -159,7 +162,7 @@ class MarkdownTools {
 				if (preg_match($pattern, $lastchar) == 0) {
 					$line = $line.'。';
 				}
-				$contents .= self::str_trans($line).PHP_EOL;
+				$contents .= self::str_trans($line).PHP_EOL.PHP_EOL;
 			}
 		}
 		return $contents;
@@ -350,13 +353,14 @@ class MarkdownTools {
 			'</s>' => '~~',
 			'<mark>' => '==',
 			'</mark>' => '==',
-			'&' => '&amp;',
-			'"' => '&quot;',
-			'<' => '&lt;',
-			'>' => '&gt;',
-			' ' => '&nbsp;',
+			'&' => '\&',
+			'*' => '\*',
+			'<' => '\<',
+			'>' => '\>',
 			'$' => '\$',
 			'_' => '\_',
+			'[' => '\[',
+			']' => '\]',
 		);
 
 		if ($intable) {

@@ -6,6 +6,8 @@ $date = date('Y-m-d H:i:s');
 $params = array('eq' => array('reminded' => 0));
 $comments = Repository::findFromComment($params);
 
+var_dump($comments);
+
 foreach ($comments as $comment) {
     $tolist = array();
     if ($comment->get_nickname() != '博主') {
@@ -43,6 +45,9 @@ foreach ($comments as $comment) {
 
 $params = array('le' => array('next_time' => $date), 'ne' => array('status' => '2'));
 $calendars = Repository::findFromCalendarAlert($params);
+
+var_dump($calendars);
+
 foreach ($calendars as $calendar) {
     if ($calendar->get_alert_time() < $calendar->get_next_time()) {
         $subject = '[日历提醒] '.$calendar->get_name();

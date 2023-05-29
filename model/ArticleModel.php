@@ -12,6 +12,7 @@ class ArticleModel extends AbstractModel
 	private $access_count;
 	private $online;
 	private $comment_count;
+	private $moved;
 
 	public function __construct($params = array())
 	{
@@ -111,6 +112,15 @@ class ArticleModel extends AbstractModel
 	public function set_online($value)
 	{
 		$this->online = $value;
+		return $this;
+	}
+	public function get_moved()
+	{
+		return $this->moved;
+	}
+	public function set_moved($value)
+	{
+		$this->moved = $value;
 		return $this;
 	}
 	public function get_comment_count()
