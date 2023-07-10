@@ -353,7 +353,6 @@ class MarkdownTools {
 			'</s>' => '~~',
 			'<mark>' => '==',
 			'</mark>' => '==',
-			'&' => '\&',
 			'*' => '\*',
 			'<' => '\<',
 			'>' => '\>',
@@ -365,7 +364,12 @@ class MarkdownTools {
 
 		if ($intable) {
 			$marks['|'] = '&#124;';
+			$marks['&nbsp;'] = ' ';
+			$marks['&bull;'] = '·';
+		} else {
+			$marks['&'] = '\&';
 		}
+
 		for ($i = 0; $i < strlen($str); $i++) {
 			foreach ($marks as $key => $value) {
 				if ($str[$i] == $key[0]) {
