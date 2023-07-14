@@ -104,7 +104,8 @@ class MarkdownTools {
 				}
 			} else if (substr($line, 0, 4) == '<img') {
 				$imgnu++;
-				$contents .= PHP_EOL.PHP_EOL.'# 此处有图片 '.$imgnu.PHP_EOL.PHP_EOL;
+				$contents .= PHP_EOL.PHP_EOL.'# 此处有图片 '.$imgnu.PHP_EOL;
+				$contents .= $line.PHP_EOL.PHP_EOL;
 			} else if (substr($line, 0, 5) == '<code') {
 				$this_mode = StringOpt::spider_string($line, 'mode="', '"');
 				if (!empty($this_mode)) {
@@ -129,7 +130,7 @@ class MarkdownTools {
 						if ($is_php) {
 							$contents .= '?>'.PHP_EOL;
 						}
-						$contents .= '```'.PHP_EOL;
+						$contents .= '```'.PHP_EOL.PHP_EOL;
 						break;
 					}
 					$line = trim($line, "\r");
