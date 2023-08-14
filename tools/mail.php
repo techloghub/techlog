@@ -1,11 +1,8 @@
 <?php
 require_once (__DIR__.'/../app/register.php');
 
-use PHPMailer\PHPMailer\PHPMailer;
-
 $options = getopt('s:t:c:h:a:');
-if (!isset($options['t']) || !isset($options['s']) || !isset($options['c']))
-{
+if (!isset($options['t']) || !isset($options['s']) || !isset($options['c'])) {
 	echo 'usage: php mail.php'
 		.' -s subject -t to -c content'
 		.' [-h is html([0]/1)] [-a alt content]'.PHP_EOL;
