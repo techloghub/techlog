@@ -1,5 +1,5 @@
 <?php
-class CalendarAlertModel
+class CalendarAlertModel extends AbstractModel
 {
 	private $id;
 	private $name;

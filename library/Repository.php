@@ -5,6 +5,7 @@
 /**
  * @method static ArticleModel findOneFromArticle(array $params)
  * @method static CalendarAlertModel[] findFromCalendarAlert(array $params)
+ * @method static CalendarAlertModel findOneFromCalendarAlert(array $params)
  * @method static CommentModel findOneFromComment(array $params)
  * @method static CommentModel[] findFromComment(array $comments_params)
  * @method static int findCountFromArticle(array $array)
