@@ -31,7 +31,7 @@ class LunarHelper
      * @throws Exception
      */
     public static function getNextAlert($entity) {
-        \date_default_timezone_set('PRC');
+        \date_default_timezone_set('Asia/Shanghai');
         if ($entity->get_status() != 1 && $entity->get_status() != 0) {
             return self::$defaultString;
         }

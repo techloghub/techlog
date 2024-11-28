@@ -1,6 +1,6 @@
 <?php
 require_once(__DIR__.'/../app/register.php');
-\date_default_timezone_set('PRC');
+\date_default_timezone_set('Asia/Shanghai');
 
 $date = date('Y-m-d H:i:s');
 $params = array('le' => array('next_time' => $date), 'ne' => array('status' => '2'));
@@ -15,7 +15,7 @@ foreach ($calendars as $calendar) {
         if (!empty($calendar->get_remark())) {
             $content .= '<p>备注：</p><p><blockquote>' . $calendar->get_remark() . '</blockquote></p>';
         }
-        CalendarAlertService::send_mail($subject, 'zeyu203@qq.com', $content);
+        CalendarAlertService::send_mail($subject, 'zeyu203@qq.com', $content, 1);
     }
     CalendarAlertService::update_next_alert_time($calendar->get_id());
 }
